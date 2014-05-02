@@ -24,20 +24,19 @@ import eso.utils.Log;
  *
  */
 public class Main implements ActionListener {
-	public static final String TAG = Main.class.getName();
-	
+	public static final String TAG = Main.class.getSimpleName();
+
 	private static Main instance;
-	
+
 	private FramePrincipal frame;
-	
+
 	public static void main(String[] args) {
 		try {
-        	LookAndFeel look = new NimbusLookAndFeel();
-        	UIManager.setLookAndFeel(look);
-        } catch (Exception ex) {
-             Log.w(TAG, "Aparencia não suportada", ex);
-        }
-		
+			LookAndFeel look = new NimbusLookAndFeel();
+			UIManager.setLookAndFeel(look);
+		} catch (Exception ex) {
+			Log.w(TAG, "Aparência não suportada", ex);
+		}
 		try{
 			instance = new Main();
 		} catch (Exception ex){
@@ -49,25 +48,40 @@ public class Main implements ActionListener {
 		initialize();
 	}
 	
-	private void initialize(){
+	private void initialize() {
 		frame = new FramePrincipal();
-
+		
 		addEvents();
 		
 		frame.setVisible(true);
+		
+		// Se não existir um banco de dados configurado
+		if(DAO.getDatabase() == null)
+			new Configuracoes(frame); // Inicia as configurações
 
-		lembretePagamento();
-		lembreteFerias();
+		// Se ainda não existir um banco de dados configurado
+		if(DAO.getDatabase() == null)
+			return;
+		
+		Login login = new Login(frame);
+		// Se acesso permitido
+		if(login.autorizar()) {
+			lembretePagamento();
+			lembreteFerias();
+		} else {
+			// Se não, sair do sistema
+			System.exit(1);
+		}
 	}
-	
+
 	private void addEvents() {
 		frame.getBtnClientes().addActionListener(this);
-		
+
 		frame.getBtnProdutos().addActionListener(this);
-		
+
 		frame.getBtnFuncionarios().addActionListener(this);
 	}
-	
+
 	public void lembretePagamento() {
 		ResultSet rs = null;
 		try {
@@ -76,7 +90,7 @@ public class Main implements ActionListener {
 			int dia = cal.get(Calendar.DAY_OF_MONTH);
 			rs = DAO.getDatabase().select(new String[] {Funcionario.NOME}, Funcionario.TABLE, 
 					Funcionario.DIA_PAGAMENTO+" = ?", new Object[]{dia}, null, Funcionario.NOME);
-			
+
 			if(rs.next()) {
 				StringBuilder strFunc = new StringBuilder("Faltam 3 dias para o pagamento de: \n");
 				strFunc.append(rs.getString(Funcionario.NOME));
@@ -84,14 +98,14 @@ public class Main implements ActionListener {
 					strFunc.append('\n');
 					strFunc.append(rs.getString(Funcionario.NOME));
 				}
-				
-				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de pagamento", JOptionPane.WARNING_MESSAGE);
+
+				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de pagamento", JOptionPane.INFORMATION_MESSAGE);
 			}
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao carregar lembrete de pagamento.", e);
 		}
 	}
-	
+
 	public void lembreteFerias() {
 		ResultSet rs = null;
 		try {
@@ -100,7 +114,7 @@ public class Main implements ActionListener {
 			Date date = new Date(cal.getTimeInMillis());
 			rs = DAO.getDatabase().select(new String[] {Funcionario.NOME}, Funcionario.TABLE, 
 					Funcionario.PREVISAO_FERIAS+" < ?", new Object[]{date.toString()}, null, Funcionario.NOME);
-			
+
 			if(rs.next()) {
 				StringBuilder strFunc = new StringBuilder("Férias vencendo ou vencidas: \n");
 				strFunc.append(rs.getString(Funcionario.NOME));
@@ -108,14 +122,14 @@ public class Main implements ActionListener {
 					strFunc.append('\n');
 					strFunc.append(rs.getString(Funcionario.NOME));
 				}
-				
-				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de férias", JOptionPane.WARNING_MESSAGE);
+
+				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de férias", JOptionPane.INFORMATION_MESSAGE);
 			}
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao carregar lembrete de férias.", e);
 		}
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch(e.getActionCommand()) {
@@ -133,7 +147,7 @@ public class Main implements ActionListener {
 			break;
 		}
 	}
-	
+
 	public static FramePrincipal getFrame() {
 		return instance.frame;
 	}

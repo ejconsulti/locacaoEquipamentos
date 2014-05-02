@@ -111,9 +111,7 @@ public class ConsultarClientes implements Runnable, ActionListener {
 			if(rs != null) {
 				try {
 					rs.close();
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
+				} catch (SQLException ex) {}
 			}
 		}
 	}
