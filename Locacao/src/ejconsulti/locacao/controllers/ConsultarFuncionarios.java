@@ -29,7 +29,7 @@ import eso.utils.Log;
  * @author Edison Jr
  *
  */
-public class ConsultarFuncionarios implements Runnable, ActionListener {
+public class ConsultarFuncionarios implements ActionListener {
 	public static final String TAG = ConsultarFuncionarios.class.getSimpleName();
 	
 	private PanelConsultar panel;
@@ -52,9 +52,7 @@ public class ConsultarFuncionarios implements Runnable, ActionListener {
 		
 		addEvents();
 		
-		Thread t = new Thread(this);
-		t.setPriority(Thread.MIN_PRIORITY);
-		t.start();
+		carregar();
 	}
 	
 	private void addEvents() {
@@ -94,7 +92,7 @@ public class ConsultarFuncionarios implements Runnable, ActionListener {
 		panel.getBtnPesquisar().addActionListener(this);
 	}
 	
-	public void run() {
+	public void carregar() {
 		ResultSet rs = null;
 		try {
 			rs = DAO.getDatabase().select(null, Funcionario.TABLE, null, null, null, Funcionario.NOME);
@@ -154,9 +152,7 @@ public class ConsultarFuncionarios implements Runnable, ActionListener {
 				
 				// Recarregar lista
 				model.clear();
-				Thread t = new Thread(this);
-				t.setPriority(Thread.MIN_PRIORITY);
-				t.start();
+				carregar();
 			}
 		}
 	}

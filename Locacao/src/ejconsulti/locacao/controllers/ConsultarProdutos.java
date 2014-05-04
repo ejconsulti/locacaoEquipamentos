@@ -28,7 +28,7 @@ import eso.utils.Log;
  * @author Edison Jr
  *
  */
-public class ConsultarProdutos implements Runnable, ActionListener {
+public class ConsultarProdutos implements ActionListener {
 	public static final String TAG = ConsultarProdutos.class.getSimpleName();
 	
 	private PanelConsultar panel;
@@ -51,9 +51,7 @@ public class ConsultarProdutos implements Runnable, ActionListener {
 		
 		addEvents();
 		
-		Thread t = new Thread(this);
-		t.setPriority(Thread.MIN_PRIORITY);
-		t.start();
+		carregar();
 	}
 	
 	private void addEvents() {
@@ -93,7 +91,7 @@ public class ConsultarProdutos implements Runnable, ActionListener {
 		panel.getBtnPesquisar().addActionListener(this);
 	}
 	
-	public void run() {
+	public void carregar() {
 		ResultSet rs = null;
 		try {
 			rs = DAO.getDatabase().select(null, Produto.TABLE, null, null, null, Produto.NOME);
@@ -152,9 +150,7 @@ public class ConsultarProdutos implements Runnable, ActionListener {
 				
 				// Recarregar lista
 				model.clear();
-				Thread t = new Thread(this);
-				t.setPriority(Thread.MIN_PRIORITY);
-				t.start();
+				carregar();
 			}
 		}
 	}
