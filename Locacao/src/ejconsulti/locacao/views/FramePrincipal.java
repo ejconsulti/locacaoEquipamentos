@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -24,6 +25,7 @@ public class FramePrincipal extends JFrame {
 	private JToggleButton btnClientes;
 	private JToggleButton btnProdutos;
 	private JToggleButton btnFuncionarios;
+	private JToggleButton btnOrdemdeServico;
 
 	public FramePrincipal() {
 		super("Locação de Equipamentos");
@@ -62,6 +64,10 @@ public class FramePrincipal extends JFrame {
 		btnFuncionarios = new JToggleButton("Funcion\u00E1rios");
 		headerPanel.add(btnFuncionarios);
 		btnGroup.add(btnFuncionarios);
+		
+		btnOrdemdeServico = new JToggleButton("Ordem de Serviço");
+		headerPanel.add(btnOrdemdeServico);
+		btnGroup.add(btnOrdemdeServico);
 	}
 
 	public void setPane(Container container) {
@@ -82,5 +88,9 @@ public class FramePrincipal extends JFrame {
 	
 	public JToggleButton getBtnFuncionarios() {
 		return btnFuncionarios;
+	}
+	
+	public JToggleButton getBtnOrdemdeServico() {
+		return btnOrdemdeServico;
 	}
 }
