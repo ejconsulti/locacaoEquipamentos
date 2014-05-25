@@ -15,7 +15,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
-import eso.components.DateFiled;
+import eso.components.DateField;
 import eso.components.DoubleField;
 import eso.utils.Text;
 
@@ -36,13 +36,13 @@ public class DialogFuncionario extends JDialog {
 	private PanelEndereco panelEndereco;
 	
 	private DoubleField txtSalario;
-	private DateFiled dataEntrada;
+	private DateField dataEntrada;
 	private JSpinner spnDiaPagamento;
 
 	private JButton btnSalvar;
 	private JButton btnCancelar;
 
-	private DateFiled previsaoFerias;
+	private DateField previsaoFerias;
 	
 	public DialogFuncionario(Window owner, String title) {
 		super(owner, title);
@@ -111,7 +111,7 @@ public class DialogFuncionario extends JDialog {
 		l4.setForeground(Color.RED);
 		contentPanel.add(l4, "cell 1 5,alignx trailing");
 		
-		dataEntrada = new DateFiled();
+		dataEntrada = new DateField();
 		contentPanel.add(dataEntrada, "cell 2 5");
 		
 		JLabel lblDiaPagamento = new JLabel("Dia de pagamento");
@@ -128,7 +128,7 @@ public class DialogFuncionario extends JDialog {
 		JLabel lblPrevisoDeFrias = new JLabel("Previs\u00E3o de F\u00E9rias");
 		contentPanel.add(lblPrevisoDeFrias, "cell 0 7");
 		
-		previsaoFerias = new DateFiled();
+		previsaoFerias = new DateField();
 		contentPanel.add(previsaoFerias, "cell 2 7");
 		
 		panelEndereco = new PanelEndereco();
@@ -168,7 +168,7 @@ public class DialogFuncionario extends JDialog {
 		return txtSalario;
 	}
 	
-	public DateFiled getDataEntrada() {
+	public DateField getDataEntrada() {
 		return dataEntrada;
 	}
 	
@@ -176,7 +176,7 @@ public class DialogFuncionario extends JDialog {
 		return spnDiaPagamento;
 	}
 	
-	public DateFiled getPrevisaoFerias() {
+	public DateField getPrevisaoFerias() {
 		return previsaoFerias;
 	}
 
