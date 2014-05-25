@@ -37,6 +37,7 @@ public class Main implements ActionListener {
 		} catch (Exception ex) {
 			Log.w(TAG, "Aparência não suportada", ex);
 		}
+		
 		try{
 			instance = new Main();
 		} catch (Exception ex){
@@ -46,6 +47,7 @@ public class Main implements ActionListener {
 
 	private Main() {
 		initialize();
+		
 	}
 	
 	private void initialize() {
@@ -62,6 +64,7 @@ public class Main implements ActionListener {
 		// Se ainda não existir um banco de dados configurado
 		if(DAO.getDatabase() == null)
 			return;
+		
 		
 		Login login = new Login(frame);
 		// Se acesso permitido
@@ -80,6 +83,8 @@ public class Main implements ActionListener {
 		frame.getBtnProdutos().addActionListener(this);
 
 		frame.getBtnFuncionarios().addActionListener(this);
+		
+		frame.getBtnOrdemdeServico().addActionListener(this);
 	}
 
 	public void lembretePagamento() {
@@ -116,7 +121,7 @@ public class Main implements ActionListener {
 					Funcionario.PREVISAO_FERIAS+" < ?", new Object[]{date.toString()}, null, Funcionario.NOME);
 
 			if(rs.next()) {
-				StringBuilder strFunc = new StringBuilder("Férias vencendo ou vencidas: \n");
+				StringBuilder strFunc = new StringBuilder("Fï¿½rias vencendo ou vencidas: \n");
 				strFunc.append(rs.getString(Funcionario.NOME));
 				while(rs.next()) {
 					strFunc.append('\n');
@@ -126,7 +131,7 @@ public class Main implements ActionListener {
 				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de férias", JOptionPane.INFORMATION_MESSAGE);
 			}
 		} catch (SQLException e) {
-			Log.e(TAG, "Erro ao carregar lembrete de férias.", e);
+			Log.e(TAG, "Erro ao carregar lembrete de fÃ©rias.", e);
 		}
 	}
 
@@ -144,6 +149,10 @@ public class Main implements ActionListener {
 		case "Funcionários":
 			ConsultarFuncionarios consFuncionarios = new ConsultarFuncionarios();
 			frame.setPane(consFuncionarios.getContentPanel());
+			break;
+		case "Ordem de Serviço":
+			ConsultarOrdemDeServico consOrdemDeServico = new ConsultarOrdemDeServico();
+			frame.setPane(consOrdemDeServico.getContentPanel());
 			break;
 		}
 	}
