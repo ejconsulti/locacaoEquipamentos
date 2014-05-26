@@ -1,7 +1,11 @@
 package ejconsulti.locacao.models;
 
+import java.awt.Color;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import eso.database.ContentValues;
 
 /**
  * Ordem de Serviço
@@ -9,28 +13,29 @@ import java.sql.SQLException;
  * @author Érico Jr
  *
  */
-
 public class OrdemDeServico {
 	public static final String TABLE = "ordemServico";
 	public static final String ID = "idOrdemServico";
 	public static final String ID_CLIENTE = "idCliente";
 	public static final String ID_ENDERECO_ENTREGA = "idEnderecoEntrega";
-	public static final String DATA = "data";//data da realizacao da ordem de servico
+	public static final String DATA_ENTREGA = "dataEntrega";
 	public static final String TOTAL = "total";
 	public static final String STATUS = "status";
 	
 	private Integer id;
 	private Integer idCliente;
 	private Integer idEnderecoEntrega;
-	private String data;
+	private Date data;
 	private Double valor;
-	private String status;
+	private Status status;
+	
+	private String nomeCliente;
 	
 	public OrdemDeServico() {}
 
 	public OrdemDeServico(Integer id, Integer idCliente,
-			Integer idEnderecoEntrega, String data,
-			Double valor, String status) {
+			Integer idEnderecoEntrega, Date data,
+			Double valor, Status status) {
 		this.id = id;
 		this.idCliente = idCliente;
 		this.idEnderecoEntrega = idEnderecoEntrega;
@@ -43,7 +48,7 @@ public class OrdemDeServico {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		if (id > 0)
 			this.id = id;
 	}
@@ -64,11 +69,11 @@ public class OrdemDeServico {
 		this.idEnderecoEntrega = idEnderecoEntrega;
 	}
 
-	public String getData() {
+	public Date getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(Date data) {
 		this.data = data;
 	}
 
@@ -80,18 +85,25 @@ public class OrdemDeServico {
 		this.valor = valor;
 	}
 	
-	public String getStatus(){
+	public Status getStatus(){
 		return status;
 	}
 	
-	public void setStatus(String status){
+	public void setStatus(Status status){
 		this.status = status;
+	}
+	
+	public String getNomeCliente() {
+		return nomeCliente;
+	}
+	
+	public void setNomeCliente(String nomeCliente) {
+		this.nomeCliente = nomeCliente;
 	}
 	
 	public int hashCode() {
 		return id != null ? id : -1;
 	}
-	
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -104,6 +116,53 @@ public class OrdemDeServico {
 	
 	public static OrdemDeServico rsToObject(ResultSet rs) throws SQLException {
 		return new OrdemDeServico(rs.getInt(ID), rs.getInt(ID_CLIENTE), rs.getInt(ID_ENDERECO_ENTREGA)
-				, rs.getString(DATA), rs.getDouble(TOTAL), rs.getString(STATUS));
+				, ContentValues.getAsDate(rs.getString(DATA_ENTREGA)), rs.getDouble(TOTAL), Status.valueOf(rs.getInt(STATUS)));
+	}
+	
+	/**
+	 * Status da Ordem de Serviço
+	 * 
+	 * @author Edison Jr
+	 *
+	 */
+	public static enum Status {
+
+		Cancelada (-1, "Cancelada", Color.RED),
+		Concluida (0, "Concluída", Color.BLUE),
+		EmAndamento (1, "Em Andamento", Color.BLACK);
+		
+		private int id;
+		private String descricao;
+		private Color cor;
+		
+		Status(int id, String descricao, Color cor) {
+			this.id = id;
+			this.descricao = descricao;
+			this.cor = cor;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		
+		public String getDescricao() {
+			return descricao;
+		}
+		
+		public Color getCor() {
+			return cor;
+		}
+		
+		@Override
+		public String toString() {
+			return descricao;
+		}
+		
+		public static Status valueOf(int id) {
+			for(Status o : values())
+				if(o.id == id)
+					return o;
+			return null;
+		}
 	}
 }

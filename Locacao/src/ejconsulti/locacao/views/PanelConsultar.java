@@ -2,12 +2,15 @@ package ejconsulti.locacao.views;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JButton;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
+
+import net.miginfocom.swing.MigLayout;
+import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.StatusCellRenderer;
 
 /**
  * Painel genérico para consulta, adição, edição e exclusão
@@ -38,6 +41,7 @@ public class PanelConsultar extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		table = new JTable();
+		table.setDefaultRenderer(Status.class, new StatusCellRenderer());
 		scrollPane.setViewportView(table);
 		
 		JPanel headerPanel = new JPanel();

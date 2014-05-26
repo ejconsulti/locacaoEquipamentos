@@ -1,7 +1,5 @@
 package ejconsulti.locacao.controllers;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -11,30 +9,28 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JTable;
 import javax.swing.RowFilter;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.OrdemDeServicoTableModel;
-import ejconsulti.locacao.models.Produto;
-import ejconsulti.locacao.models.ProdutoTableModel;
 import ejconsulti.locacao.views.PanelConsultar;
 import eso.database.ContentValues;
-import eso.database.SQLiteDatabase;
 import eso.utils.Log;
 
 /**
  * Consultar ordem de servico
  * 
  * @author Érico Jr
+ * @author Edison Jr
  *
  */
 public class ConsultarOrdemDeServico implements ActionListener {
@@ -57,25 +53,7 @@ public class ConsultarOrdemDeServico implements ActionListener {
 
 		sorter = new TableRowSorter<OrdemDeServicoTableModel>(model);
 		panel.getTable().setRowSorter(sorter);
-		
-		final TableCellRenderer renderer = panel.getTable().getDefaultRenderer(OrdemDeServico.class);
-		
-		panel.getTable().setDefaultRenderer(OrdemDeServico.class, new TableCellRenderer() {
-			
-			@Override
-			public Component getTableCellRendererComponent(JTable table, Object value,
-					boolean isSelected, boolean hasFocus, int row, int column) {
 
-				//Component c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				
-			//	if (row > 0)
-				System.out.println("i'm here!");
-					//c.setBackground(Color.RED);
-				return null;
-			}
-		});
-
-		panel.getBtnEditar().setText("Visualisar");
 		panel.getBtnExcluir().setText("Cancelar");
 
 		addEvents();
@@ -92,17 +70,17 @@ public class ConsultarOrdemDeServico implements ActionListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() > 1) {
-					visualisar();
+					editar();
 				} else if(e.getButton() == MouseEvent.BUTTON3) {
 					JPopupMenu menu = new JPopupMenu();
 
-					JMenuItem visualisar = new JMenuItem("Visualisar");
+					JMenuItem editar = new JMenuItem("Editar");
 					JMenuItem cancelar = new JMenuItem("Cancelar");
 
-					visualisar.addActionListener(ConsultarOrdemDeServico.this);
+					editar.addActionListener(ConsultarOrdemDeServico.this);
 					cancelar.addActionListener(ConsultarOrdemDeServico.this);
 
-					menu.add(visualisar);
+					menu.add(editar);
 					menu.add(cancelar);
 
 					menu.show(panel.getTable(), e.getX(), e.getY());
@@ -123,10 +101,13 @@ public class ConsultarOrdemDeServico implements ActionListener {
 	public void carregar() {
 		ResultSet rs = null;
 		try {
-			rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, null, null, null, OrdemDeServico.DATA);
+			rs = DAO.getDatabase().select(new String[] {"o.*", "c."+Cliente.NOME}, 
+					OrdemDeServico.TABLE+" o INNER JOIN "+Cliente.TABLE+" c ON c."+Cliente.ID+" = o."+OrdemDeServico.ID_CLIENTE, 
+					null, null, null, OrdemDeServico.DATA_ENTREGA);
 
 			while(rs.next()) {
 				OrdemDeServico o = OrdemDeServico.rsToObject(rs);
+				o.setNomeCliente(rs.getString(Cliente.NOME));
 				model.add(o);
 			}
 
@@ -141,80 +122,44 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		}
 	}
 
-	public void visualisar() {
+	public void editar() {
 		int row = panel.getTable().getSelectedRow();
 		
-		if (row < 0)
-			return;
-
-		int index = panel.getTable().convertRowIndexToModel(row);
-
-		OrdemDeServico o = model.get(index);
-
-		new VisualizarOrdemDeServico(o);
+		if(row > -1) {
+			int index = panel.getTable().convertRowIndexToModel(row);
+			OrdemDeServico o = model.get(index);
+			new EditarOrdemDeServico(o);
+		}
 	}
 
 	public void cancelar() {
 
 		int[] delRows = panel.getTable().getSelectedRows();
 
-
 		if(delRows.length > 0) {
 
 			int option = JOptionPane.showConfirmDialog(panel, 
 					String.format("Deseja realmente cancelar %d Ordem(s) de Serviço(s)?", delRows.length), 
-					"Excluir Ordem(s) de Serviço(s)", 
+					"Cancelar Ordem(s) de Serviço(s)", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 			if(option == JOptionPane.YES_OPTION) {
-				ArrayList<Produto> produtos = new ArrayList<Produto>();
-				ArrayList<Integer> quantidades = new ArrayList<Integer>();
 
-				// Remover da base
-				SQLiteDatabase db = DAO.getDatabase();
+				// Cancelar Ordens de Serviço
 				for(int row : delRows) {
 					// Converte a linha do filtro para a linha do modelo
 					int index = panel.getTable().convertRowIndexToModel(row);
 					
-					if (!model.get(index).getStatus().equals("Cancelada")){
+					OrdemDeServico o = model.get(index);
+					if(o.getStatus().getId() > 0) {
 						try {
 							//altera o status da ordem de serviço
-							OrdemDeServico o = model.get(index);
 							ContentValues contValues = new ContentValues();
-							contValues.put(OrdemDeServico.STATUS, "Cancelada");
-							db.update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID + "=?", new Object[]{o.getId()});
+							contValues.put(OrdemDeServico.STATUS, Status.Cancelada.getId());
+							DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{o.getId()});
 						} catch (Exception e) {
-							Log.e(TAG, "Erro ao exluir ordem de serviço na linha "+index, e);
+							Log.e(TAG, "Erro ao cancelar ordem de serviço na linha "+index, e);
 						}
-
-						//Busca os produtos locados e as quantidades
-						ResultSet rs = null;
-						ResultSet rsProduto = null;					
-						try {
-							rs = DAO.getDatabase().select(null, "PRODUTOSLOCADOS", OrdemDeServico.ID + "=?", 
-									new Integer[]{model.get(index).getId()}, null, null);
-
-							while (rs.next()){
-								rsProduto = DAO.getDatabase().select(null, Produto.TABLE, 
-										Produto.ID + "=?", new Integer[]{rs.getInt(Produto.ID)}, null, null);
-								Produto p = Produto.rsToObject(rsProduto);
-								produtos.add(p);
-								quantidades.add(rs.getInt("QUANTIDADE"));
-								rsProduto.close();
-							}
-							rs.close();
-							
-						} catch (SQLException e) {
-							Log.e(TAG, "Erro ao buscar produtos.");
-						}
-						
-						
-					}
-					
-
-					//Aumenta o estoque dos produtos contidos da ordem cancelada
-					for (int i = 0; i < produtos.size(); i++){
-						CadastrarOrdemDeServico.alterarEstoque(produtos.get(i), -quantidades.get(i));
 					}
 				}
 
@@ -227,31 +172,22 @@ public class ConsultarOrdemDeServico implements ActionListener {
 	
 
 	public void pesquisar() {
+		final List<RowFilter<OrdemDeServicoTableModel, Integer>> filters = new ArrayList<RowFilter<OrdemDeServicoTableModel, Integer>>(2);
+	
 		final String text = panel.getTxtPesquisar().getText();
 		if(text.length() > 0) {
-			RowFilter<OrdemDeServicoTableModel, Integer> filter = new RowFilter<OrdemDeServicoTableModel, Integer>() {			
+			RowFilter<OrdemDeServicoTableModel, Integer> filterNomeCliente = new RowFilter<OrdemDeServicoTableModel, Integer>() {			
 				@Override
 				public boolean include(RowFilter.Entry<? extends OrdemDeServicoTableModel, ? extends Integer> entry) {
-					OrdemDeServico p = entry.getModel().get(entry.getIdentifier());
-					Cliente c = null;
-					ResultSet rs = null;
-					try {
-						rs = DAO.getDatabase().select(null, Cliente.TABLE, Cliente.ID + "=?", new Integer[]{p.getIdCliente()}, null, null);
-						c = Cliente.rsToObject(rs);
-					}catch(SQLException e){
-						e.printStackTrace();
-					}finally{
-						if (rs != null)
-							try {
-								rs.close();
-							} catch (SQLException e) {}
-					}
-
-					return c.getNome().toUpperCase().contains(text.toUpperCase()) || p.getData().contains(text.toUpperCase());
+					OrdemDeServico o = entry.getModel().get(entry.getIdentifier());
+					return o.getNomeCliente().toUpperCase().contains(text.toUpperCase());
 				}
 			};
-			sorter.setRowFilter(filter);
+			filters.add(filterNomeCliente);
 		}
+		//TODO: Adicionar filtros por status e por data
+		
+		sorter.setRowFilter(RowFilter.andFilter(filters));
 	}
 
 	@Override
@@ -260,8 +196,8 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		case "Adicionar":
 			new CadastrarOrdemDeServico();
 			break;
-		case "Visualisar":
-			visualisar();
+		case "Editar":
+			editar();
 			break;
 		case "Cancelar":
 			cancelar();

@@ -2,40 +2,33 @@ package ejconsulti.locacao.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.peer.SystemTrayPeer;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.text.html.HTMLDocument.HTMLReader.CharacterAction;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.Endereco;
 import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.Produto;
+import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.views.DialogOrdemDeServico;
 import eso.database.ContentValues;
+import eso.utils.ComponentUtils;
 import eso.utils.Log;
-
-
 
 /**
  * Cadastrar Ordem de Serviço
  * 
  * @author Érico Jr
+ * @author Edison Junior
  *
  */
 public class CadastrarOrdemDeServico implements ActionListener, TableModelListener {
@@ -45,8 +38,6 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	
 	private Cliente cliente;
 	private Integer idEndereco;
-	private String data = "__/__/____";
-	private double total = 0;
 
 	public CadastrarOrdemDeServico() {
 		initialize();
@@ -54,80 +45,43 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	
 	private void initialize() {
 		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviço");
+		dialog.getTxtDataEntrega().setDate(new Date(System.currentTimeMillis()));
 		
 		addEvents();
 		
 		addClientes();
 		addProdutos();
 		
-			
 		dialog.setVisible(true);
 	}
 	
-	public static String converterData (Calendar c){
-		String dt = new DecimalFormat("00").format(c.get(Calendar.DAY_OF_MONTH)) + "/";
-		dt += new DecimalFormat("00").format(c.get(Calendar.MONTH)+1) + "/";
-		dt += new DecimalFormat("00").format(c.get(Calendar.YEAR));
-		
-		return dt;
-	}
-	
 	private void addEvents() {
-		dialog.getCboxNome().addActionListener(this);
+		dialog.getCboxNome().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (dialog.getCboxNome().getSelectedIndex() < 0) {
+					dialog.getTxtTelefone().setValue(null);
+					ComponentUtils.free(dialog.getPanelEnderecoEntrega());
+				} else
+					preencherCampos((Cliente) dialog.getCboxNome().getSelectedItem());	
+			}
+		});
 		dialog.getBtnAdicionar().addActionListener(this);
 		dialog.getBtnExcluir().addActionListener(this);
 		dialog.getBtnSalvar().addActionListener(this);
 		dialog.getBtnCancelar().addActionListener(this);
 		dialog.getTxtTotal().addActionListener(this);
 		dialog.getProdutoOrdemTableModel().addTableModelListener(this);
-		
-		dialog.getTxtData().getDocument().addDocumentListener(new DocumentListener() {
-			public void removeUpdate(DocumentEvent e){}
-			public void insertUpdate(DocumentEvent e) {
-				String texto = dialog.getTxtData().getText().replaceAll("/", "").replaceAll("_", "");
-				if (texto.length() == 8 && !validarData(texto)){
-					Calendar dataAtual = Calendar.getInstance();
-					String dia = new DecimalFormat("00").format(dataAtual.get(Calendar.DATE)).toString();
-					String mes = new DecimalFormat("00").format(dataAtual.get(Calendar.MONTH) + 1).toString();
-					String ano =  "" + dataAtual.get(Calendar.YEAR);
-					data = dia + "/" + mes + "/" + ano;
-					Runnable doHighlight = new Runnable() {
-				        @Override
-				        public void run() {
-				        	dialog.getTxtData().setText(data);
-				        }
-				    };       
-				    SwingUtilities.invokeLater(doHighlight);
-					
-				}
-				else
-					data = dialog.getTxtData().getText();
-			}
-			public void changedUpdate(DocumentEvent e){}
-		});
-	}
-	
-	public boolean validarData (String texto){
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");  
-		sdf.setLenient(false);  
-		try {  
-			sdf.parse(texto);  
-			return true;  
-		}  
-		catch (ParseException ex) {  
-			return false;  
-			// ex.getMessage();  
-		}
 	}
 	
 	private void addClientes (){
 		ResultSet rs = null;
 		try {
 			rs = DAO.getDatabase().select(null, Cliente.TABLE, null, null, null, Cliente.NOME);
-			
+
+			DefaultComboBoxModel<Cliente> model = (DefaultComboBoxModel<Cliente>) dialog.getCboxNome().getModel();
 			while(rs.next()) {
 				Cliente c = Cliente.rsToObject(rs);
-				DefaultComboBoxModel<Cliente> model = (DefaultComboBoxModel<Cliente>) dialog.getCboxNome().getModel();
 				model.addElement(c);
 			}
 
@@ -147,19 +101,16 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	private void addProdutos (){
 		ResultSet rs = null;
 		try {
-			rs = DAO.getDatabase().select(null, Produto.TABLE, null, null, null, Produto.ID);
+			rs = DAO.getDatabase().select(null, Produto.TABLE, Produto.QUANTIDADE+" > 0", null, null, Produto.ID);
 
+			DefaultComboBoxModel<Produto> model = (DefaultComboBoxModel<Produto>) dialog.getCboxProdutos().getModel();
 			while(rs.next()){
 				Produto p = Produto.rsToObject(rs);
-				
-				if (p.getQuantidade() > 0){
-					DefaultComboBoxModel<Produto> model = (DefaultComboBoxModel<Produto>) dialog.getCboxProdutos().getModel();
-					model.addElement(p);
-				}
+				model.addElement(p);
 			}
 
 		} catch (SQLException ex) {
-			Log.e(TAG, "Erro ao carregar clientes", ex);
+			Log.e(TAG, "Erro ao carregar produtos", ex);
 		} finally {
 			if(rs != null) {
 				try {
@@ -169,17 +120,6 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 				}
 			}
 		}		
-	}
-	
-	private void limparCampos (){
-		dialog.getTxtTelefone().setText("");
-		dialog.getPanelEnderecoEntrega().getTxtRua().setText("");
-		dialog.getPanelEnderecoEntrega().getTxtNumero().setText("");
-		dialog.getPanelEnderecoEntrega().getTxtComplemento().setText("");
-		dialog.getPanelEnderecoEntrega().getTxtBairro().setText("");
-		dialog.getPanelEnderecoEntrega().getTxtCidade().setText("");
-		dialog.getPanelEnderecoEntrega().getBoxUf().setSelectedItem("");
-		dialog.getPanelEnderecoEntrega().getTxtReferencia().setText("");
 	}
 	
 	private void preencherCampos (Cliente c){		
@@ -208,67 +148,50 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 			dialog.getCboxNome().requestFocus();
 			return;
 		}
-		
 		if (dialog.getTabela().getRowCount() <= 0){
 			JOptionPane.showMessageDialog(null, "Nenhum produto foi adicionado.");
 			dialog.getCboxProdutos().requestFocus();
 			return;
 		}
-		
-		//Cadastra a ordem de serviço
-		ContentValues values = new ContentValues();
-		values.put(OrdemDeServico.ID_CLIENTE, cliente.getId());
-		values.put(OrdemDeServico.ID_ENDERECO_ENTREGA, idEndereco);
-		values.put(OrdemDeServico.DATA, data);
-		values.put(OrdemDeServico.TOTAL, total);
-		values.put(OrdemDeServico.STATUS, "Em Andamento");
-		
-		
-		int idOrdemServicoAtual = 0;
-		
-		try {
-			DAO.getDatabase().insert(OrdemDeServico.TABLE, values);
-			
-			ResultSet r = DAO.getDatabase().getConnection().createStatement().executeQuery("SELECT MAX(IDORDEMSERVICO) AS \"ULTIMO\" FROM ORDEMSERVICO");
-			if (r.next())
-				idOrdemServicoAtual = r.getInt("ULTIMO");
-			
-			r.close();
-			
-		} catch (SQLException e){
-			Log.e(TAG, "Erro ao cadastrar Ordem de Serviço.");
+		Date data = dialog.getTxtDataEntrega().getDate();
+		if(data == null) {
+			JOptionPane.showMessageDialog(null, "Preencha o campo 'Data de entrega'.");
+			dialog.getTxtDataEntrega().requestFocus();
 			return;
 		}
 		
-		Calendar cal;
+		int idOrdemServicoAtual = -1;
+		try {
+			//Cadastra a ordem de serviço
+			ContentValues values = new ContentValues();
+			values.put(OrdemDeServico.ID_CLIENTE, cliente.getId());
+			values.put(OrdemDeServico.ID_ENDERECO_ENTREGA, idEndereco);
+			values.put(OrdemDeServico.DATA_ENTREGA, data);
+			values.put(OrdemDeServico.TOTAL, dialog.getTxtTotal().doubleValue());
+			values.put(OrdemDeServico.STATUS, Status.EmAndamento.getId());
+			
+			idOrdemServicoAtual = DAO.getDatabase().insert(OrdemDeServico.TABLE, values);
+		} catch (SQLException e) {
+			Log.e(TAG, "Erro ao cadastrar Ordem de Serviço.", e);
+			return;
+		}
 		
-		for (int i = 0; i < dialog.getProdutoOrdemTableModel().getRowCount(); i++){
+		for(ProdutoOS p : dialog.getProdutoOrdemTableModel().getRows()) {
 			ContentValues valuesLocacao = new ContentValues();
-			valuesLocacao.put("IDPRODUTO", dialog.getProdutoOrdemTableModel().get(i).getId());
-			valuesLocacao.put(OrdemDeServico.ID, idOrdemServicoAtual);
+			valuesLocacao.put(ProdutoOS.ID, p.getId());
+			valuesLocacao.put(ProdutoOS.ID_ORDEMSERVICO, idOrdemServicoAtual);
+			valuesLocacao.put(ProdutoOS.DIAS, p.getDias());
+			valuesLocacao.put(ProdutoOS.QUANTIDADE_LOCADA, p.getQuantidade());
+			valuesLocacao.put(ProdutoOS.VALOR, p.getTotal());
+			valuesLocacao.put(ProdutoOS.LOCADO, p.getLocado());
 			
-			if (data.equals("__/__/____"))
-				valuesLocacao.put("DATAENTREGA", "__/__/____");
-			else{
-				cal = Calendar.getInstance();
-				cal.set(Integer.parseInt(data.substring(6)), Integer.parseInt(data.substring(3, 5)), Integer.parseInt(data.substring(0, 2)));
-				cal.add(Calendar.DATE, Integer.parseInt(dialog.getProdutoOrdemTableModel().getValueAt(i, 4).toString()));
-				valuesLocacao.put("DATAENTREGA", converterData(cal));
-			}
-			valuesLocacao.put("DIAS", dialog.getProdutoOrdemTableModel().getValueAt(i, 4));
-			valuesLocacao.put("QUANTIDADE", Integer.parseInt(dialog.getProdutoOrdemTableModel().getValueAt(i, 3).toString()));
-			valuesLocacao.put("VALOR", Double.parseDouble(dialog.getProdutoOrdemTableModel().getValueAt(i, 5).toString()));
-			
-			alterarEstoque(dialog.getProdutoOrdemTableModel().get(i), Integer.parseInt(dialog.getProdutoOrdemTableModel().getValueAt(i, 3).toString()));
 			try {
-				DAO.getDatabase().insert("PRODUTOSLOCADOS", valuesLocacao);
+				DAO.getDatabase().insert(ProdutoOS.TABLE, valuesLocacao);
 			} catch (SQLException e){
-				e.printStackTrace();
-				//Log.e(TAG, "Erro ao cadastrar Ordem de Serviço.");
+				Log.e(TAG, "Erro ao locar produtos.", e);
 				return;
 			}
 		}
-		
 		
 		JOptionPane.showMessageDialog(dialog, "Ordem de Serviço cadastrada!");
 		Main.getFrame().getBtnOrdemdeServico().doClick();
@@ -276,48 +199,43 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 		dialog.dispose();
 	}
 	
-	public static void alterarEstoque (Produto p, int quantidade){
-		try {
-			Object []id = new Integer[]{p.getId()};
-			ContentValues c = new ContentValues();
-			c.put(Produto.QUANTIDADE, (p.getQuantidade()-quantidade) );
+	public void adicionar() {
+		Produto p = (Produto) dialog.getCboxProdutos().getSelectedItem();
+		if(p != null) {
+			int dias = 1;
 			
-			DAO.getDatabase().update(Produto.TABLE, c, Produto.ID +  " =? ", id);
-			
+			Date dataDevolucao = dialog.getTxtDataDevolucao().getDate();
+			// Se a data de devolução não for vazia, 
+			// os dias serão a diferença em dias entre a data de entrega e a data de devolução
+			if(dataDevolucao != null) {
+				
+				Calendar calDev = Calendar.getInstance();
+				calDev.setTime(dataDevolucao);
 
-		} catch (SQLException e){
-			Log.e(TAG, "Erro ao alterar o estoque do produto.", e);
-			return;
+				Date dataEntrega = dialog.getTxtDataEntrega().getDate();
+				Calendar calEnt = Calendar.getInstance();
+				// Se o campo não estiver preenchido, 
+				// a data de entrega vai ser a atual
+				if(dataEntrega != null)
+					calEnt.setTime(dataEntrega);
+				
+				// Se a data de devolução for maior que a data de entrega
+				if(calDev.compareTo(calEnt) > 0)
+					dias = calDev.get(Calendar.DAY_OF_YEAR) - calEnt.get(Calendar.DAY_OF_YEAR);
+			}
+			
+			dialog.getProdutoOrdemTableModel().add(new ProdutoOS(p, 1, dias, 1));
 		}
 	}
 	
-	public void adicionar (){
-		Produto p = (Produto) dialog.getCboxProdutos().getSelectedItem();
-		dialog.getProdutoOrdemTableModel().addRow(p, 1, 1);
-		dialog.getProdutoOrdemTableModel().fireTableDataChanged();
-	}
-	
-	public void excluir (){
-		if (dialog.getTabela().getSelectedRow() >= 0)
-			dialog.getProdutoOrdemTableModel().removeRow(dialog.getTabela().getSelectedRow());
+	public void excluir() {
+		int row = dialog.getTabela().getSelectedRow();
+		if (row >= 0)
+			dialog.getProdutoOrdemTableModel().remove(row);
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		if (e.getSource() == dialog.getCboxNome()){
-			
-			if (dialog.getCboxNome().getSelectedIndex() < 0)
-				limparCampos();
-			else
-				preencherCampos((Cliente) dialog.getCboxNome().getSelectedItem());			
-		}
-		
-//		if (e.getSource() == dialog.getTxtData()){
-//			dialog.getTxtData().setCaretPosition(0);
-//			//System.out.println(dialog.getTxtData().getText());
-//		}
-		
+	public void actionPerformed(ActionEvent e) {		
 		switch(e.getActionCommand()) {
 		case "Adicionar":
 			adicionar();
@@ -336,28 +254,10 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		double valor = 0 ;
-		for (int i = 0 ; i < dialog.getProdutoOrdemTableModel().getRowCount(); i++){			
-			valor += Double.parseDouble(dialog.getProdutoOrdemTableModel().getValueAt(i, 5).toString());
-		}
-		total = valor;
-		
-		//impede que o campo "total" tenha dízimas periódicas
-		//permite apenas dois dígitos após a vírgula
-		String real = Double.toString(total);
-		real = real.substring(0, real.indexOf("."));
-		
-		String centavos = Double.toString(total);
-		centavos = centavos.substring(centavos.indexOf(".")+1);
-		
-		if (centavos.length() > 2)
-			centavos = centavos.substring(0, 2);
-		else
-		if (centavos.length() < 2)
-			centavos += "0";
-		
-		total = Double.parseDouble(real + "." + centavos);
-		dialog.getTxtTotal().setText("R$" + real + "." + centavos);
+		double total = 0;
+		for(ProdutoOS p : dialog.getProdutoOrdemTableModel().getRows())
+			total += p.getTotal();
+		dialog.getTxtTotal().setValue(total);
 	}
 
 }

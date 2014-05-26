@@ -39,8 +39,8 @@ public class EditarCliente implements ActionListener {
 		dialog = new DialogCliente(Main.getFrame(), "Editar cliente");
 		dialog.getTxtNome().setText(cliente.getNome());
 		dialog.getTxtRg().setText(cliente.getRg());
-		dialog.getTxtCpf().setText(cliente.getCpf());
-		dialog.getTxtTelefone().setText(cliente.getTelefone());
+		dialog.getTxtCpf().setValue(cliente.getCpf());
+		dialog.getTxtTelefone().setValue(cliente.getTelefone());
 		dialog.getTxtEmail().setText(cliente.getEmail());
 		
 		endereco = ControladorEndereco.getEndereco(cliente.getIdEndereco());

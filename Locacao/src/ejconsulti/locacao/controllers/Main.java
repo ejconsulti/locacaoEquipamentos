@@ -66,15 +66,15 @@ public class Main implements ActionListener {
 			return;
 		
 		
-		Login login = new Login(frame);
-		// Se acesso permitido
-		if(login.autorizar()) {
-			lembretePagamento();
-			lembreteFerias();
-		} else {
-			// Se não, sair do sistema
-			System.exit(1);
-		}
+//		Login login = new Login(frame);
+//		// Se acesso permitido
+//		if(login.autorizar()) {
+//			lembretePagamento();
+//			lembreteFerias();
+//		} else {
+//			// Se não, sair do sistema
+//			System.exit(1);
+//		}
 	}
 
 	private void addEvents() {
@@ -121,7 +121,7 @@ public class Main implements ActionListener {
 					Funcionario.PREVISAO_FERIAS+" < ?", new Object[]{date.toString()}, null, Funcionario.NOME);
 
 			if(rs.next()) {
-				StringBuilder strFunc = new StringBuilder("Fï¿½rias vencendo ou vencidas: \n");
+				StringBuilder strFunc = new StringBuilder("Férias vencendo ou vencidas: \n");
 				strFunc.append(rs.getString(Funcionario.NOME));
 				while(rs.next()) {
 					strFunc.append('\n');

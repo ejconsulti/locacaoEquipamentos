@@ -243,6 +243,7 @@ public class ControladorEndereco {
 		if(!endereco.getCidade().getNome().equals(nomeCidade) 
 				|| uf.getId() != endereco.getCidade().getIdUf()) {
 			
+			idCidade = -1;
 			// Buscar cidade
 			try {
 				ResultSet rs = db.select(new String[] {Cidade.ID}, Cidade.TABLE, 
@@ -276,6 +277,7 @@ public class ControladorEndereco {
 		if(!endereco.getBairro().getNome().equals(nomeBairro)
 				|| idCidade != endereco.getCidade().getId()) {
 			
+			idBairro = -1;
 			// Buscar bairro
 			try {
 				ResultSet rs = db.select(new String[] {Bairro.ID}, Bairro.TABLE, 
@@ -308,7 +310,8 @@ public class ControladorEndereco {
 		// Verificase foi alterado a rua ou o bairro
 		if(!endereco.getRua().getNome().equals(nomeRua)
 				|| idBairro != endereco.getBairro().getId()) {
-
+			
+			idRua = -1;
 			// Buscar rua
 			try {
 				ResultSet rs = db.select(new String[] {Rua.ID}, Rua.TABLE, 

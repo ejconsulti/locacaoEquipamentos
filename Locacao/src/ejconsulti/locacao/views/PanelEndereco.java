@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.JTextComponent;
 
 import net.miginfocom.swing.MigLayout;
 import ejconsulti.locacao.models.Uf;
@@ -137,6 +138,15 @@ public class PanelEndereco extends JPanel {
 		for(Component c : getComponents())
 			c.setEnabled(enabled);
 		super.setEnabled(enabled);
+	}
+	
+	public void setEditable(boolean editable) {
+		for(Component c : getComponents()) {
+			if(c instanceof JTextComponent)
+				((JTextComponent) c).setEditable(editable);
+			else
+				c.setEnabled(false);
+		}
 	}
 
 }
