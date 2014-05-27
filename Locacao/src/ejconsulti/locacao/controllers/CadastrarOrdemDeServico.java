@@ -155,7 +155,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 		}
 		Date data = dialog.getTxtDataEntrega().getDate();
 		if(data == null) {
-			JOptionPane.showMessageDialog(null, "Preencha o campo 'Data de entrega'.");
+			JOptionPane.showMessageDialog(null, "Preencha corretamente o campo 'Data de entrega'.");
 			dialog.getTxtDataEntrega().requestFocus();
 			return;
 		}
