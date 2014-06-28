@@ -7,9 +7,9 @@ import eso.table.TableColumn;
 import eso.table.TableModel;
 
 /**
- * Modelo de tabela da ordem de serviço
+ * Modelo de tabela da ordem de serviï¿½o
  * 
- * @author Érico Jr
+ * @author ï¿½rico Jr
  *
  */
 public class OrdemDeServicoTableModel extends TableModel<OrdemDeServico> {

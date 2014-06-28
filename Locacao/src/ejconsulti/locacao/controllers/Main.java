@@ -35,7 +35,7 @@ public class Main implements ActionListener {
 			LookAndFeel look = new NimbusLookAndFeel();
 			UIManager.setLookAndFeel(look);
 		} catch (Exception ex) {
-			Log.w(TAG, "Aparência não suportada", ex);
+			Log.w(TAG, "Aparï¿½ncia nï¿½o suportada", ex);
 		}
 		
 		try{
@@ -57,11 +57,11 @@ public class Main implements ActionListener {
 		
 		frame.setVisible(true);
 		
-		// Se não existir um banco de dados configurado
+		// Se nï¿½o existir um banco de dados configurado
 		if(DAO.getDatabase() == null)
-			new Configuracoes(frame); // Inicia as configurações
+			new Configuracoes(frame); // Inicia as configuraï¿½ï¿½es
 
-		// Se ainda não existir um banco de dados configurado
+		// Se ainda nï¿½o existir um banco de dados configurado
 		if(DAO.getDatabase() == null)
 			return;
 		
@@ -72,7 +72,7 @@ public class Main implements ActionListener {
 //			lembretePagamento();
 //			lembreteFerias();
 //		} else {
-//			// Se não, sair do sistema
+//			// Se nï¿½o, sair do sistema
 //			System.exit(1);
 //		}
 	}
@@ -85,6 +85,12 @@ public class Main implements ActionListener {
 		frame.getBtnFuncionarios().addActionListener(this);
 		
 		frame.getBtnOrdemdeServico().addActionListener(this);
+		
+		frame.getBtnDespesas().addActionListener(this);
+		
+		frame.getBtnRecebimentos().addActionListener(this);
+		
+		frame.getBtnCaixa().addActionListener(this);
 	}
 
 	public void lembretePagamento() {
@@ -121,17 +127,17 @@ public class Main implements ActionListener {
 					Funcionario.PREVISAO_FERIAS+" < ?", new Object[]{date.toString()}, null, Funcionario.NOME);
 
 			if(rs.next()) {
-				StringBuilder strFunc = new StringBuilder("Férias vencendo ou vencidas: \n");
+				StringBuilder strFunc = new StringBuilder("Fï¿½rias vencendo ou vencidas: \n");
 				strFunc.append(rs.getString(Funcionario.NOME));
 				while(rs.next()) {
 					strFunc.append('\n');
 					strFunc.append(rs.getString(Funcionario.NOME));
 				}
 
-				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de férias", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de fï¿½rias", JOptionPane.INFORMATION_MESSAGE);
 			}
 		} catch (SQLException e) {
-			Log.e(TAG, "Erro ao carregar lembrete de fÃ©rias.", e);
+			Log.e(TAG, "Erro ao carregar lembrete de fï¿½ï¿½rias.", e);
 		}
 	}
 
@@ -146,13 +152,25 @@ public class Main implements ActionListener {
 			ConsultarProdutos consProdutos = new ConsultarProdutos();
 			frame.setPane(consProdutos.getContentPanel());
 			break;
-		case "Funcionários":
+		case "FuncionÃ¡rios":
 			ConsultarFuncionarios consFuncionarios = new ConsultarFuncionarios();
 			frame.setPane(consFuncionarios.getContentPanel());
 			break;
-		case "Ordem de Serviço":
+		case "Ordem de Serviï¿½o":
 			ConsultarOrdemDeServico consOrdemDeServico = new ConsultarOrdemDeServico();
 			frame.setPane(consOrdemDeServico.getContentPanel());
+			break;
+		case "Despesas":
+			ConsultarDespesas consDespesas = new ConsultarDespesas();
+			frame.setPane(consDespesas.getContentPanel());
+			break;
+		case "Recebimentos":
+			ConsultarRecebimentos consRecebimentos = new ConsultarRecebimentos();
+			frame.setPane(consRecebimentos.getContentPanel());
+			break;
+		case "Caixa":
+			ConsultarCaixa consCaixa = new ConsultarCaixa();
+			frame.setPane(consCaixa.getContentPanel());
 			break;
 		}
 	}
