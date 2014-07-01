@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import eso.database.ContentValues;
 
 /**
- * Ordem de Serviço
+ * Ordem de Serviï¿½ï¿½ï¿½o
  * 
- * @author Érico Jr
+ * @author ï¿½ï¿½ï¿½rico Jr
  *
  */
 public class OrdemDeServico {
@@ -21,6 +21,7 @@ public class OrdemDeServico {
 	public static final String DATA_ENTREGA = "dataEntrega";
 	public static final String TOTAL = "total";
 	public static final String STATUS = "status";
+	public static final String RECEBIMENTO = "recebimento";
 	
 	private Integer id;
 	private Integer idCliente;
@@ -28,6 +29,7 @@ public class OrdemDeServico {
 	private Date data;
 	private Double valor;
 	private Status status;
+	private Integer recebimento;
 	
 	private String nomeCliente;
 	
@@ -35,13 +37,14 @@ public class OrdemDeServico {
 
 	public OrdemDeServico(Integer id, Integer idCliente,
 			Integer idEnderecoEntrega, Date data,
-			Double valor, Status status) {
+			Double valor, Status status, Integer recebimento) {
 		this.id = id;
 		this.idCliente = idCliente;
 		this.idEnderecoEntrega = idEnderecoEntrega;
 		this.data = data;
 		this.valor = valor;
 		this.status = status;
+		this.recebimento = recebimento;
 	}
 
 	public Integer getId() {
@@ -101,6 +104,14 @@ public class OrdemDeServico {
 		this.nomeCliente = nomeCliente;
 	}
 	
+	public Integer getRecebimento() {
+		return recebimento;
+	}
+	
+	public void setRecebimento(Integer recebimento) {
+		this.recebimento = recebimento; 
+	}
+	
 	public int hashCode() {
 		return id != null ? id : -1;
 	}
@@ -114,13 +125,18 @@ public class OrdemDeServico {
 		return false;
 	}
 	
+	@Override
+	public String toString() {
+		return "" + id;
+	}
+	
 	public static OrdemDeServico rsToObject(ResultSet rs) throws SQLException {
 		return new OrdemDeServico(rs.getInt(ID), rs.getInt(ID_CLIENTE), rs.getInt(ID_ENDERECO_ENTREGA)
-				, ContentValues.getAsDate(rs.getString(DATA_ENTREGA)), rs.getDouble(TOTAL), Status.valueOf(rs.getInt(STATUS)));
+				, ContentValues.getAsDate(rs.getString(DATA_ENTREGA)), rs.getDouble(TOTAL), Status.valueOf(rs.getInt(STATUS)), rs.getInt(RECEBIMENTO));
 	}
 	
 	/**
-	 * Status da Ordem de Serviço
+	 * Status da Ordem de Serviï¿½ï¿½ï¿½o
 	 * 
 	 * @author Edison Jr
 	 *
@@ -128,7 +144,7 @@ public class OrdemDeServico {
 	public static enum Status {
 
 		Cancelada (-1, "Cancelada", Color.RED),
-		Concluida (0, "Concluída", Color.BLUE),
+		Concluida (0, "Concluï¿½ï¿½ï¿½da", Color.BLUE),
 		EmAndamento (1, "Em Andamento", Color.BLACK);
 		
 		private int id;

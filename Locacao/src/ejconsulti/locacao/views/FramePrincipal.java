@@ -25,9 +25,12 @@ public class FramePrincipal extends JFrame {
 	private JToggleButton btnProdutos;
 	private JToggleButton btnFuncionarios;
 	private JToggleButton btnOrdemdeServico;
+	private JToggleButton btnDespesas;
+	private JToggleButton btnRecebimentos;
+	private JToggleButton btnCaixa;
 
 	public FramePrincipal() {
-		super("Locação de Equipamentos");
+		super("Locaï¿½ï¿½o de Equipamentos");
 		
 		initialize();
 	}
@@ -64,9 +67,22 @@ public class FramePrincipal extends JFrame {
 		headerPanel.add(btnFuncionarios);
 		btnGroup.add(btnFuncionarios);
 		
-		btnOrdemdeServico = new JToggleButton("Ordem de Serviço");
+		btnOrdemdeServico = new JToggleButton("Ordem de Serviï¿½o");
 		headerPanel.add(btnOrdemdeServico);
 		btnGroup.add(btnOrdemdeServico);
+		
+		btnDespesas = new JToggleButton("Despesas");
+		headerPanel.add(btnDespesas);
+		btnGroup.add(btnDespesas);
+		
+		btnRecebimentos = new JToggleButton("Recebimentos");
+		headerPanel.add(btnRecebimentos);
+		btnGroup.add(btnRecebimentos);
+		
+		btnCaixa = new JToggleButton("Caixa");
+		headerPanel.add(btnCaixa);
+		btnGroup.add(btnCaixa);
+		
 	}
 
 	public void setPane(Container container) {
@@ -91,5 +107,17 @@ public class FramePrincipal extends JFrame {
 	
 	public JToggleButton getBtnOrdemdeServico() {
 		return btnOrdemdeServico;
+	}
+	
+	public JToggleButton getBtnDespesas() {
+		return btnDespesas;
+	}
+	
+	public JToggleButton getBtnRecebimentos() {
+		return btnRecebimentos;
+	}
+	
+	public JToggleButton getBtnCaixa() {
+		return btnCaixa;
 	}
 }

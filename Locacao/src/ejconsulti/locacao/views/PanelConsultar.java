@@ -13,7 +13,7 @@ import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.StatusCellRenderer;
 
 /**
- * Painel genérico para consulta, adição, edição e exclusão
+ * Painel genï¿½rico para consulta, adiï¿½ï¿½o, ediï¿½ï¿½o e exclusï¿½o
  * 
  * @author Edison Jr
  *
@@ -28,6 +28,8 @@ public class PanelConsultar extends JPanel {
 	private JButton btnExcluir;
 	private JTextField txtPesquisar;
 	private JButton btnPesquisar;
+	private JPanel headerPanel;
+	private JButton btnImprimir;
 	
 	public PanelConsultar() {
 		super();
@@ -44,9 +46,9 @@ public class PanelConsultar extends JPanel {
 		table.setDefaultRenderer(Status.class, new StatusCellRenderer());
 		scrollPane.setViewportView(table);
 		
-		JPanel headerPanel = new JPanel();
+		headerPanel = new JPanel();
 		add(headerPanel, BorderLayout.NORTH);
-		headerPanel.setLayout(new MigLayout("", "[][][][grow][][]", "[]"));
+		headerPanel.setLayout(new MigLayout("", "[][][][][][][][][][][][][grow][][]", "[]"));
 		
 		btnAdicionar = new JButton("Adicionar");
 		headerPanel.add(btnAdicionar, "cell 0 0");
@@ -57,11 +59,14 @@ public class PanelConsultar extends JPanel {
 		btnExcluir = new JButton("Excluir");
 		headerPanel.add(btnExcluir, "cell 2 0");
 		
+		btnImprimir = new JButton("Imprimir");
+		headerPanel.add(btnImprimir, "cell 3 0");
+		
 		txtPesquisar = new JTextField(15);
-		headerPanel.add(txtPesquisar, "cell 4 0");
+		headerPanel.add(txtPesquisar, "cell 13 0");
 		
 		btnPesquisar = new JButton("Pesquisar");
-		headerPanel.add(btnPesquisar, "cell 5 0");
+		headerPanel.add(btnPesquisar, "cell 14 0");
 		
 	}
 	
@@ -87,6 +92,14 @@ public class PanelConsultar extends JPanel {
 	
 	public JButton getBtnPesquisar() {
 		return btnPesquisar;
+	}
+	
+	public JPanel getHeaderPanel() {
+		return headerPanel;
+	}
+	
+	public JButton getBtnImprimir() {
+		return btnImprimir;
 	}
 	
 }

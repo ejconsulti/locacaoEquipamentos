@@ -21,9 +21,9 @@ import eso.database.ContentValues;
 import eso.utils.Log;
 
 /**
- * Visualizar Ordem de Serviço
+ * Visualizar Ordem de Serviï¿½o
  * 
- * @author Érico Jr
+ * @author ï¿½rico Jr
  * @author Edison Jr
  *
  */
@@ -39,7 +39,7 @@ public class EditarOrdemDeServico implements ActionListener {
 	}
 
 	private void initialize(OrdemDeServico ordem) {
-		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviço");
+		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviï¿½o");
 		this.ordem = ordem;
 
 		addEvents();
@@ -70,7 +70,7 @@ public class EditarOrdemDeServico implements ActionListener {
 	private void addProdutosTabela(OrdemDeServico ordem) {
 		ResultSet rs = null;
 		try {
-			//Carrega produtos da ordem de serviço
+			//Carrega produtos da ordem de serviï¿½o
 			rs = DAO.getDatabase().select(null, ProdutoOS.VIEW, ProdutoOS.ID_ORDEMSERVICO+" = ?", new Object[]{ordem.getId()}, null, null);
 
 			List<ProdutoOS> list = new ArrayList<ProdutoOS>();
@@ -127,9 +127,9 @@ public class EditarOrdemDeServico implements ActionListener {
 	}
 
 	private void salvar() {
-		//altera a data da ordem de serviço e dos produtos
+		//altera a data da ordem de serviï¿½o e dos produtos
 
-		//		 Verificar campos obrigatórios
+		//		 Verificar campos obrigatï¿½rios
 		Date data = dialog.getTxtDataEntrega().getDate();
 		if(data == null) {
 			JOptionPane.showMessageDialog(null, "Preencha o campo 'Data de entrega'.");
@@ -142,7 +142,7 @@ public class EditarOrdemDeServico implements ActionListener {
 				values.put(OrdemDeServico.DATA_ENTREGA, data);
 				DAO.getDatabase().update(OrdemDeServico.TABLE, values, OrdemDeServico.ID + " = ?", new Object[]{ordem.getId()});
 			} catch (SQLException e) {
-				Log.e(TAG, "Erro ao alterar ordem de serviço.");
+				Log.e(TAG, "Erro ao alterar ordem de serviï¿½o.");
 				return;
 			}
 		}
@@ -152,18 +152,19 @@ public class EditarOrdemDeServico implements ActionListener {
 	}
 
 	private void cancelar() {
-		int option = JOptionPane.showConfirmDialog(dialog, "Deseja realmente cancelar Ordem de Serviço?", 
-				"Cancelar Ordem de Serviço", 
+		int option = JOptionPane.showConfirmDialog(dialog, "Deseja realmente cancelar Ordem de Serviï¿½o?", 
+				"Cancelar Ordem de Serviï¿½o", 
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		
 		if(option == JOptionPane.YES_OPTION) {
 			try {
-				//altera o status da ordem de serviço
+				//altera o status da ordem de serviï¿½o
 				ContentValues contValues = new ContentValues();
 				contValues.put(OrdemDeServico.STATUS, Status.Cancelada.getId());
+				contValues.put(OrdemDeServico.RECEBIMENTO, 1);
 				DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});
 			} catch (Exception e) {
-				Log.e(TAG, "Erro ao cancelar ordem de serviço.", e);
+				Log.e(TAG, "Erro ao cancelar ordem de serviï¿½o.", e);
 			}
 
 			Main.getFrame().getBtnOrdemdeServico().doClick();

@@ -25,9 +25,9 @@ import eso.utils.ComponentUtils;
 import eso.utils.Log;
 
 /**
- * Cadastrar Ordem de Serviço
+ * Cadastrar Ordem de Serviï¿½o
  * 
- * @author Érico Jr
+ * @author ï¿½rico Jr
  * @author Edison Junior
  *
  */
@@ -44,7 +44,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	}
 	
 	private void initialize() {
-		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviço");
+		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviï¿½o");
 		dialog.getTxtDataEntrega().setDate(new Date(System.currentTimeMillis()));
 		
 		addEvents();
@@ -141,7 +141,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	
 	private void cadastrar() {
 		
-//		 Verificar campos obrigatórios
+//		 Verificar campos obrigatï¿½rios
 		
 		if (dialog.getCboxNome().getSelectedIndex() <= 0){
 			JOptionPane.showMessageDialog(null, "Selecione um Cliente.");
@@ -162,17 +162,18 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 		
 		int idOrdemServicoAtual = -1;
 		try {
-			//Cadastra a ordem de serviço
+			//Cadastra a ordem de serviï¿½o
 			ContentValues values = new ContentValues();
 			values.put(OrdemDeServico.ID_CLIENTE, cliente.getId());
 			values.put(OrdemDeServico.ID_ENDERECO_ENTREGA, idEndereco);
 			values.put(OrdemDeServico.DATA_ENTREGA, data);
 			values.put(OrdemDeServico.TOTAL, dialog.getTxtTotal().doubleValue());
 			values.put(OrdemDeServico.STATUS, Status.EmAndamento.getId());
+			values.put(OrdemDeServico.RECEBIMENTO, 0);
 			
 			idOrdemServicoAtual = DAO.getDatabase().insert(OrdemDeServico.TABLE, values);
 		} catch (SQLException e) {
-			Log.e(TAG, "Erro ao cadastrar Ordem de Serviço.", e);
+			Log.e(TAG, "Erro ao cadastrar Ordem de Serviï¿½o.", e);
 			return;
 		}
 		
@@ -193,7 +194,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 			}
 		}
 		
-		JOptionPane.showMessageDialog(dialog, "Ordem de Serviço cadastrada!");
+		JOptionPane.showMessageDialog(dialog, "Ordem de Serviï¿½o cadastrada!");
 		Main.getFrame().getBtnOrdemdeServico().doClick();
 		
 		dialog.dispose();
@@ -205,8 +206,8 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 			int dias = 1;
 			
 			Date dataDevolucao = dialog.getTxtDataDevolucao().getDate();
-			// Se a data de devolução não for vazia, 
-			// os dias serão a diferença em dias entre a data de entrega e a data de devolução
+			// Se a data de devoluï¿½ï¿½o nï¿½o for vazia, 
+			// os dias serï¿½o a diferenï¿½a em dias entre a data de entrega e a data de devoluï¿½ï¿½o
 			if(dataDevolucao != null) {
 				
 				Calendar calDev = Calendar.getInstance();
@@ -214,12 +215,12 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 
 				Date dataEntrega = dialog.getTxtDataEntrega().getDate();
 				Calendar calEnt = Calendar.getInstance();
-				// Se o campo não estiver preenchido, 
+				// Se o campo nï¿½o estiver preenchido, 
 				// a data de entrega vai ser a atual
 				if(dataEntrega != null)
 					calEnt.setTime(dataEntrega);
 				
-				// Se a data de devolução for maior que a data de entrega
+				// Se a data de devoluï¿½ï¿½o for maior que a data de entrega
 				if(calDev.compareTo(calEnt) > 0)
 					dias = calDev.get(Calendar.DAY_OF_YEAR) - calEnt.get(Calendar.DAY_OF_YEAR);
 			}
