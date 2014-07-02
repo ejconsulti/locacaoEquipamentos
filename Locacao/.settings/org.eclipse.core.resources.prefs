@@ -2,6 +2,11 @@ eclipse.preferences.version=1
 encoding//src/ejconsulti/locacao/controllers/CadastrarDespesa.java=UTF-8
 encoding//src/ejconsulti/locacao/controllers/CadastrarOrdemDeServico.java=UTF-8
 encoding//src/ejconsulti/locacao/controllers/CadastrarRecebimento.java=UTF-8
+<<<<<<< HEAD
+=======
+encoding//src/ejconsulti/locacao/controllers/ConsultarCaixa.java=UTF-8
+encoding//src/ejconsulti/locacao/controllers/ConsultarOrdemDeServico.java=UTF-8
+>>>>>>> d38bde6fa6113d955d3b2db53d138f69376196d3
 encoding//src/ejconsulti/locacao/controllers/ConsultarRecebimentos.java=UTF-8
 encoding//src/ejconsulti/locacao/controllers/EditarDespesa.java=UTF-8
 encoding//src/ejconsulti/locacao/controllers/EditarOrdemDeServico.java=UTF-8
@@ -16,6 +21,10 @@ encoding//src/ejconsulti/locacao/models/StatusRecebimento.java=UTF-8
 encoding//src/ejconsulti/locacao/models/TipoDespesa.java=UTF-8
 encoding//src/ejconsulti/locacao/models/TipoRecebimento.java=UTF-8
 encoding//src/ejconsulti/locacao/views/DialogCaixa.java=UTF-8
+<<<<<<< HEAD
+=======
+encoding//src/ejconsulti/locacao/views/DialogCaixaPeriodo.java=UTF-8
+>>>>>>> d38bde6fa6113d955d3b2db53d138f69376196d3
 encoding//src/ejconsulti/locacao/views/DialogDespesa.java=UTF-8
 encoding//src/ejconsulti/locacao/views/DialogRecebimento.java=UTF-8
 encoding//src/ejconsulti/locacao/views/FramePrincipal.java=UTF-8
