@@ -16,7 +16,7 @@ public class ProdutoOSTableModel extends TableModel<ProdutoOS> {
 	public static final TableColumn NOME = new TableColumn("Nome", String.class, false);
     public static final TableColumn VALOR_DIARIO = new TableColumn("Valor diário", String.class, false);
     public static final TableColumn VALOR_MENSAL = new TableColumn("Valor mensal", String.class, false);
-    public static final TableColumn QUANTIDADE = new TableColumn("Quantiade", Integer.class, true);
+    public static final TableColumn QUANTIDADE = new TableColumn("Quantidade", Integer.class, true);
     public static final TableColumn DIAS = new TableColumn("Dias", Integer.class, true);
     public static final TableColumn TOTAL = new TableColumn("Total", String.class, false);
     

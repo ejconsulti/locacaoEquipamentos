@@ -28,9 +28,10 @@ public class FramePrincipal extends JFrame {
 	private JToggleButton btnDespesas;
 	private JToggleButton btnRecebimentos;
 	private JToggleButton btnCaixa;
-
+	private JToggleButton btnRecibos;
+	
 	public FramePrincipal() {
-		super("Loca��o de Equipamentos");
+		super("Locaço de Equipamentos");
 		
 		initialize();
 	}
@@ -67,9 +68,13 @@ public class FramePrincipal extends JFrame {
 		headerPanel.add(btnFuncionarios);
 		btnGroup.add(btnFuncionarios);
 		
-		btnOrdemdeServico = new JToggleButton("Ordem de Servi�o");
+		btnOrdemdeServico = new JToggleButton("Ordem de Serviço");
 		headerPanel.add(btnOrdemdeServico);
 		btnGroup.add(btnOrdemdeServico);
+		
+		btnRecibos = new JToggleButton("Recibos");
+		headerPanel.add(btnRecibos);
+		btnGroup.add(btnRecibos);
 		
 		btnDespesas = new JToggleButton("Despesas");
 		headerPanel.add(btnDespesas);
@@ -107,6 +112,10 @@ public class FramePrincipal extends JFrame {
 	
 	public JToggleButton getBtnOrdemdeServico() {
 		return btnOrdemdeServico;
+	}
+	
+	public JToggleButton getBtnRecibos() {
+		return btnRecibos;
 	}
 	
 	public JToggleButton getBtnDespesas() {

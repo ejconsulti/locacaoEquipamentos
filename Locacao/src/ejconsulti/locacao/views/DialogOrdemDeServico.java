@@ -78,7 +78,7 @@ public class DialogOrdemDeServico extends JDialog{
 		contentPanel.add(lblTelefone, "flowx,cell 0 1");
 
 		txtTelefone = new JFormattedTextField(Text.buildMask("(##)####-####"));
-		txtTelefone.setColumns(8);
+		txtTelefone.setColumns(9);
 		txtTelefone.setEditable(false);
 		contentPanel.add(txtTelefone, "cell 1 1");
 
@@ -106,12 +106,14 @@ public class DialogOrdemDeServico extends JDialog{
 		contentPanel.add(lblData, "flowx,cell 0 5 2 1,alignx center");
 
 		txtDataEntrega = new DateField();
+		txtDataEntrega.setColumns(7);
 		contentPanel.add(txtDataEntrega, "cell 0 5 2 1");
 
 		JLabel lblDataDevoluo = new JLabel("Data devolu\u00E7\u00E3o");
 		contentPanel.add(lblDataDevoluo, "cell 0 5 2 1");
 
 		txtDataDevolucao = new DateField();
+		txtDataDevolucao.setColumns(7);
 		contentPanel.add(txtDataDevolucao, "cell 0 5 2 1");
 
 		JLabel lblTotal = new JLabel("Total");

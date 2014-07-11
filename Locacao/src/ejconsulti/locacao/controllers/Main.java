@@ -86,6 +86,8 @@ public class Main implements ActionListener {
 		
 		frame.getBtnOrdemdeServico().addActionListener(this);
 		
+		frame.getBtnRecibos().addActionListener(this);
+		
 		frame.getBtnDespesas().addActionListener(this);
 		
 		frame.getBtnRecebimentos().addActionListener(this);
@@ -156,9 +158,13 @@ public class Main implements ActionListener {
 			ConsultarFuncionarios consFuncionarios = new ConsultarFuncionarios();
 			frame.setPane(consFuncionarios.getContentPanel());
 			break;
-		case "Ordem de Servi�o":
+		case "Ordem de Serviço":
 			ConsultarOrdemDeServico consOrdemDeServico = new ConsultarOrdemDeServico();
 			frame.setPane(consOrdemDeServico.getContentPanel());
+			break;
+		case "Recibos":
+			ControladorRecibos controladorRecibos = new ControladorRecibos();
+			frame.setPane(controladorRecibos.getContentPanel());
 			break;
 		case "Despesas":
 			ConsultarDespesas consDespesas = new ConsultarDespesas();

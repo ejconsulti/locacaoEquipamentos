@@ -144,8 +144,10 @@ public class OrdemDeServico {
 	public static enum Status {
 
 		Cancelada (-1, "Cancelada", Color.RED),
-		Concluida (0, "Conclu���da", Color.BLUE),
-		EmAndamento (1, "Em Andamento", Color.BLACK);
+		Concluida (0, "Concluída", Color.GREEN),
+		EmAndamento (1, "Em Andamento", Color.BLACK),
+		PagamentoPendente (2, "Pagamento Pendente", Color.ORANGE);
+		
 		
 		private int id;
 		private String descricao;
