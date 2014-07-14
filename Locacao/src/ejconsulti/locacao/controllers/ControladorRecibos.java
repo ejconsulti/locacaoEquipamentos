@@ -27,8 +27,6 @@ import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.OrdemDeServico;
 import ejconsulti.locacao.models.OrdemDeServicoTableModel;
-import ejconsulti.locacao.models.ProdutoOS;
-import ejconsulti.locacao.views.DialogReciboDevolucao;
 import ejconsulti.locacao.views.PanelRecibos;
 import eso.utils.Log;
 

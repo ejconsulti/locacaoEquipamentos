@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SingleSelectionModel;
 
 import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.StatusCellRenderer;
