@@ -44,7 +44,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	}
 	
 	private void initialize() {
-		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Servi�o");
+		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Servi\u00e7o");
 		dialog.getTxtDataEntrega().setDate(new Date(System.currentTimeMillis()));
 		
 		addEvents();
@@ -173,7 +173,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 			
 			idOrdemServicoAtual = DAO.getDatabase().insert(OrdemDeServico.TABLE, values);
 		} catch (SQLException e) {
-			Log.e(TAG, "Erro ao cadastrar Ordem de Servi�o.", e);
+			Log.e(TAG, "Erro ao cadastrar Ordem de Servi\u00e7o.", e);
 			return;
 		}
 		
@@ -194,7 +194,7 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 			}
 		}
 		
-		JOptionPane.showMessageDialog(dialog, "Ordem de Servi�o cadastrada!");
+		JOptionPane.showMessageDialog(dialog, "Ordem de Servi\u00e7o cadastrada!");
 		Main.getFrame().getBtnOrdemdeServico().doClick();
 		
 		dialog.dispose();

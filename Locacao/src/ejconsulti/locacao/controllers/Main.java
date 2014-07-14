@@ -37,7 +37,6 @@ public class Main implements ActionListener {
 		} catch (Exception ex) {
 			Log.w(TAG, "Apar�ncia n�o suportada", ex);
 		}
-		
 		try{
 			instance = new Main();
 		} catch (Exception ex){
@@ -86,6 +85,8 @@ public class Main implements ActionListener {
 		
 		frame.getBtnOrdemdeServico().addActionListener(this);
 		
+		frame.getBtnRecibos().addActionListener(this);
+		
 		frame.getBtnDespesas().addActionListener(this);
 		
 		frame.getBtnRecebimentos().addActionListener(this);
@@ -127,14 +128,14 @@ public class Main implements ActionListener {
 					Funcionario.PREVISAO_FERIAS+" < ?", new Object[]{date.toString()}, null, Funcionario.NOME);
 
 			if(rs.next()) {
-				StringBuilder strFunc = new StringBuilder("F�rias vencendo ou vencidas: \n");
+				StringBuilder strFunc = new StringBuilder("F\u00e9rias vencendo ou vencidas: \n");
 				strFunc.append(rs.getString(Funcionario.NOME));
 				while(rs.next()) {
 					strFunc.append('\n');
 					strFunc.append(rs.getString(Funcionario.NOME));
 				}
 
-				JOptionPane.showMessageDialog(frame, strFunc, "Lembrete de f�rias", JOptionPane.INFORMATION_MESSAGE);
+
 			}
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao carregar lembrete de f��rias.", e);
@@ -152,13 +153,17 @@ public class Main implements ActionListener {
 			ConsultarProdutos consProdutos = new ConsultarProdutos();
 			frame.setPane(consProdutos.getContentPanel());
 			break;
-		case "Funcionários":
+		case "Funcion\u00e1rios":
 			ConsultarFuncionarios consFuncionarios = new ConsultarFuncionarios();
 			frame.setPane(consFuncionarios.getContentPanel());
 			break;
-		case "Ordem de Servi�o":
+		case "Ordem de Servi\u00e7o":
 			ConsultarOrdemDeServico consOrdemDeServico = new ConsultarOrdemDeServico();
 			frame.setPane(consOrdemDeServico.getContentPanel());
+			break;
+		case "Recibos":
+			ControladorRecibos controladorRecibos = new ControladorRecibos();
+			frame.setPane(controladorRecibos.getContentPanel());
 			break;
 		case "Despesas":
 			ConsultarDespesas consDespesas = new ConsultarDespesas();
@@ -179,3 +184,5 @@ public class Main implements ActionListener {
 		return instance.frame;
 	}
 }
+	
+	
