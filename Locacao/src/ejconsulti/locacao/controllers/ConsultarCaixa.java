@@ -40,12 +40,12 @@ public class ConsultarCaixa implements ActionListener {
 		panel = new PanelConsultar();
 		
 		panel.getBtnAdicionar().setText("Por Dia");
-		panel.getBtnEditar().setText("Por Período");
+		panel.getBtnEditar().setText("Por PerÃ­odo");
 		panel.getBtnExcluir().setText("Hoje");
 		panel.getTxtPesquisar().setVisible(false);
 		panel.getBtnPesquisar().setVisible(false);
 		
-		JLabel lblSaldoDiaAnterior = new JLabel("Saldo total de ontem");
+		JLabel lblSaldoDiaAnterior = new JLabel("Saldo do Dia Anterior");
 		panel.getHeaderPanel().add(lblSaldoDiaAnterior, "cell 4 0");
 		
 		txtSaldoDiaAnterior = new DoubleField();
@@ -61,7 +61,7 @@ public class ConsultarCaixa implements ActionListener {
 		txtSaldoEntrada.setFocusable(false);
 		panel.getHeaderPanel().add(txtSaldoEntrada, "cell 7 0");
 		
-		JLabel lblSaldoSaida = new JLabel("Saída Total");
+		JLabel lblSaldoSaida = new JLabel("SaÃ­da Total");
 		panel.getHeaderPanel().add(lblSaldoSaida, "cell 8 0");
 		
 		txtSaldoSaida = new DoubleField();
@@ -97,12 +97,12 @@ public class ConsultarCaixa implements ActionListener {
 		sorter = new TableRowSorter<CaixaTableModel>(model);
 		panel.getTable().setRowSorter(sorter);
 		try {
+			SimpleDateFormat dia = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar calendario = Calendar.getInstance();
 			if (condition == 0) {
 				Date data = new Date();
-				SimpleDateFormat dia = new SimpleDateFormat("yyyy-MM-dd");
-				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(data.getTime()) + "' ORDER BY idCaixa", null);
-				Calendar calendario = Calendar.getInstance();
 				calendario.add(Calendar.DAY_OF_MONTH, -1);
+				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(data.getTime()) + "' ORDER BY idCaixa", null);
 				ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
 				double entrada = 0;
 				double saida = 0;
@@ -114,8 +114,18 @@ public class ConsultarCaixa implements ActionListener {
 				txtSaldoDiaAnterior.setValue(entrada - saida);
 			}
 			else if (condition == 1) {
-				Date data = dialog.getTxtDataInicio().getDate();
-				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + data + "' ORDER BY idCaixa", null);
+				calendario.setTime(dialog.getTxtDataInicio().getDate());
+				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dialog.getTxtDataInicio().getDate() + "' ORDER BY idCaixa", null);
+				calendario.add(Calendar.DAY_OF_MONTH, -1);
+				ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
+				double entrada = 0;
+				double saida = 0;
+				while (rs2.next()) {
+					Caixa c = Caixa.rsToObject(rs2);
+					entrada += c.getValorEntrada();
+					saida += c.getValorSaida();
+				}
+				txtSaldoDiaAnterior.setValue(entrada - saida);
 			}
 			else if (condition == 2) {
 				Date data1 = dialog.getTxtDataInicio().getDate();
@@ -133,14 +143,13 @@ public class ConsultarCaixa implements ActionListener {
 			txtSaldoEntrada.setValue(entrada2);
 			txtSaldoSaida.setValue(saida2);
 			txtSaldoTotal.setValue(entrada2 - saida2);
-	
 		} catch (SQLException ex) {
 			if (condition == 0)
 				Log.e(TAG, "Erro ao carregar o caixa", ex);
 			else if (condition == 1)
 				JOptionPane.showMessageDialog(dialog, "Erro ao carregar o caixa do dia.");
 			else if (condition == 2)
-				JOptionPane.showMessageDialog(dialog, "Erro ao carregar o caixa do período.");
+				JOptionPane.showMessageDialog(dialog, "Erro ao carregar o caixa do perÃ­odo.");
 		} finally {
 			if(rs != null) {
 				try {
@@ -167,7 +176,7 @@ public class ConsultarCaixa implements ActionListener {
 	}
 	
 	public void consultarPeriodo() {
-		dialog = new DialogCaixa(Main.getFrame(), "Pesquisar por Período");
+		dialog = new DialogCaixa(Main.getFrame(), "Pesquisar por PerÃ­odo");
 		dialog.setVisible(true);
 		dialog.getBtnBuscar().addActionListener(new ActionListener() {
 			@Override
@@ -184,7 +193,7 @@ public class ConsultarCaixa implements ActionListener {
 		case "Por Dia":
 			consultarDia();
 			break;
-		case "Por Período":
+		case "Por PerÃ­odo":
 			consultarPeriodo();
 			break;
 		case "Hoje":

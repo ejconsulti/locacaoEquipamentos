@@ -27,6 +27,7 @@ import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.OrdemDeServico;
 import ejconsulti.locacao.models.OrdemDeServicoTableModel;
+import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.views.DialogReciboDevolucao;
 import ejconsulti.locacao.views.PanelRecibos;
 import eso.utils.Log;
@@ -178,10 +179,12 @@ public class ControladorRecibos implements ActionListener {
 
 				o = model.get(index);
 				
-				if (o.getStatus() == OrdemDeServico.Status.Cancelada || o.getStatus() == OrdemDeServico.Status.PagamentoPendente)
+				if (o.getStatus() == OrdemDeServico.Status.Cancelada)
 					return;
 				
-				new GerarReciboDevolucao(o);
+				if (o.getStatus() == OrdemDeServico.Status.EmAndamento)
+					new DevolverProdutos(o);
+
 				break;
 		}
 	}

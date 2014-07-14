@@ -55,14 +55,24 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				ResultSet rs = null;
 				try {
-					ResultSet rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.ID + " = " + dialog.getJcbOrdemServico().getSelectedItem(), null, null, null);
+					rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.ID + " = " + dialog.getJcbOrdemServico().getSelectedItem(), null, null, null);
 					OrdemDeServico ordem = OrdemDeServico.rsToObject(rs);
 					dialog.getTxtQuantidadeTotal().setValue(ordem.getValor());
 					dialog.getTxtQuantidadeTotal().setFocusable(false);
 				}
 				catch (SQLException ex) {
 					JOptionPane.showMessageDialog(dialog, "ERRO!");
+				}
+				finally {
+					if(rs != null) {
+						try {
+							rs.close();
+						} catch (SQLException ex) {
+							ex.printStackTrace();
+						}
+					}
 				}
 			}
 		});
@@ -149,6 +159,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao cadastrar recebimento");
 			JOptionPane.showMessageDialog(dialog, e.getMessage());
+			e.printStackTrace();
 			return;
 		}
 		

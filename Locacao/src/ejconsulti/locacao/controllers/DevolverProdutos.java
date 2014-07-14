@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -23,14 +24,14 @@ import ejconsulti.locacao.views.DialogReciboDevolucao;
 import eso.database.ContentValues;
 import eso.utils.Log;
 
-public class GerarReciboDevolucao implements ActionListener, TableModelListener{
-	public static final String TAG = GerarReciboDevolucao.class.getSimpleName();
+public class DevolverProdutos implements ActionListener, TableModelListener{
+	public static final String TAG = DevolverProdutos.class.getSimpleName();
 
 	private DialogReciboDevolucao dialog;
 
 	private OrdemDeServico ordem;
 
-	public GerarReciboDevolucao(OrdemDeServico ordem) {
+	public DevolverProdutos(OrdemDeServico ordem) {
 		initialize(ordem);
 	}
 
@@ -146,12 +147,13 @@ public class GerarReciboDevolucao implements ActionListener, TableModelListener{
 		for (int i = 0; i < row; i++){
 			try {
 				//altera o status dos produtos locados
+				ProdutoOS p = dialog.getProdutoOrdemTableModel().get(i);
 				ContentValues contValues = new ContentValues();
 				contValues.put(ProdutoOS.LOCADO, 0);
-				Produto p = dialog.getProdutoOrdemTableModel().get(i);
-				DAO.getDatabase().update(ProdutoOS.TABLE, contValues, Produto.ID+" = ?", new Object[]{p.getId()});
+				contValues.put(ProdutoOS.DATA_DEVOLUCAO, new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()).toString());
+				DAO.getDatabase().update(ProdutoOS.TABLE, contValues, ProdutoOS.ID+" = ? and " + ProdutoOS.ID_ORDEMSERVICO+" = ?", new Object[]{p.getId(), ordem.getId()});
 			} catch (Exception e) {
-				Log.e(TAG, "Erro ao cancelar ordem de serviçoo na linha "+i, e);
+				Log.e(TAG, "Erro ao Devolver produtos ", e);
 			}
 		}
 		
@@ -159,13 +161,10 @@ public class GerarReciboDevolucao implements ActionListener, TableModelListener{
 		//Se não, altera o status para Pagamento Pendente
 		ResultSet rs = null;
 		try {
-			rs = DAO.getDatabase().executeQuery("SELECT * FROM ordemservico as o, produtoslocados as p WHERE o.[IDORDEMSERVICO] = ? AND p.[LOCADO] = 0", new Object[]{ordem.getId()});
-			int recebimento = rs.getInt(OrdemDeServico.RECEBIMENTO);
+			rs = DAO.getDatabase().executeQuery("SELECT * FROM v_produtoslocados WHERE IDORDEMSERVICO = ? AND LOCADO = 1", new Object[]{ordem.getId()});
 			
-			if (rs.next()){
-				rs.close();
-				
-				if (recebimento == 0){
+			if (!rs.next()){
+				if (ordem.getRecebimento() == 0){
 					ContentValues contValues = new ContentValues();
 					contValues.put(OrdemDeServico.STATUS, Status.PagamentoPendente.getId());
 					DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});
@@ -178,7 +177,7 @@ public class GerarReciboDevolucao implements ActionListener, TableModelListener{
 			}
 
 		} catch (SQLException ex) {
-			Log.e(TAG, "Erro ao adicionar produto", ex);
+			Log.e(TAG, "Erro ao devolver produtos", ex);
 		} finally {
 			if(rs != null) {
 				try {
@@ -186,6 +185,9 @@ public class GerarReciboDevolucao implements ActionListener, TableModelListener{
 				} catch (SQLException ex) {}
 			}
 		}
+		
+		Main.getFrame().getBtnRecibos().doClick();
+		new GerarReciboDevolucao(ordem, dialog.getProdutoOrdemTableModel().getRows());
 		
 		dialog.dispose();
 	}

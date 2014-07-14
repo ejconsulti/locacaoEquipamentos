@@ -44,6 +44,8 @@ public class GerarReciboEntrega {
 	OrdemDeServico ordem = null;
 	PdfWriter write;
 	Cliente cliente = null;
+	String pathRecibo;
+	String pathLogo;
 	ArrayList<Produto> produtos = new ArrayList<Produto>();
 	ArrayList<Date> datas_entrega = new ArrayList<Date>();
 	ArrayList<Integer> quantidades = new ArrayList<Integer>();
@@ -53,6 +55,13 @@ public class GerarReciboEntrega {
 		
 		cliente = buscarCliente();
 		buscarProdutos();
+		
+		pathRecibo = ordem.getId() + 
+				", Entrega, " +
+				new SimpleDateFormat("dd-MM-yyyy").format(ordem.getData()).toString() + 
+				".pdf";
+		
+		pathLogo = "argolo-locacao.jpg";
 		
 		try {
 			inicilizarDocumento();
@@ -67,7 +76,7 @@ public class GerarReciboEntrega {
 	public void abrirDocumento (){
 		if (Desktop.isDesktopSupported()) {
 		    try {
-		        File myFile = new File("recibo.pdf");
+		        File myFile = new File(pathRecibo);
 		        Desktop.getDesktop().open(myFile);
 		    } catch (IOException ex) {
 		        ex.printStackTrace();
@@ -78,7 +87,7 @@ public class GerarReciboEntrega {
 	private void inicilizarDocumento(){		
 		doc = new Document(PageSize.A4, 28, 28, 20, 14);
         try {
-			os = new FileOutputStream("recibo.pdf");
+			os = new FileOutputStream(pathRecibo);
 			write = PdfWriter.getInstance(doc, os);
 	        doc.open();	
 		} catch (FileNotFoundException | DocumentException e) {
@@ -149,7 +158,7 @@ public class GerarReciboEntrega {
 	private void criarDocumento () throws IOException{
 		try {           
 			//adiciona a logo
-            Image img = Image.getInstance("argolo-locacao.jpg");
+            Image img = Image.getInstance(pathLogo);
             img.scaleAbsolute(540, 90);
             img.setAlignment(Element.ALIGN_CENTER);
             
@@ -262,7 +271,7 @@ public class GerarReciboEntrega {
             tabela_produtos.setLockedWidth(true);
             
             PdfPCell header_Quantidade = new PdfPCell(new Phrase("Equipamento", fonte_negrito));
-            PdfPCell header_Data = new PdfPCell(new Phrase("Entrega Prevista", fonte_negrito));
+            PdfPCell header_Data = new PdfPCell(new Phrase("Devolução Prevista", fonte_negrito));
             
             header_Quantidade.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
             header_Data.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -374,55 +383,3 @@ public class GerarReciboEntrega {
         }
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//		int linha = 38;
-//		BufferedImage img = null;  
-//		try {  
-//			img = ImageIO.read(new File("recibo.jpg"));  
-//		} catch (IOException ex) {  
-//			ex.printStackTrace();  
-//		}  
-//		
-//		int w = img.getWidth();  
-//		int h = img.getHeight();  
-//		BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-//		Graphics g = bi.createGraphics();
-//		g.drawImage(img, 0, 0, null);  
-//		g.setFont(new Font("Arial", Font.LAYOUT_LEFT_TO_RIGHT, 30));
-//		g.setColor(Color.black);
-//		g.drawString("Érico Ferreira Souza Júnior", 190, 459);//nome
-//		g.drawString("(73)9137-8040", 1292, 459);  //telefone
-//		g.drawString("Úrbis III, Rua C, Nº 53, Jequiezinho, Jequié-BA", 248, 459+linha);//endereço
-//		g.drawString("Próximo à padaria Conpan", 420, 459+(linha*2));//ponto de referência
-//		
-//		g.drawString("1    123456789012345678901234567890123456789012345678901234567", 94, 749);//produto 1(57 caracteres)		
-//		g.drawString("10/05/2014", 94+(1238), 749);//data 1
-//		
-//		g.drawString("1    Makita Becker&Decker 220v", 94, 749+(53));//produto 2
-//		g.drawString("10/05/2014", 94+(1238), 749+(53));//data 2
-//		
-//		
-//		g.drawString("10/05/2014", 94+(1315), 1315);//data do dia
-//		
-//		
-//		g.dispose();
-//
-//		try {               
-//			ImageIO.write(bi, "PNG", new File("zica.png"));  
-//		} catch (IOException ex) {  
-//			ex.printStackTrace();  
-//		}  
-		
