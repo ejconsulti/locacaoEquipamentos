@@ -93,7 +93,6 @@ public class ConsultarCaixa implements ActionListener {
 		ResultSet rs = null;
 		model = new CaixaTableModel();
 		panel.getTable().setModel(model);
-		
 		sorter = new TableRowSorter<CaixaTableModel>(model);
 		panel.getTable().setRowSorter(sorter);
 		try {
@@ -103,21 +102,22 @@ public class ConsultarCaixa implements ActionListener {
 				Date data = new Date();
 				calendario.add(Calendar.DAY_OF_MONTH, -1);
 				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(data.getTime()) + "' ORDER BY idCaixa", null);
-				ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
+				//ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
 				double entrada = 0;
 				double saida = 0;
-				while (rs2.next()) {
-					Caixa c = Caixa.rsToObject(rs2);
-					entrada += c.getValorEntrada();
-					saida += c.getValorSaida();
-				}
-				txtSaldoDiaAnterior.setValue(entrada - saida);
+				//while (rs2.next()) {
+				//	Caixa c = Caixa.rsToObject(rs2);
+				//	entrada += c.getValorEntrada();
+				//	saida += c.getValorSaida();
+				//}
+				//txtSaldoDiaAnterior.setValue(entrada - saida);
 			}
 			else if (condition == 1) {
-				calendario.setTime(dialog.getTxtDataInicio().getDate());
-				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dialog.getTxtDataInicio().getDate() + "' ORDER BY idCaixa", null);
+				Date data = dialog.getTxtDataInicio().getDate();
+				calendario.setTime(data);
+				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + data + "' ORDER BY idCaixa", null);
 				calendario.add(Calendar.DAY_OF_MONTH, -1);
-				ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
+				/*ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
 				double entrada = 0;
 				double saida = 0;
 				while (rs2.next()) {
@@ -125,7 +125,7 @@ public class ConsultarCaixa implements ActionListener {
 					entrada += c.getValorEntrada();
 					saida += c.getValorSaida();
 				}
-				txtSaldoDiaAnterior.setValue(entrada - saida);
+				txtSaldoDiaAnterior.setValue(entrada - saida);*/
 			}
 			else if (condition == 2) {
 				Date data1 = dialog.getTxtDataInicio().getDate();
