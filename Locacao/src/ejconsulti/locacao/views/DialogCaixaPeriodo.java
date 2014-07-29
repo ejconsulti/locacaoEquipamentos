@@ -1,24 +1,15 @@
 package ejconsulti.locacao.views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Window;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import net.miginfocom.swing.MigLayout;
-import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
-import ejconsulti.locacao.models.OrdemDeServico;
-import ejconsulti.locacao.models.StatusCellRenderer;
-import ejconsulti.locacao.models.TipoRecebimento;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
 import eso.components.DateField;
 import eso.components.DoubleField;
 

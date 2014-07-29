@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 import ejconsulti.locacao.models.Cliente;
@@ -25,18 +24,17 @@ import eso.document.AutoCompleteDecorator;
 import eso.utils.Text;
 
 /**
- * Dialog da Ordem de Serviço
+ * Dialog do Recibo de Devolução
  * 
  * @author Érico Jr
  *
  */
 
-public class DialogOrdemDeServico extends JDialog{
+public class DialogReciboDevolucao extends JDialog{
 	private static final long serialVersionUID = 1L;
 
 	private JComboBox<Cliente> cboxNome;
 	private JFormattedTextField txtTelefone;
-	private PanelEndereco panelEnderecoEntrega;
 	private JComboBox<Produto> cboxProdutos;
 	private DoubleField txtTotal;
 	private DateField txtDataEntrega;
@@ -49,7 +47,7 @@ public class DialogOrdemDeServico extends JDialog{
 	private JButton btnCancelar;
 	private JButton btnExcluir;
 
-	public DialogOrdemDeServico(Window owner, String title) {
+	public DialogReciboDevolucao(Window owner, String title) {
 		super(owner, title);
 		initialize();
 	}
@@ -65,72 +63,68 @@ public class DialogOrdemDeServico extends JDialog{
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 
 		JLabel lblNome = new JLabel("Nome");
-		contentPanel.add(lblNome, "flowx,cell 0 0");
+		contentPanel.add(lblNome, "cell 0 0");
 
 		cboxNome = new JComboBox<Cliente>();
 		cboxNome.setMinimumSize(new Dimension(400, 10));
 		cboxNome.addItem(null);
 		AutoCompleteDecorator.enable(cboxNome);
-		contentPanel.add(cboxNome, "cell 1 0 2 1");
+		contentPanel.add(cboxNome, "cell 1 0");
 
 		JLabel lblTelefone = new JLabel("Telefone");
-		lblTelefone.setEnabled(false);
 		contentPanel.add(lblTelefone, "flowx,cell 0 1");
 
 		txtTelefone = new JFormattedTextField(Text.buildMask("(##)####-####"));
 		txtTelefone.setColumns(9);
-		txtTelefone.setEditable(false);
 		contentPanel.add(txtTelefone, "cell 1 1");
 
-		panelEnderecoEntrega = new PanelEndereco();
-		panelEnderecoEntrega.setBorder(new TitledBorder(null, "Endere\u00E7o de entrega", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelEnderecoEntrega.setEditable(false);
-		contentPanel.add(panelEnderecoEntrega, "cell 1 2,alignx left");
-
 		cboxProdutos = new JComboBox<Produto>();
-		contentPanel.add(cboxProdutos, "cell 0 3 2 1,growx");
+		cboxProdutos.setMinimumSize(new Dimension(430, 10));
+		contentPanel.add(cboxProdutos, "cell 0 3, span 2, left");
 
 		btnAdicionar = new JButton("Adicionar");
-		contentPanel.add(btnAdicionar, "cell 2 3");	
+		contentPanel.add(btnAdicionar, "cell 1 3, right");
+		
+		btnExcluir = new JButton("Excluir");
+		contentPanel.add(btnExcluir, "cell 1 3, right");
 
 		produtoOrdemTableModel = new ProdutoOSTableModel();
 
 		tabela = new JTable(produtoOrdemTableModel);
 		tabela.setPreferredScrollableViewportSize(new Dimension(600, 100));
-		contentPanel.add(new JScrollPane(tabela), "cell 0 4 2 1");
-
-		btnExcluir = new JButton("Excluir");
-		contentPanel.add(btnExcluir, "cell 2 4");
+		contentPanel.add(new JScrollPane(tabela), "cell 0 5 2 1");
+		
 
 		JLabel lblData = new JLabel("Data entrega");
-		contentPanel.add(lblData, "flowx,cell 0 5 2 1,alignx center");
+		contentPanel.add(lblData, "flowx,cell 0 6 2 1,alignx center");
 
 		txtDataEntrega = new DateField();
 		txtDataEntrega.setColumns(7);
-		contentPanel.add(txtDataEntrega, "cell 0 5 2 1");
+		contentPanel.add(txtDataEntrega, "cell 0 6 2 1");
 
 		JLabel lblDataDevoluo = new JLabel("Data devolu\u00E7\u00E3o");
-		contentPanel.add(lblDataDevoluo, "cell 0 5 2 1");
+		contentPanel.add(lblDataDevoluo, "cell 0 6 2 1");
 
 		txtDataDevolucao = new DateField();
 		txtDataDevolucao.setColumns(7);
-		contentPanel.add(txtDataDevolucao, "cell 0 5 2 1");
+		contentPanel.add(txtDataDevolucao, "cell 0 6 2 1");
 
 		JLabel lblTotal = new JLabel("Total");
-		contentPanel.add(lblTotal, "cell 0 5 2 1,gapx 60");
+		contentPanel.add(lblTotal, "cell 0 6 2 1,gapx 60");
 
 		txtTotal = new DoubleField();
 		txtTotal.setValue(0.0);
 		txtTotal.setColumns(10);
-		contentPanel.add(txtTotal, "cell 0 5 2 1");
+		contentPanel.add(txtTotal, "cell 0 6 2 1");
 
 		JLabel l2 = new JLabel("*");
-		l2.setEnabled(false);
 		l2.setForeground(Color.RED);
+		l2.setEnabled(false);
 		contentPanel.add(l2, "cell 0 1");
 
 		JLabel l1 = new JLabel("*");
 		l1.setForeground(Color.RED);
+		l1.setEnabled(false);
 		contentPanel.add(l1, "cell 0 0");
 
 		JPanel buttonPanel = new JPanel();
@@ -152,10 +146,6 @@ public class DialogOrdemDeServico extends JDialog{
 
 	public JFormattedTextField getTxtTelefone() {
 		return txtTelefone;
-	}
-
-	public PanelEndereco getPanelEnderecoEntrega() {
-		return panelEnderecoEntrega;
 	}
 
 	public JButton getBtnSalvar() {

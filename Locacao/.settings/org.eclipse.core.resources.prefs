@@ -2,6 +2,7 @@
 <<<<<<<=HEAD
 >>>>>>>=d38bde6fa6113d955d3b2db53d138f69376196d3
 eclipse.preferences.version=1
+<<<<<<< HEAD
 encoding//src/ejconsulti/locacao/controllers/CadastrarDespesa.java=UTF-8
 encoding//src/ejconsulti/locacao/controllers/CadastrarOrdemDeServico.java=UTF-8
 encoding//src/ejconsulti/locacao/controllers/CadastrarRecebimento.java=UTF-8
@@ -26,3 +27,6 @@ encoding//src/ejconsulti/locacao/views/DialogRecebimento.java=UTF-8
 encoding//src/ejconsulti/locacao/views/FramePrincipal.java=UTF-8
 encoding//src/ejconsulti/locacao/views/PanelConsultar.java=UTF-8
 encoding//src/ejconsulti/locacao/views/PanelConsultarCaixaDia.java=UTF-8
+=======
+encoding/<project>=cp1252
+>>>>>>> f4cfd6b88b9cb2f34338434d6876e53894815a54

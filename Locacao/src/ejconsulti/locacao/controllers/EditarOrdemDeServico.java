@@ -21,9 +21,9 @@ import eso.database.ContentValues;
 import eso.utils.Log;
 
 /**
- * Visualizar Ordem de Servi�o
+ * Visualizar Ordem de Serviço
  * 
- * @author �rico Jr
+ * @author Érico Jr
  * @author Edison Jr
  *
  */
@@ -39,7 +39,7 @@ public class EditarOrdemDeServico implements ActionListener {
 	}
 
 	private void initialize(OrdemDeServico ordem) {
-		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Servi�o");
+		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviço");
 		this.ordem = ordem;
 
 		addEvents();
@@ -48,11 +48,13 @@ public class EditarOrdemDeServico implements ActionListener {
 		carregarCliente();
 
 		dialog.getCboxNome().setEnabled(false);
+		dialog.getTxtTelefone().setEnabled(false);
 		dialog.getCboxProdutos().setEnabled(false);
 		dialog.getTabela().setEnabled(false);
 		dialog.getBtnAdicionar().setEnabled(false);
 		dialog.getBtnExcluir().setEnabled(false);
 		dialog.getTxtDataDevolucao().setEnabled(false);
+		dialog.getTxtTotal().setEnabled(false);
 
 		if (ordem.getStatus().getId() == Status.Cancelada.getId()){
 			dialog.getTxtDataEntrega().setEnabled(false);
@@ -70,7 +72,7 @@ public class EditarOrdemDeServico implements ActionListener {
 	private void addProdutosTabela(OrdemDeServico ordem) {
 		ResultSet rs = null;
 		try {
-			//Carrega produtos da ordem de servi�o
+			//Carrega produtos da ordem de serviço
 			rs = DAO.getDatabase().select(null, ProdutoOS.VIEW, ProdutoOS.ID_ORDEMSERVICO+" = ?", new Object[]{ordem.getId()}, null, null);
 
 			List<ProdutoOS> list = new ArrayList<ProdutoOS>();
@@ -127,9 +129,9 @@ public class EditarOrdemDeServico implements ActionListener {
 	}
 
 	private void salvar() {
-		//altera a data da ordem de servi�o e dos produtos
+		//altera a data da ordem de serviço e dos produtos
 
-		//		 Verificar campos obrigat�rios
+		//		 Verificar campos obrigatórios
 		Date data = dialog.getTxtDataEntrega().getDate();
 		if(data == null) {
 			JOptionPane.showMessageDialog(null, "Preencha o campo 'Data de entrega'.");
@@ -142,7 +144,7 @@ public class EditarOrdemDeServico implements ActionListener {
 				values.put(OrdemDeServico.DATA_ENTREGA, data);
 				DAO.getDatabase().update(OrdemDeServico.TABLE, values, OrdemDeServico.ID + " = ?", new Object[]{ordem.getId()});
 			} catch (SQLException e) {
-				Log.e(TAG, "Erro ao alterar ordem de servi�o.");
+				Log.e(TAG, "Erro ao alterar ordem de serviço.");
 				return;
 			}
 		}
@@ -152,19 +154,18 @@ public class EditarOrdemDeServico implements ActionListener {
 	}
 
 	private void cancelar() {
-		int option = JOptionPane.showConfirmDialog(dialog, "Deseja realmente cancelar Ordem de Servi�o?", 
-				"Cancelar Ordem de Servi�o", 
+		int option = JOptionPane.showConfirmDialog(dialog, "Deseja realmente cancelar Ordem de Serviço?", 
+				"Cancelar Ordem de Serviço", 
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		
 		if(option == JOptionPane.YES_OPTION) {
 			try {
-				//altera o status da ordem de servi�o
+				//altera o status da ordem de serviço
 				ContentValues contValues = new ContentValues();
 				contValues.put(OrdemDeServico.STATUS, Status.Cancelada.getId());
-				contValues.put(OrdemDeServico.RECEBIMENTO, 1);
 				DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});
 			} catch (Exception e) {
-				Log.e(TAG, "Erro ao cancelar ordem de servi�o.", e);
+				Log.e(TAG, "Erro ao cancelar ordem de serviço.", e);
 			}
 
 			Main.getFrame().getBtnOrdemdeServico().doClick();
