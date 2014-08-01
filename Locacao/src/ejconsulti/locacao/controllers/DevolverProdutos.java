@@ -159,7 +159,7 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 		//Se não, altera o status para Pagamento Pendente
 		ResultSet rs = null;
 		try {
-			rs = DAO.getDatabase().executeQuery("SELECT * FROM v_produtoslocados WHERE IDORDEMSERVICO = ? AND LOCADO = 1", new Object[]{ordem.getId()});
+			rs = DAO.getDatabase().executeQuery("SELECT * FROM v_produtoslocados WHERE IDORDEMSERVICO = ? AND LOCADO > 0", new Object[]{ordem.getId()});
 			
 			if (!rs.next()){
 				if (ordem.getRecebimento() == 0){

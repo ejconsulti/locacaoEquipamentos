@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
@@ -81,7 +82,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void addOrdens (){
 		ResultSet rs = null;
 		try {
-			rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.STATUS + " = 1 AND " + OrdemDeServico.RECEBIMENTO + " = 0", null, null, null);
+			rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.STATUS + " IN (1, 2) AND " + OrdemDeServico.RECEBIMENTO + " = 0", null, null, null);
 		
 			DefaultComboBoxModel<OrdemDeServico> model = (DefaultComboBoxModel<OrdemDeServico>) dialog.getJcbOrdemServico().getModel();
 			while(rs.next()) {
@@ -144,8 +145,9 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		}
 		
 		// Cadastrar recebimento
+		int ident = Integer.parseInt(dialog.getJcbOrdemServico().getSelectedItem().toString());
 		ContentValues values = new ContentValues();
-		values.put(Recebimento.ID_ORDEM_SERVICO, Integer.parseInt(dialog.getJcbOrdemServico().getSelectedItem().toString()));
+		values.put(Recebimento.ID_ORDEM_SERVICO, ident);
 		values.put(Recebimento.TIPO, tipoRecebimento);
 		values.put(Recebimento.QUANTIDADE_PARCIAL, dialog.getTxtQuantidadeReceber().doubleValue());
 		values.put(Recebimento.QUANTIDADE_TOTAL, dialog.getTxtQuantidadeTotal().doubleValue());
@@ -155,7 +157,26 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		SimpleDateFormat dia = new SimpleDateFormat("yyyy-MM-dd");
 		values.put(Recebimento.DATA_RECEBIMENTO, dia.format(dataAtual.getTime()));
 		try {
+			
 			DAO.getDatabase().insert(Recebimento.TABLE, values);
+			
+			if (status == 0) {
+			
+				ResultSet rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.ID + " = ?", new Object[]{ident}, null, null);
+				OrdemDeServico ordem = OrdemDeServico.rsToObject(rs);
+				JOptionPane.showMessageDialog(dialog, "Aqui funcionou");
+				rs.close();
+				JOptionPane.showMessageDialog(dialog, ordem.getId());
+				if (ordem.getStatus().getId() == 1) {
+					JOptionPane.showMessageDialog(dialog, "Aqui tbm");
+					ContentValues value = new ContentValues();
+					value.put(OrdemDeServico.STATUS, Status.DevolucaoPendente);
+					DAO.getDatabase().update(OrdemDeServico.TABLE, values, OrdemDeServico.ID + " = ?", ident);
+					
+				}
+				
+			}
+				
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao cadastrar recebimento");
 			JOptionPane.showMessageDialog(dialog, e.getMessage());

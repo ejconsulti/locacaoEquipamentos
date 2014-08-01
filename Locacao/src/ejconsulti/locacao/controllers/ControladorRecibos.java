@@ -180,7 +180,7 @@ public class ControladorRecibos implements ActionListener {
 				if (o.getStatus() == OrdemDeServico.Status.Cancelada)
 					return;
 				
-				if (o.getStatus() == OrdemDeServico.Status.EmAndamento)
+				if (o.getStatus() == OrdemDeServico.Status.EmAndamento || o.getStatus() == OrdemDeServico.Status.DevolucaoPendente)
 					new DevolverProdutos(o);
 
 				break;
