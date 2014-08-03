@@ -8,7 +8,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -19,6 +23,7 @@ import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Caixa;
 import ejconsulti.locacao.models.Despesa;
 import ejconsulti.locacao.models.DespesaTableModel;
+import ejconsulti.locacao.views.DialogCaixa;
 import ejconsulti.locacao.views.PanelConsultar;
 import eso.database.SQLiteDatabase;
 import eso.utils.Log;
@@ -28,7 +33,10 @@ public class ConsultarDespesas implements ActionListener {
 	
 	private PanelConsultar panel;
 	private DespesaTableModel model;
+	private DialogCaixa dialog;
 	private TableRowSorter<DespesaTableModel> sorter;
+	List<Despesa> lista;
+	JButton filtro;
 	
 	public ConsultarDespesas() {
 		initialize();
@@ -37,21 +45,20 @@ public class ConsultarDespesas implements ActionListener {
 	private void initialize() {
 		panel = new PanelConsultar();
 		
-		model = new DespesaTableModel();
-		panel.getTable().setModel(model);
-		
-		sorter = new TableRowSorter<DespesaTableModel>(model);
-		panel.getTable().setRowSorter(sorter);
+		filtro = new JButton("Filtrar");
+		panel.getHeaderPanel().add(filtro, "cell 4 0");
 		
 		addEvents();
 		
-		carregar();
+		carregar(0);
 	}
 	
 	private void addEvents() {
 		panel.getBtnAdicionar().addActionListener(this);
 		panel.getBtnEditar().addActionListener(this);
 		panel.getBtnExcluir().addActionListener(this);
+		panel.getBtnImprimir().addActionListener(this);
+		this.filtro.addActionListener(this);
 		
 		panel.getTable().addMouseListener(new MouseAdapter() {
 			@Override
@@ -86,16 +93,28 @@ public class ConsultarDespesas implements ActionListener {
 		panel.getBtnPesquisar().addActionListener(this);
 	}
 	
-	public void carregar() {
+	public void carregar(int condition) {
 		ResultSet rs = null;
+		model = new DespesaTableModel();
+		model = new DespesaTableModel();
+		panel.getTable().setModel(model);
+		sorter = new TableRowSorter<DespesaTableModel>(model);
+		panel.getTable().setRowSorter(sorter);
+		lista = new ArrayList<Despesa>();
 		try {
-			rs = DAO.getDatabase().select(null, Despesa.TABLE, null, null, null, Despesa.ID_DESPESA);
-			
+			if (condition == 0) {
+				rs = DAO.getDatabase().select(null, Despesa.TABLE, null, null, null, Despesa.ID_DESPESA);
+			}
+			else if (condition == 1) {
+				Date data1 = dialog.getTxtDataInicio().getDate();
+				Date data2 = dialog.getTxtDataFim().getDate();
+				rs = DAO.getDatabase().executeQuery("SELECT * FROM despesas WHERE dataPagamentoDespesa BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY dataPagamentoDespesa", null);
+			}
 			while(rs.next()) {
 				Despesa d = Despesa.rsToObject(rs);
 				model.add(d);
+				lista.add(d);
 			}
-
 		} catch (SQLException ex) {
 			Log.e(TAG, "Erro ao carregar despesas", ex);
 		} finally {
@@ -146,7 +165,7 @@ public class ConsultarDespesas implements ActionListener {
 				
 				// Recarregar lista
 				model.clear();
-				carregar();
+				carregar(0);
 			}
 		}
 	}
@@ -165,6 +184,22 @@ public class ConsultarDespesas implements ActionListener {
 		}
 	}
 	
+	public void consultarPeriodo() {
+		dialog = new DialogCaixa(Main.getFrame(), "Pesquisar por Período");
+		dialog.setVisible(true);
+		dialog.getBtnBuscar().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				carregar(1);
+				dialog.dispose();
+			}
+		});
+	}
+	
+	public void imprimir() {
+		new ImprimirDespesa(lista);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		switch(evt.getActionCommand()) {
@@ -179,6 +214,12 @@ public class ConsultarDespesas implements ActionListener {
 			break;
 		case "Pesquisar":
 			pesquisar();
+			break;
+		case "Imprimir":
+			imprimir();
+			break;
+		case "Filtrar":
+			consultarPeriodo();
 			break;
 		}
 	}

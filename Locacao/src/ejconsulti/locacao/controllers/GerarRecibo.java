@@ -2,11 +2,9 @@ package ejconsulti.locacao.controllers;
 
 import java.awt.Desktop;
 import java.awt.Font;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.ResultSet;
@@ -25,7 +23,6 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfAction;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -49,7 +46,7 @@ public class GerarRecibo {
 	Recebimento recebimento;
 	List<ProdutoOS> produtos;
 	
-	public GerarRecibo (OrdemDeServico ordem, List<ProdutoOS> produtos, Recebimento recebimento){
+	public GerarRecibo (OrdemDeServico ordem, Recebimento recebimento, List<ProdutoOS> produtos){
 		this.ordem = ordem;
 		this.produtos = produtos;
 		this.recebimento = recebimento;
@@ -119,7 +116,7 @@ public class GerarRecibo {
 		try {           
 			//adiciona a logo
             Image img = Image.getInstance(pathLogo);
-            img.scaleAbsolute(540, 90);
+            img.scaleAbsolute(405, 90);
             img.setAlignment(Element.ALIGN_CENTER);
             
             //traça uma linha horizontal
@@ -179,18 +176,10 @@ public class GerarRecibo {
             endereco.add(end);
             endereco.add(end_valor);
             
-            //ponto de referência do cliente
-            Chunk ref = new Chunk("Ponto de Referência: ", fonte_negrito);
-            Chunk ref_valor = new Chunk("   " + e.getReferencia(), fonte_normal);
-            ref_valor.setUnderline(0.1f, -2f);
-            
-            Phrase referencia = new Phrase();
-            referencia.add(ref);
-            referencia.add(ref_valor);
-            
+            //valor a pagar pelo cliente
             Chunk valor = new Chunk("A importância de: ", fonte_negrito);
             Phrase importancia = new Phrase();
-            referencia.add(valor);
+            importancia.add(valor);
             
             //Adicionar um texto antes da tabela
             Paragraph pre_tabela = new Paragraph("Referente à locação de:", fonte_normal);
@@ -205,7 +194,6 @@ public class GerarRecibo {
             PdfPCell linha2_1 = new PdfPCell(cpf);
             PdfPCell linha2_2 = new PdfPCell(telefone);
             PdfPCell linha3_1 = new PdfPCell(endereco);
-            PdfPCell linha4_1 = new PdfPCell(referencia);
             PdfPCell linha5_1 = new PdfPCell(importancia);
             
             PdfPCell vazio = new PdfPCell();
@@ -244,14 +232,6 @@ public class GerarRecibo {
             linha3_1.setBorderWidthRight(0);
             linha3_1.setColspan(2);
             	tabela_dados.addCell(linha3_1);
-            
-            //linha3_1.setBorder(0);
-            linha4_1.setFixedHeight(16f);
-            linha4_1.setBorderWidthTop(0);
-            linha4_1.setBorderWidthLeft(0);
-            linha4_1.setBorderWidthRight(0);
-            linha4_1.setColspan(2);
-            	tabela_dados.addCell(linha4_1);
             	
             //linha4_1.setBorder(0);
             linha5_1.setFixedHeight(16f);
@@ -334,41 +314,6 @@ public class GerarRecibo {
             doc.add(linha_contrato);
             doc.add(titulo_contrato);
             
-            //exibe o texto do contrato
-            BufferedReader br;
-            String texto_contrato = "";
-            try {
-            	
-            	br = new BufferedReader(new FileReader("contrato.txt"));
-            	String line = null;
-            	while ((line = br.readLine()) != null) {
-            		texto_contrato += line;
-            	    if (texto_contrato.contains("\\n")){
-            	    	boolean tab = false;
-            	    	            	    	
-            	    	if (texto_contrato.contains("\\t"))
-            	    		tab = true;
-            	    	
-            	    	texto_contrato = texto_contrato.replace("\\n", "");
-            	    	texto_contrato = texto_contrato.replace("\\t", "");
-            	    	
-            	    	Paragraph contrato = new Paragraph(texto_contrato, FontFactory.getFont(FontFactory.HELVETICA, 7f, BaseColor.GRAY));
-            	    	contrato.setAlignment(Paragraph.ALIGN_JUSTIFIED);
-            	    	contrato.setLeading(9f);
-            	    	
-            	    	if (tab)
-            	    		contrato.setFirstLineIndent(25f);
-            	    	
-            	    	doc.add(contrato);
-            	    }
-            	    texto_contrato = "";
-            	}
-            	
-            	write.setOpenAction(new PdfAction(PdfAction.PRINTDIALOG));
-            	
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
         }
 		catch (Exception e){
         	e.printStackTrace();

@@ -13,9 +13,7 @@ import javax.swing.JOptionPane;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.HistoricoRecebimento;
-import ejconsulti.locacao.models.OrdemDeServico;
 import ejconsulti.locacao.models.Produto;
-import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;

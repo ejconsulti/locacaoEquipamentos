@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -15,7 +16,7 @@ import javax.swing.JOptionPane;
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemDeServico;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
@@ -29,6 +30,8 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private HistoricoRecebimentoTableModel model;
 	
 	private boolean flag = false;
+	
+	private List<ProdutoOS> produtoList;
 	
 	public CadastrarRecebimento() {
 		initialize();
@@ -109,7 +112,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	}
 	
 	private void cadastrar() {
-		
+		int id;
 		// Verificar campos obrigat�rios
 		if (flag == false) {
 			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
@@ -158,25 +161,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		values.put(Recebimento.DATA_RECEBIMENTO, dia.format(dataAtual.getTime()));
 		try {
 			
-			DAO.getDatabase().insert(Recebimento.TABLE, values);
-			
-			if (status == 0) {
-			
-				ResultSet rs = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.ID + " = ?", new Object[]{ident}, null, null);
-				OrdemDeServico ordem = OrdemDeServico.rsToObject(rs);
-				JOptionPane.showMessageDialog(dialog, "Aqui funcionou");
-				rs.close();
-				JOptionPane.showMessageDialog(dialog, ordem.getId());
-				if (ordem.getStatus().getId() == 1) {
-					JOptionPane.showMessageDialog(dialog, "Aqui tbm");
-					ContentValues value = new ContentValues();
-					value.put(OrdemDeServico.STATUS, Status.DevolucaoPendente);
-					DAO.getDatabase().update(OrdemDeServico.TABLE, values, OrdemDeServico.ID + " = ?", ident);
-					
-				}
-				
-			}
-				
+			id = DAO.getDatabase().insert(Recebimento.TABLE, values);
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao cadastrar recebimento");
 			JOptionPane.showMessageDialog(dialog, e.getMessage());
@@ -185,6 +170,26 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		}
 		
 		dialog.dispose();
+		ResultSet rs2 = null;
+		Recebimento rec = null;
+		OrdemDeServico ordem = null;
+		try {
+			rs2 = DAO.getDatabase().select(null, Recebimento.TABLE, Recebimento.ID + " = ?", new Object[]{id}, null, null);
+			rec = Recebimento.rsToObject(rs2);
+			rs2 = DAO.getDatabase().select(null, OrdemDeServico.TABLE, OrdemDeServico.ID + " = ?", new Object[]{rec.getIdOrdemServico()}, null, null);
+			ordem = OrdemDeServico.rsToObject(rs2);
+			rs2 = DAO.getDatabase().select(null, ProdutoOS.TABLE, ProdutoOS.ID_ORDEMSERVICO + " = ?", new Object[]{ordem.getId()}, null, null);
+			while (rs2.next()) {
+				ProdutoOS produto = ProdutoOS.rsToObject(rs2);
+				produtoList.add(produto);
+			}
+			rs2.close();
+		}
+		catch (SQLException b) {
+			
+		}
+		
+		new GerarRecibo(ordem, rec, produtoList);
 		
 		// Atualiza��o da tabela
 		Main.getFrame().getBtnRecebimentos().doClick();

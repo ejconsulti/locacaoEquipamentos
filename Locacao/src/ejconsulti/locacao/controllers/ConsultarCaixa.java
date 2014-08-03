@@ -5,8 +5,10 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,12 +33,16 @@ public class ConsultarCaixa implements ActionListener {
 	private DoubleField txtSaldoEntrada;
 	private DoubleField txtSaldoSaida;
 	private DoubleField txtSaldoTotal;
+	List<Caixa> lista;
 	
 	public ConsultarCaixa() {
 		initialize();
 	}
 	
 	private void initialize() {
+		
+		
+		
 		panel = new PanelConsultar();
 		
 		panel.getBtnAdicionar().setText("Por Dia");
@@ -102,30 +108,12 @@ public class ConsultarCaixa implements ActionListener {
 				Date data = new Date();
 				calendario.add(Calendar.DAY_OF_MONTH, -1);
 				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(data.getTime()) + "' ORDER BY idCaixa", null);
-				//ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
-				double entrada = 0;
-				double saida = 0;
-				//while (rs2.next()) {
-				//	Caixa c = Caixa.rsToObject(rs2);
-				//	entrada += c.getValorEntrada();
-				//	saida += c.getValorSaida();
-				//}
-				//txtSaldoDiaAnterior.setValue(entrada - saida);
 			}
 			else if (condition == 1) {
 				Date data = dialog.getTxtDataInicio().getDate();
 				calendario.setTime(data);
 				rs = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + data + "' ORDER BY idCaixa", null);
 				calendario.add(Calendar.DAY_OF_MONTH, -1);
-				/*ResultSet rs2 = DAO.getDatabase().executeQuery("SELECT * FROM caixa WHERE data = '" + dia.format(calendario.getTime()) + "'", null);
-				double entrada = 0;
-				double saida = 0;
-				while (rs2.next()) {
-					Caixa c = Caixa.rsToObject(rs2);
-					entrada += c.getValorEntrada();
-					saida += c.getValorSaida();
-				}
-				txtSaldoDiaAnterior.setValue(entrada - saida);*/
 			}
 			else if (condition == 2) {
 				Date data1 = dialog.getTxtDataInicio().getDate();
@@ -134,9 +122,12 @@ public class ConsultarCaixa implements ActionListener {
 			}
 			double entrada2 = 0;
 			double saida2 = 0;
+			lista = new ArrayList<Caixa>();
 			while(rs.next()) {
 				Caixa c = Caixa.rsToObject(rs);
 				model.add(c);
+				
+				lista.add(c);
 				entrada2 += c.getValorEntrada();
 				saida2 += c.getValorSaida();
 			}
@@ -187,6 +178,10 @@ public class ConsultarCaixa implements ActionListener {
 		});
 	}
 	
+	public void imprimir() {
+		new ImprimirCaixa(lista);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		switch(evt.getActionCommand()) {
@@ -200,6 +195,7 @@ public class ConsultarCaixa implements ActionListener {
 			carregar(0);
 			break;
 		case "Imprimir":
+			imprimir();
 			break;
 		}
 	}

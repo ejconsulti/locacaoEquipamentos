@@ -8,7 +8,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -18,6 +22,7 @@ import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.HistoricoRecebimento;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.RecebimentoTableModel;
+import ejconsulti.locacao.views.DialogCaixa;
 import ejconsulti.locacao.views.PanelConsultar;
 import eso.database.SQLiteDatabase;
 import eso.utils.Log;
@@ -30,28 +35,50 @@ public class ConsultarRecebimentos implements ActionListener {
 	private RecebimentoTableModel model;
 	private TableRowSorter<RecebimentoTableModel> sorter;
 	
+	List<Recebimento> lista;
+	JButton filtro;
+	
+	private DialogCaixa dialog;
+	
 	public ConsultarRecebimentos(){
 		initialize();
+	}
+	
+	public void imprimir() {
+		new ImprimirRecebimento(lista);
 	}
 	
 	private void initialize() {
 		panel = new PanelConsultar();
 		
-		model = new RecebimentoTableModel();
-		panel.getTable().setModel(model);
 		
-		sorter = new TableRowSorter<RecebimentoTableModel>(model);
-		panel.getTable().setRowSorter(sorter);
+		
+		filtro = new JButton("Filtrar");
+		panel.getHeaderPanel().add(filtro, "cell 4 0");
 		
 		addEvents();
 		
-		carregar();
+		carregar(0);
+	}
+	
+	public void consultarPeriodo() {
+		dialog = new DialogCaixa(Main.getFrame(), "Pesquisar por Período");
+		dialog.setVisible(true);
+		dialog.getBtnBuscar().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				carregar(1);
+				dialog.dispose();
+			}
+		});
 	}
 	
 	private void addEvents() {
 		panel.getBtnAdicionar().addActionListener(this);
 		panel.getBtnEditar().addActionListener(this);
 		panel.getBtnExcluir().addActionListener(this);
+		panel.getBtnImprimir().addActionListener(this);
+		this.filtro.addActionListener(this);
 		
 		panel.getTable().addMouseListener(new MouseAdapter() {
 			@Override
@@ -86,14 +113,26 @@ public class ConsultarRecebimentos implements ActionListener {
 		panel.getBtnPesquisar().addActionListener(this);
 	}
 	
-	public void carregar() {
+	public void carregar(int condition) {
 		ResultSet rs = null;
+		model = new RecebimentoTableModel();
+		panel.getTable().setModel(model);
+		sorter = new TableRowSorter<RecebimentoTableModel>(model);
+		panel.getTable().setRowSorter(sorter);
+		lista = new ArrayList<Recebimento>();
 		try {
-			rs = DAO.getDatabase().select(null, Recebimento.TABLE, null, null, null, null);
-			
+			if (condition == 0) {
+				rs = DAO.getDatabase().select(null, Recebimento.TABLE, null, null, null, null);
+			}
+			else if (condition == 1) {
+				Date data1 = dialog.getTxtDataInicio().getDate();
+				Date data2 = dialog.getTxtDataFim().getDate();
+				rs = DAO.getDatabase().executeQuery("SELECT * FROM recebimentos WHERE dataRecebimento BETWEEN '" + data1 + "' AND '" + data2 + "' ORDER BY dataRecebimento", null);
+			}
 			while(rs.next()) {
 				Recebimento r = Recebimento.rsToObject(rs);
 				model.add(r);
+				lista.add(r);
 			}
 
 		} catch (SQLException ex) {
@@ -146,7 +185,7 @@ public class ConsultarRecebimentos implements ActionListener {
 				
 				// Recarregar lista
 				model.clear();
-				carregar();
+				carregar(0);
 			}
 		}
 	}
@@ -179,6 +218,12 @@ public class ConsultarRecebimentos implements ActionListener {
 			break;
 		case "Pesquisar":
 			//pesquisar();
+			break;
+		case "Filtrar":
+			consultarPeriodo();
+			break;
+		case "Imprimir":
+			imprimir();
 			break;
 		}
 	}
