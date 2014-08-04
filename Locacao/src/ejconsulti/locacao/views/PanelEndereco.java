@@ -1,5 +1,8 @@
 package ejconsulti.locacao.views;
 
+import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -9,9 +12,6 @@ import javax.swing.text.JTextComponent;
 
 import net.miginfocom.swing.MigLayout;
 import ejconsulti.locacao.models.Uf;
-
-import java.awt.Color;
-import java.awt.Component;
 
 /**
  * Painel de endereço

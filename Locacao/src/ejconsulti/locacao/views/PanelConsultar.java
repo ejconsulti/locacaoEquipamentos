@@ -2,6 +2,7 @@ package ejconsulti.locacao.views;
 
 import java.awt.BorderLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,7 +29,6 @@ public class PanelConsultar extends JPanel {
 	private JButton btnExcluir;
 	private JTextField txtPesquisar;
 	private JButton btnPesquisar;
-	private JPanel headerPanel;
 	private JButton btnImprimir;
 	
 	public PanelConsultar() {
@@ -46,27 +46,32 @@ public class PanelConsultar extends JPanel {
 		table.setDefaultRenderer(Status.class, new StatusCellRenderer());
 		scrollPane.setViewportView(table);
 		
-		headerPanel = new JPanel();
+		JPanel headerPanel = new JPanel();
 		add(headerPanel, BorderLayout.NORTH);
-		headerPanel.setLayout(new MigLayout("", "[][][][][][][][][][][][][grow][][]", "[]"));
+		headerPanel.setLayout(new MigLayout("", "[][][][][grow][][]", "[]"));
 		
 		btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/adicionar.png")));
 		headerPanel.add(btnAdicionar, "cell 0 0");
 		
 		btnEditar = new JButton("Editar");
+		btnEditar.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/editar.png")));
 		headerPanel.add(btnEditar, "cell 1 0");
 		
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/excluir.png")));
 		headerPanel.add(btnExcluir, "cell 2 0");
 		
 		btnImprimir = new JButton("Imprimir");
+		btnImprimir.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/imprimir.png")));
 		headerPanel.add(btnImprimir, "cell 3 0");
 		
 		txtPesquisar = new JTextField(15);
-		headerPanel.add(txtPesquisar, "cell 13 0");
+		headerPanel.add(txtPesquisar, "cell 5 0");
 		
 		btnPesquisar = new JButton("Pesquisar");
-		headerPanel.add(btnPesquisar, "cell 14 0");
+		btnPesquisar.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/pesquisar.png")));
+		headerPanel.add(btnPesquisar, "cell 6 0");
 		
 	}
 	
@@ -86,20 +91,16 @@ public class PanelConsultar extends JPanel {
 		return btnExcluir;
 	}
 	
+	public JButton getBtnImprimir() {
+		return btnImprimir;
+	}
+	
 	public JTextField getTxtPesquisar() {
 		return txtPesquisar;
 	}
 	
 	public JButton getBtnPesquisar() {
 		return btnPesquisar;
-	}
-	
-	public JPanel getHeaderPanel() {
-		return headerPanel;
-	}
-	
-	public JButton getBtnImprimir() {
-		return btnImprimir;
 	}
 	
 }

@@ -16,9 +16,9 @@ import javax.swing.JTable;
 import net.miginfocom.swing.MigLayout;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.StatusCellRenderer;
 import ejconsulti.locacao.models.TipoRecebimento;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
 import eso.components.DoubleField;
 
 public class DialogRecebimento extends JDialog {
