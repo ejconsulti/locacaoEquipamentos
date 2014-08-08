@@ -59,13 +59,18 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 		dialog.getCboxNome().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (dialog.getCboxNome().getSelectedIndex() < 0) {
+				if (dialog.getCboxNome().getSelectedItem() == null) {
 					dialog.getTxtTelefone().setValue(null);
 					ComponentUtils.free(dialog.getPanelEnderecoEntrega());
-				} else
-					preencherCampos((Cliente) dialog.getCboxNome().getSelectedItem());	
+					dialog.getBtnEditarCliente().setEnabled(false);
+				} else {
+					preencherCampos((Cliente) dialog.getCboxNome().getSelectedItem());
+					dialog.getBtnEditarCliente().setEnabled(true);
+				}
 			}
 		});
+		dialog.getBtnAdicionarCliente().addActionListener(this);
+		dialog.getBtnEditarCliente().addActionListener(this);
 		dialog.getBtnAdicionar().addActionListener(this);
 		dialog.getBtnExcluir().addActionListener(this);
 		dialog.getBtnSalvar().addActionListener(this);
@@ -238,6 +243,15 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 	@Override
 	public void actionPerformed(ActionEvent e) {		
 		switch(e.getActionCommand()) {
+		case "Adicionar cliente":
+			new CadastrarCliente(dialog);
+			break;
+		case "Editar cliente":
+			if (cliente != null) {
+				EditarCliente edtCliente = new EditarCliente(dialog, cliente);
+				preencherCampos(edtCliente.getCliente());
+			}
+			break;
 		case "Adicionar":
 			adicionar();
 			break;

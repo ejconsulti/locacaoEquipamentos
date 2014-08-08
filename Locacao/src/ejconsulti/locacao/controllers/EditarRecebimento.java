@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.HistoricoRecebimento;
+import ejconsulti.locacao.models.Produto;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
@@ -25,6 +26,10 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 	
 	private Recebimento recebimento;
 
+	double value;
+	
+	ArrayList<Produto> produto = new ArrayList<Produto>();
+	
 	public EditarRecebimento(Recebimento recebimento) {
 		this.recebimento = recebimento;
 		initialize(recebimento);
@@ -34,7 +39,9 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 		dialog = new DialogRecebimento(Main.getFrame(), "Editar Recebimento");
 		dialog.getJcbOrdemServico().setEnabled(false);
 		dialog.getJcbTipo().setSelectedIndex(recebimento.getTipo());
-		dialog.getTxtQuantidadeTotal().setValue(recebimento.getQuantidadeTotal());
+		value = recebimento.getQuantidadeTotal() - recebimento.getQuantidadeParcial();
+		dialog.getTxtQuantidadeTotal().setValue(value);
+		dialog.getTxtQuantidadeTotal().setFocusable(false);
 		if (recebimento.getStatus() == 0) {
 			dialog.getJcbTipo().setEnabled(false);
 			dialog.getTxtQuantidadeReceber().setEnabled(false);
@@ -69,29 +76,22 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 			dialog.getTxtQuantidadeReceber().requestFocus();
 			return;
 		}
-		String quantidadeTotal = dialog.getTxtQuantidadeTotal().getText();
-		if(quantidadeTotal.isEmpty()) {
-			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Quantidade total'.");
-			dialog.getTxtQuantidadeTotal().requestFocus();
-			return;
-		}
 		double valor = dialog.getTxtQuantidadeReceber().doubleValue();
-		valor = valor + recebimento.getQuantidadeParcial();
 		int status = 1;
-		if (valor > dialog.getTxtQuantidadeTotal().doubleValue()) {
+		if (valor > value) {
 			JOptionPane.showMessageDialog(dialog, "Valor parcial mais valor recebido maior que o total. Favor corrigir.");
 			dialog.getTxtQuantidadeReceber().requestFocus();
 			return;
 		}
-		else if (valor == dialog.getTxtQuantidadeTotal().doubleValue()) {
+		else if (valor == value) {
 			status = 0;
 		}
 		// Cadastrar produto
 		ContentValues values = new ContentValues();
 		values.put(Recebimento.ID_ORDEM_SERVICO, recebimento.getIdOrdemServico());
 		values.put(Recebimento.TIPO, tipoRecebimento);
-		values.put(Recebimento.QUANTIDADE_PARCIAL, valor);
-		values.put(Recebimento.QUANTIDADE_TOTAL, dialog.getTxtQuantidadeTotal().doubleValue());
+		values.put(Recebimento.QUANTIDADE_PARCIAL, valor + recebimento.getQuantidadeParcial());
+		values.put(Recebimento.QUANTIDADE_TOTAL, recebimento.getQuantidadeTotal());
 		values.put(Recebimento.STATUS, status);
 		values.put(Recebimento.QUANTIDADE_RECEBIMENTO, dialog.getTxtQuantidadeReceber().doubleValue());
 		Date dataAtual = new Date();
@@ -106,6 +106,7 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 		}
 		
 		dialog.dispose();
+		//new GerarRecibo(ordem, produto, recebimento);
 		
 		// Atualizar da tabela
 		Main.getFrame().getBtnRecebimentos().doClick();

@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import net.miginfocom.swing.MigLayout;
 import eso.components.DateField;
 import eso.components.DoubleField;
+import javax.swing.ImageIcon;
 
 public class DialogCaixaPeriodo extends JDialog {
 private static final long serialVersionUID = 1L;
@@ -36,7 +37,7 @@ private static final long serialVersionUID = 1L;
 		setResizable(false);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		add(scrollPane, BorderLayout.CENTER);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		getContentPane().setLayout(new BorderLayout());
 		
@@ -68,7 +69,7 @@ private static final long serialVersionUID = 1L;
 		txtEntrada.setColumns(8);
 		contentPanel.add(txtEntrada, "cell 1 1");
 		
-		JLabel lblSaida = new JLabel("Total Saída");
+		JLabel lblSaida = new JLabel("Total Sa\u00EDda");
 		contentPanel.add(lblSaida, "cell 2 1");
 		
 		txtSaida = new DoubleField(0.0);
@@ -86,10 +87,12 @@ private static final long serialVersionUID = 1L;
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogCaixaPeriodo.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogCaixaPeriodo.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 	}
 

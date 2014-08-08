@@ -18,6 +18,7 @@ import net.miginfocom.swing.MigLayout;
 import eso.components.DateField;
 import eso.components.DoubleField;
 import eso.utils.Text;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de funcionário
@@ -139,10 +140,12 @@ public class DialogFuncionario extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogFuncionario.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogFuncionario.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 		
 		pack();

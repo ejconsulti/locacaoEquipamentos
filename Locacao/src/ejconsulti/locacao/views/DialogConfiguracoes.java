@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de configurações
@@ -58,15 +59,18 @@ public class DialogConfiguracoes extends JDialog {
 		txtBanco = new JTextField(20);
 		contentPanel.add(txtBanco, "flowx,cell 1 1");
 
-		btnCarregarBanco = new JButton("...");
+		btnCarregarBanco = new JButton("");
+		btnCarregarBanco.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/pesquisar.png")));
 		btnCarregarBanco.setActionCommand("Carregar banco");
 		contentPanel.add(btnCarregarBanco, "cell 2 1");
 
 		btnSalvarBanco = new JButton("Salvar");
+		btnSalvarBanco.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/confirmar.png")));
 		btnSalvarBanco.setActionCommand("Salvar banco");
 		contentPanel.add(btnSalvarBanco, "cell 3 1");
 
 		btnRedefinirBanco = new JButton("Redefinir");
+		btnRedefinirBanco.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/cancelar.png")));
 		btnRedefinirBanco.setActionCommand("Redefinir banco");
 		contentPanel.add(btnRedefinirBanco, "cell 4 1");
 
@@ -74,6 +78,7 @@ public class DialogConfiguracoes extends JDialog {
 		contentPanel.add(lblAdministrador, "cell 0 2,alignx trailing");
 
 		btnAlterarSenhaAdmin = new JButton("Alterar senha");
+		btnAlterarSenhaAdmin.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/editar.png")));
 		btnAlterarSenhaAdmin.setActionCommand("Alterar senha admin");
 		contentPanel.add(btnAlterarSenhaAdmin, "flowx,cell 1 2");
 
@@ -83,12 +88,15 @@ public class DialogConfiguracoes extends JDialog {
 		panelUsuarios.setLayout(new MigLayout("", "0[][][grow]0", "0[][grow]0"));
 
 		btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/adicionar.png")));
 		panelUsuarios.add(btnAdicionar, "cell 0 0");
 
 		btnAlterarSenha = new JButton("Alterar senha");
+		btnAlterarSenha.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/editar.png")));
 		panelUsuarios.add(btnAlterarSenha, "cell 1 0");
 
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.setIcon(new ImageIcon(DialogConfiguracoes.class.getResource("/icones/excluir.png")));
 		panelUsuarios.add(btnExcluir, "cell 2 0");
 
 		JScrollPane scrollPane = new JScrollPane();

@@ -17,6 +17,7 @@ import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
 import eso.utils.Text;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de cliente
@@ -39,6 +40,7 @@ public class DialogCliente extends JDialog implements ItemListener {
 
 	private JButton btnSalvar;
 	private JButton btnCancelar;
+	private JLabel label;
 	
 	public DialogCliente(Window owner, String title) {
 		super(owner, title);
@@ -70,6 +72,10 @@ public class DialogCliente extends JDialog implements ItemListener {
 
 		txtRg = new JTextField(10);
 		contentPanel.add(txtRg, "cell 2 1");
+		
+		label = new JLabel("*");
+		label.setForeground(Color.RED);
+		contentPanel.add(label, "flowx,cell 1 2");
 
 		JLabel lblCpf = new JLabel("CPF");
 		contentPanel.add(lblCpf, "cell 0 2");
@@ -112,10 +118,12 @@ public class DialogCliente extends JDialog implements ItemListener {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogCliente.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogCliente.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 		
 		pack();
@@ -171,6 +179,7 @@ public class DialogCliente extends JDialog implements ItemListener {
 		if(b) {
 			pack();
 			setLocationRelativeTo(null);
+			setModal(true);
 		}
 		super.setVisible(b);
 	}

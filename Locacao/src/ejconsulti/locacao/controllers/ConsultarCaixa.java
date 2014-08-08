@@ -5,8 +5,10 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.TableRowSorter;
@@ -26,19 +28,24 @@ public class ConsultarCaixa implements ActionListener {
 	private TableRowSorter<CaixaTableModel> sorter;
 	private DialogCaixa dialog;
 	
+	private List<Caixa> lista;
+	
 	public ConsultarCaixa() {
 		initialize();
 	}
 	
 	private void initialize() {
+		
 		panel = new PanelConsultarCaixa();
+		
+		lista = new ArrayList<Caixa>();
 		
 		addEvents();
 		
 		carregar(0);
 	}
 	
-	private void addEvents() {
+	private void addEvents() {		
 		panel.getBtnPorDia().addActionListener(this);
 		panel.getBtnPorPeriodo().addActionListener(this);
 		panel.getBtnHoje().addActionListener(this);
@@ -71,9 +78,13 @@ public class ConsultarCaixa implements ActionListener {
 			}
 			double entrada2 = 0;
 			double saida2 = 0;
+			
+			lista.clear();
 			while(rs.next()) {
 				Caixa c = Caixa.rsToObject(rs);
 				model.add(c);
+				
+				lista.add(c);
 				entrada2 += c.getValorEntrada();
 				saida2 += c.getValorSaida();
 			}
@@ -125,6 +136,10 @@ public class ConsultarCaixa implements ActionListener {
 		});
 	}
 	
+	public void imprimir() {
+		new ImprimirCaixa(lista);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		switch(evt.getActionCommand()) {
@@ -138,6 +153,7 @@ public class ConsultarCaixa implements ActionListener {
 			carregar(0);
 			break;
 		case "Imprimir":
+			imprimir();
 			break;
 		}
 	}

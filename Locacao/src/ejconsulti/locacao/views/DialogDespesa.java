@@ -16,6 +16,7 @@ import ejconsulti.locacao.models.StatusDespesa;
 import ejconsulti.locacao.models.TipoDespesa;
 import eso.components.DateField;
 import eso.components.DoubleField;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de despesa
@@ -95,7 +96,7 @@ public class DialogDespesa extends JDialog {
 		JLabel l4 = new JLabel("*");
 		l4.setForeground(Color.RED);
 		contentPanel.add(l4, "cell 1 4,alignx trailing");
-
+		
 		jcbStatus = new JComboBox<StatusDespesa>(StatusDespesa.values());
 		contentPanel.add(jcbStatus, "cell 2 4");
 		
@@ -113,10 +114,12 @@ public class DialogDespesa extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogDespesa.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogDespesa.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 		
 		pack();

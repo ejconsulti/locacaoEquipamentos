@@ -11,6 +11,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de login
@@ -60,10 +61,12 @@ public class DialogLogin extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnEntrar = new JButton("Entrar");
+		btnEntrar.setIcon(new ImageIcon(DialogLogin.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnEntrar);
 		getRootPane().setDefaultButton(btnEntrar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogLogin.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 	}
 	

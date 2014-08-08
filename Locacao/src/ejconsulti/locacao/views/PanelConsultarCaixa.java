@@ -69,30 +69,31 @@ public class PanelConsultarCaixa extends JPanel {
 		headerPanel.add(lblSaldoDiaAnterior, "cell 3 0");
 		
 		txtSaldoDiaAnterior = new DoubleField();
+		txtSaldoDiaAnterior.setEditable(false);
 		txtSaldoDiaAnterior.setColumns(8);
-		txtSaldoDiaAnterior.setFocusable(false);
 		headerPanel.add(txtSaldoDiaAnterior, "cell 4 0");
 		
 		JLabel lblSaldoEntrada = new JLabel("Entrada Total");
 		headerPanel.add(lblSaldoEntrada, "cell 5 0");
 		
 		txtSaldoEntrada = new DoubleField();
+		txtSaldoEntrada.setEditable(false);
 		txtSaldoEntrada.setColumns(8);
-		txtSaldoEntrada.setFocusable(false);
 		headerPanel.add(txtSaldoEntrada, "cell 6 0");
 		
 		JLabel lblSaldoSaida = new JLabel("Saída Total");
 		headerPanel.add(lblSaldoSaida, "cell 7 0");
 		
 		txtSaldoSaida = new DoubleField();
+		txtSaldoSaida.setEditable(false);
 		txtSaldoSaida.setColumns(8);
-		txtSaldoSaida.setFocusable(false);
 		headerPanel.add(txtSaldoSaida, "cell 8 0");
 		
 		JLabel lblSaldoTotal = new JLabel("Saldo Total");
 		headerPanel.add(lblSaldoTotal, "cell 9 0");
 		
 		txtSaldoTotal = new DoubleField();
+		txtSaldoTotal.setEditable(false);
 		txtSaldoTotal.setColumns(8);
 		txtSaldoTotal.setFocusable(false);
 		headerPanel.add(txtSaldoTotal, "cell 10 0");

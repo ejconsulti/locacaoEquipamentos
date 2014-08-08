@@ -21,6 +21,7 @@ public enum StatusRecebimento {
 		return id;
 	}
 	
+	@Override
 	public String toString() {
 		return nome; 
 	}

@@ -20,6 +20,7 @@ import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.StatusCellRenderer;
 import ejconsulti.locacao.models.TipoRecebimento;
 import eso.components.DoubleField;
+import javax.swing.ImageIcon;
 
 public class DialogRecebimento extends JDialog {
 private static final long serialVersionUID = 1L;
@@ -46,7 +47,7 @@ private static final long serialVersionUID = 1L;
 		setResizable(false);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		add(scrollPane, BorderLayout.CENTER);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		table = new JTable();
 		table.setDefaultRenderer(Status.class, new StatusCellRenderer());
@@ -110,10 +111,12 @@ private static final long serialVersionUID = 1L;
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 	}
 	

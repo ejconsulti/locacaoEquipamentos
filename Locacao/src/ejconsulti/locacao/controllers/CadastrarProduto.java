@@ -68,7 +68,10 @@ public class CadastrarProduto implements ActionListener {
 		values.put(Produto.NOME, nome);
 		values.put(Produto.VALOR_DIARIO, dialog.getTxtValorDiario().doubleValue());
 		values.put(Produto.VALOR_MENSAL, dialog.getTxtValorMensal().doubleValue());
-		values.put(Produto.QUANTIDADE, dialog.getSpnQuantidade().getValue());
+		
+		int quantidade = (int) dialog.getSpnQuantidade().getValue();
+		values.put(Produto.QUANTIDADE_TOTAL, quantidade);
+		values.put(Produto.QUANTIDADE, quantidade);
 		try {
 			DAO.getDatabase().insert(Produto.TABLE, values);
 		} catch (SQLException e) {

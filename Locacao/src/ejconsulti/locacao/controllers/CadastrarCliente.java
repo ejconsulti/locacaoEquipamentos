@@ -1,5 +1,6 @@
 package ejconsulti.locacao.controllers;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -24,12 +25,12 @@ public class CadastrarCliente implements ActionListener {
 	
 	private DialogCliente dialog;
 
-	public CadastrarCliente() {
+	public CadastrarCliente(Window window) {
+		dialog = new DialogCliente(window, "Cadastrar cliente");
 		initialize();
 	}
 	
 	private void initialize() {
-		dialog = new DialogCliente(Main.getFrame(), "Cadastrar cliente");
 		
 		addEvents();
 		
@@ -51,8 +52,14 @@ public class CadastrarCliente implements ActionListener {
 			dialog.getTxtNome().requestFocus();
 			return;
 		}
+		String cpf = Text.toString(dialog.getTxtCpf().getValue());
+		if(Text.isEmpty(cpf)) {
+			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'CPF'.");
+			dialog.getTxtCpf().requestFocus();
+			return;
+		}
 		String telefone = Text.toString(dialog.getTxtTelefone().getValue()); // Apenas dígitos
-		if(telefone == null) {
+		if(Text.isEmpty(telefone)) {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Telefone'.");
 			dialog.getTxtTelefone().requestFocus();
 			return;
@@ -80,7 +87,7 @@ public class CadastrarCliente implements ActionListener {
 		ContentValues values = new ContentValues();
 		values.put(Cliente.NOME, nome);
 		values.put(Cliente.RG, dialog.getTxtRg().getText().trim());
-		values.put(Cliente.CPF, Text.toString(dialog.getTxtCpf().getValue())); // Apenas números
+		values.put(Cliente.CPF, cpf); // Apenas números
 		values.put(Cliente.TELEFONE, telefone);
 		values.put(Cliente.EMAIL, dialog.getTxtEmail().getText().trim());
 		values.put(Cliente.ID_ENDERECO, idEndereco);

@@ -35,7 +35,7 @@ public class EditarProduto implements ActionListener {
 		dialog.getTxtNome().setText(produto.getNome());
 		dialog.getTxtValorDiario().setValue(produto.getValorDiario());
 		dialog.getTxtValorMensal().setValue(produto.getValorMensal());
-		dialog.getSpnQuantidade().setValue(produto.getQuantidade());
+		dialog.getSpnQuantidade().setValue(produto.getQuantidadeTotal());
 		
 		addEvents();
 		
@@ -75,7 +75,7 @@ public class EditarProduto implements ActionListener {
 		values.put(Produto.NOME, nome);
 		values.put(Produto.VALOR_DIARIO, dialog.getTxtValorDiario().doubleValue()); // Converter separadores monetários para o formato padrão
 		values.put(Produto.VALOR_MENSAL, dialog.getTxtValorMensal().doubleValue()); // Converter separadores monetários para o formato padrão
-		values.put(Produto.QUANTIDADE, dialog.getSpnQuantidade().getValue());
+		values.put(Produto.QUANTIDADE_TOTAL, dialog.getSpnQuantidade().getValue());
 		try {
 			DAO.getDatabase().update(Produto.TABLE, values, Produto.ID+" = ?", produto.getId());
 		} catch (SQLException e) {

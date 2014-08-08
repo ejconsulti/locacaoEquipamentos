@@ -146,8 +146,8 @@ public class OrdemDeServico {
 		Cancelada (-1, "Cancelada", Color.RED),
 		Concluida (0, "Concluída", Color.GREEN),
 		EmAndamento (1, "Em Andamento", Color.BLACK),
-		PagamentoPendente (2, "Pagamento Pendente", Color.ORANGE);
-		
+		PagamentoPendente (2, "Pagamento Pendente", Color.ORANGE),
+		DevolucaoPendente (3, "Devolução Pendente", Color.YELLOW);
 		
 		private int id;
 		private String descricao;

@@ -11,6 +11,9 @@ import eso.utils.Log;
 public class Config {
 	public static final String TAG = Config.class.getSimpleName();
 	
+	public static final String IMAGEM = "image";
+	public static final String CONTRATO = "contrato";
+	
 	private static Config instance;
 
 	private File file = new File("config.properties");

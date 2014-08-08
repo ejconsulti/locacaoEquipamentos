@@ -8,9 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -22,31 +21,31 @@ import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.OrdemDeServico;
 import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.OrdemDeServicoTableModel;
-import ejconsulti.locacao.views.PanelConsultar;
+import ejconsulti.locacao.views.PanelConsultarOS;
 import eso.database.ContentValues;
 import eso.utils.Log;
 
 /**
  * Consultar ordem de servico
  * 
- * @author …rico Jr
+ * @author ÔøΩrico Jr
  * @author Edison Jr
  *
  */
 public class ConsultarOrdemDeServico implements ActionListener {
 	public static final String TAG = ConsultarOrdemDeServico.class.getSimpleName();
 
-	private PanelConsultar panel;
+	private PanelConsultarOS panel;
 
 	private OrdemDeServicoTableModel model;
 	private TableRowSorter<OrdemDeServicoTableModel> sorter;
 
-	public ConsultarOrdemDeServico(){
+	public ConsultarOrdemDeServico() {
 		initialize();
 	}
 
 	private void initialize() {
-		panel = new PanelConsultar();
+		panel = new PanelConsultarOS();
 
 		model = new OrdemDeServicoTableModel();
 		panel.getTable().setModel(model);
@@ -65,6 +64,9 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		panel.getBtnAdicionar().addActionListener(this);
 		panel.getBtnEditar().addActionListener(this);
 		panel.getBtnExcluir().addActionListener(this);
+		panel.getBtnReciboEntrega().addActionListener(this);
+		panel.getBtnReciboDevolucao().addActionListener(this);
+		panel.getBtnFiltrar().addActionListener(this);
 
 		panel.getTable().addMouseListener(new MouseAdapter() {
 			@Override
@@ -72,16 +74,29 @@ public class ConsultarOrdemDeServico implements ActionListener {
 				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() > 1) {
 					editar();
 				} else if(e.getButton() == MouseEvent.BUTTON3) {
+			
 					JPopupMenu menu = new JPopupMenu();
 
 					JMenuItem editar = new JMenuItem("Editar");
-					JMenuItem cancelar = new JMenuItem("Cancelar");
-
 					editar.addActionListener(ConsultarOrdemDeServico.this);
-					cancelar.addActionListener(ConsultarOrdemDeServico.this);
-
 					menu.add(editar);
+					
+					JMenuItem cancelar = new JMenuItem("Cancelar");
+					cancelar.addActionListener(ConsultarOrdemDeServico.this);
 					menu.add(cancelar);
+
+					JMenu recibo = new JMenu("Recibo");
+					menu.add(recibo);
+					
+					JMenuItem reeciboEntrega = new JMenuItem("Entrega");
+					reeciboEntrega.setActionCommand("Recibo de Entrega");
+					reeciboEntrega.addActionListener(ConsultarOrdemDeServico.this);
+					recibo.add(reeciboEntrega);
+					
+					JMenuItem reciboDevolucao = new JMenuItem("Devolu√ß√£o");
+					reciboDevolucao.setActionCommand("Recibo de Devolu√ß√£o");
+					reciboDevolucao.addActionListener(ConsultarOrdemDeServico.this);
+					recibo.add(reciboDevolucao);
 
 					menu.show(panel.getTable(), e.getX(), e.getY());
 				}
@@ -112,7 +127,7 @@ public class ConsultarOrdemDeServico implements ActionListener {
 			}
 
 		} catch (SQLException ex) {
-			Log.e(TAG, "Erro ao carregar ordens de serviÁos", ex);
+			Log.e(TAG, "Erro ao carregar ordens de serviÔøΩos", ex);
 		} finally {
 			if(rs != null) {
 				try {
@@ -139,13 +154,13 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		if(delRows.length > 0) {
 
 			int option = JOptionPane.showConfirmDialog(panel, 
-					String.format("Deseja realmente cancelar %d Ordem(s) de ServiÁo(s)?", delRows.length), 
-					"Cancelar Ordem(s) de ServiÁo(s)", 
+					String.format("Deseja realmente cancelar %d Ordem(s) de ServiÔøΩo(s)?", delRows.length), 
+					"Cancelar Ordem(s) de ServiÔøΩo(s)", 
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 			if(option == JOptionPane.YES_OPTION) {
 
-				// Cancelar Ordens de ServiÁo
+				// Cancelar Ordens de ServiÔøΩo
 				for(int row : delRows) {
 					// Converte a linha do filtro para a linha do modelo
 					int index = panel.getTable().convertRowIndexToModel(row);
@@ -153,12 +168,12 @@ public class ConsultarOrdemDeServico implements ActionListener {
 					OrdemDeServico o = model.get(index);
 					if(o.getStatus().getId() > 0) {
 						try {
-							//altera o status da ordem de serviÁo
+							//altera o status da ordem de serviÔøΩo
 							ContentValues contValues = new ContentValues();
 							contValues.put(OrdemDeServico.STATUS, Status.Cancelada.getId());
 							DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{o.getId()});
 						} catch (Exception e) {
-							Log.e(TAG, "Erro ao cancelar ordem de serviÁo na linha "+index, e);
+							Log.e(TAG, "Erro ao cancelar ordem de serviÔøΩo na linha "+index, e);
 						}
 					}
 				}
@@ -170,24 +185,49 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		}
 	}
 	
+	private void reciboEntrega() {
+		int row = panel.getTable().getSelectedRow();
+		
+		if(row > -1) {
+			int index = panel.getTable().convertRowIndexToModel(row);
+			OrdemDeServico o = model.get(index);
+
+			o = model.get(index);
+
+			if (o.getStatus() == OrdemDeServico.Status.Cancelada)
+				JOptionPane.showMessageDialog(panel, "Ordem de servi√ßo cancelada.");
+			else 
+				new GerarReciboEntrega(o);
+		}
+	}
+	
+	private void reciboDevolucao() {
+		int row = panel.getTable().getSelectedRow();
+		
+		if(row > -1) {
+			int index = panel.getTable().convertRowIndexToModel(row);
+			OrdemDeServico o = model.get(index);
+
+			o = model.get(index);
+
+			if (o.getStatus() == OrdemDeServico.Status.EmAndamento || 
+					o.getStatus() == OrdemDeServico.Status.DevolucaoPendente)
+				new DevolverProdutos(o);
+			else
+				JOptionPane.showMessageDialog(panel, "Ordem de servi√ßo "+o.getStatus().toString().toLowerCase());
+		}
+	}
 
 	public void pesquisar() {
-		final List<RowFilter<OrdemDeServicoTableModel, Integer>> filters = new ArrayList<RowFilter<OrdemDeServicoTableModel, Integer>>(2);
-	
 		final String text = panel.getTxtPesquisar().getText();
-		if(text.length() > 0) {
-			RowFilter<OrdemDeServicoTableModel, Integer> filterNomeCliente = new RowFilter<OrdemDeServicoTableModel, Integer>() {			
-				@Override
-				public boolean include(RowFilter.Entry<? extends OrdemDeServicoTableModel, ? extends Integer> entry) {
-					OrdemDeServico o = entry.getModel().get(entry.getIdentifier());
-					return o.getNomeCliente().toUpperCase().contains(text.toUpperCase());
-				}
-			};
-			filters.add(filterNomeCliente);
-		}
-		//TODO: Adicionar filtros por status e por data
-		
-		sorter.setRowFilter(RowFilter.andFilter(filters));
+		RowFilter<OrdemDeServicoTableModel, Integer> filterNomeCliente = new RowFilter<OrdemDeServicoTableModel, Integer>() {			
+			@Override
+			public boolean include(RowFilter.Entry<? extends OrdemDeServicoTableModel, ? extends Integer> entry) {
+				OrdemDeServico o = entry.getModel().get(entry.getIdentifier());
+				return o.getNomeCliente().toUpperCase().contains(text.toUpperCase());
+			}
+		};
+		sorter.setRowFilter(filterNomeCliente);
 	}
 
 	@Override
@@ -205,10 +245,16 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		case "Pesquisar":
 			pesquisar();
 			break;
-		}	
+		case "Recibo de Entrega":
+			reciboEntrega();
+			break;
+		case "Recibo de Devolu√ß√£o":
+			reciboDevolucao();
+			break;
+		}
 	}
 
-	public PanelConsultar getContentPanel() {
+	public PanelConsultarOS getContentPanel() {
 		return panel;
 	}
 

@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
+import ejconsulti.locacao.assets.Config;
+
 /**
  * Janela principal
  * 
@@ -32,7 +34,6 @@ public class FramePrincipal extends JFrame {
 	private JToggleButton btnDespesas;
 	private JToggleButton btnRecebimentos;
 	private JToggleButton btnCaixa;
-	private JToggleButton btnRecibos;
 	private JPanel panel;
 	private JLabel label;
 	
@@ -82,10 +83,6 @@ public class FramePrincipal extends JFrame {
 		headerPanel.add(btnOrdemdeServico);
 		btnGroup.add(btnOrdemdeServico);
 		
-		btnRecibos = new JToggleButton("Recibos");
-		headerPanel.add(btnRecibos);
-		btnGroup.add(btnRecibos);
-		
 		btnDespesas = new JToggleButton("Despesas");
 		btnDespesas.setIcon(new ImageIcon(FramePrincipal.class.getResource("/icones/despesas.png")));
 		headerPanel.add(btnDespesas);
@@ -115,7 +112,7 @@ public class FramePrincipal extends JFrame {
 		Dimension dim = new Dimension(600, 100);
 		label.setMinimumSize(dim);
 		label.setMaximumSize(dim);
-		ImageIcon img =  new ImageIcon("img/header.jpg");
+		ImageIcon img =  new ImageIcon(Config.getProperty(Config.IMAGEM));
 		if(img.getIconWidth() > dim.width || img.getIconHeight() > dim.height) {
 			img = new ImageIcon(img.getImage()
 					.getScaledInstance(dim.width, dim.height, 0));
@@ -146,10 +143,6 @@ public class FramePrincipal extends JFrame {
 	
 	public JToggleButton getBtnOrdemdeServico() {
 		return btnOrdemdeServico;
-	}
-	
-	public JToggleButton getBtnRecibos() {
-		return btnRecibos;
 	}
 	
 	public JToggleButton getBtnDespesas() {

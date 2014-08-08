@@ -25,7 +25,7 @@ import eso.utils.Log;
  */
 public class Main implements ActionListener {
 	public static final String TAG = Main.class.getSimpleName();
-
+	
 	private static Main instance;
 
 	private FramePrincipal frame;
@@ -35,7 +35,7 @@ public class Main implements ActionListener {
 			LookAndFeel look = new NimbusLookAndFeel();
 			UIManager.setLookAndFeel(look);
 		} catch (Exception ex) {
-			Log.w(TAG, "Apar�ncia n�o suportada", ex);
+			Log.w(TAG, "Apar�ncia não suportada", ex);
 		}
 		try{
 			instance = new Main();
@@ -56,9 +56,9 @@ public class Main implements ActionListener {
 		
 		frame.setVisible(true);
 		
-		// Se n�o existir um banco de dados configurado
+		// Se não existir um banco de dados configurado
 		if(DAO.getDatabase() == null)
-			new Configuracoes(frame); // Inicia as configura��es
+			new Configuracoes(frame); // Inicia as configurações
 
 		// Se ainda n�o existir um banco de dados configurado
 		if(DAO.getDatabase() == null)
@@ -71,7 +71,7 @@ public class Main implements ActionListener {
 //			lembretePagamento();
 //			lembreteFerias();
 //		} else {
-//			// Se n�o, sair do sistema
+//			// Se não, sair do sistema
 //			System.exit(1);
 //		}
 	}
@@ -84,8 +84,6 @@ public class Main implements ActionListener {
 		frame.getBtnFuncionarios().addActionListener(this);
 		
 		frame.getBtnOrdemdeServico().addActionListener(this);
-		
-		frame.getBtnRecibos().addActionListener(this);
 		
 		frame.getBtnDespesas().addActionListener(this);
 		
@@ -160,10 +158,6 @@ public class Main implements ActionListener {
 		case "Ordem de Servi\u00e7o":
 			ConsultarOrdemDeServico consOrdemDeServico = new ConsultarOrdemDeServico();
 			frame.setPane(consOrdemDeServico.getContentPanel());
-			break;
-		case "Recibos":
-			ControladorRecibos controladorRecibos = new ControladorRecibos();
-			frame.setPane(controladorRecibos.getContentPanel());
 			break;
 		case "Despesas":
 			ConsultarDespesas consDespesas = new ConsultarDespesas();

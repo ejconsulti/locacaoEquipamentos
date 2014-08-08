@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de alterar senha
@@ -57,10 +58,12 @@ public class DialogAlterarSenha extends JDialog {
 		getContentPane().add(panel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogAlterarSenha.class.getResource("/icones/confirmar.png")));
 		panel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogAlterarSenha.class.getResource("/icones/cancelar.png")));
 		panel.add(btnCancelar);
 	}
 

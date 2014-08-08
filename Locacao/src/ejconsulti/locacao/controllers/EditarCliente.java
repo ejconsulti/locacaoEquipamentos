@@ -1,5 +1,6 @@
 package ejconsulti.locacao.controllers;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -30,13 +31,13 @@ public class EditarCliente implements ActionListener {
 	private Endereco endereco;
 	private Endereco enderecoEntrega;
 
-	public EditarCliente(Cliente cliente) {
+	public EditarCliente(Window window, Cliente cliente) {
+		dialog = new DialogCliente(window, "Editar cliente");
 		this.cliente = cliente;
 		initialize();
 	}
 	
 	private void initialize() {
-		dialog = new DialogCliente(Main.getFrame(), "Editar cliente");
 		dialog.getTxtNome().setText(cliente.getNome());
 		dialog.getTxtRg().setText(cliente.getRg());
 		dialog.getTxtCpf().setValue(cliente.getCpf());
@@ -53,15 +54,20 @@ public class EditarCliente implements ActionListener {
 		pEnd.getTxtComplemento().setText(endereco.getComplemento());
 		pEnd.getTxtReferencia().setText(endereco.getReferencia());
 
-		enderecoEntrega = ControladorEndereco.getEndereco(cliente.getIdEnderecoEntrega());
-		PanelEndereco pEndEntrega = dialog.getPanelEndereco();
-		pEndEntrega.getBoxUf().setSelectedItem(enderecoEntrega.getUf());
-		pEndEntrega.getTxtCidade().setText(enderecoEntrega.getCidade().getNome());
-		pEndEntrega.getTxtBairro().setText(enderecoEntrega.getBairro().getNome());
-		pEndEntrega.getTxtRua().setText(enderecoEntrega.getRua().getNome());
-		pEndEntrega.getTxtNumero().setText(enderecoEntrega.getNumero());
-		pEndEntrega.getTxtComplemento().setText(enderecoEntrega.getComplemento());
-		pEndEntrega.getTxtReferencia().setText(enderecoEntrega.getReferencia());
+		if (cliente.getIdEndereco() != cliente.getIdEnderecoEntrega()) {
+			dialog.getCbEntregarOutroEnd().setSelected(true);
+			enderecoEntrega = ControladorEndereco.getEndereco(cliente.getIdEnderecoEntrega());
+			PanelEndereco pEndEntrega = dialog.getPanelEnderecoEntrega();
+			pEndEntrega.getBoxUf().setSelectedItem(enderecoEntrega.getUf());
+			pEndEntrega.getTxtCidade().setText(enderecoEntrega.getCidade().getNome());
+			pEndEntrega.getTxtBairro().setText(enderecoEntrega.getBairro().getNome());
+			pEndEntrega.getTxtRua().setText(enderecoEntrega.getRua().getNome());
+			pEndEntrega.getTxtNumero().setText(enderecoEntrega.getNumero());
+			pEndEntrega.getTxtComplemento().setText(enderecoEntrega.getComplemento());
+			pEndEntrega.getTxtReferencia().setText(enderecoEntrega.getReferencia());
+		} else {
+			dialog.getCbEntregarOutroEnd().setSelected(false);
+		}
 		
 		addEvents();
 		
@@ -83,6 +89,12 @@ public class EditarCliente implements ActionListener {
 			dialog.getTxtNome().requestFocus();
 			return;
 		}
+		String cpf = Text.toString(dialog.getTxtCpf().getValue());
+		if(Text.isEmpty(cpf)) {
+			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'CPF'.");
+			dialog.getTxtCpf().requestFocus();
+			return;
+		}
 		String telefone = Text.toString(dialog.getTxtTelefone().getValue()); // Apenas dígitos
 		if(telefone == null) {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Telefone'.");
@@ -92,13 +104,13 @@ public class EditarCliente implements ActionListener {
 		
 		// Editar endereço
 		
-		int result = ControladorEndereco.editar(dialog, dialog.getPanelEndereco(), endereco);
-		if(result < 1)
+		int idEndereco = ControladorEndereco.editar(dialog, dialog.getPanelEndereco(), endereco);
+		if(idEndereco < 1)
 			return;
 		
-		int idEnderecoEntrega = enderecoEntrega.getId();
+		int idEnderecoEntrega = idEndereco;
 		
-		// Se o endereco de entrega NÂO É o mesmo endereço
+		// Se o endereco de entrega NÂO É o mesmo endereço do cliente
 		if(dialog.getCbEntregarOutroEnd().isSelected()) {
 			
 			// Se o endereco de entrega ERA é o mesmo endereço
@@ -128,18 +140,27 @@ public class EditarCliente implements ActionListener {
 					Log.e(TAG, "Erro ao excluir endereço de entrega");
 					return;
 				}
-				idEnderecoEntrega = cliente.getIdEndereco();
+				System.out.println("Não era, mas agora é: "+idEnderecoEntrega);
 			}
 		}
+
+		cliente.setNome(nome);
+		cliente.setRg(dialog.getTxtRg().getText().trim());
+		cliente.setCpf(cpf);
+		cliente.setTelefone(telefone);
+		cliente.setEmail(dialog.getTxtEmail().getText().trim());
+		cliente.setIdEndereco(idEndereco);
+		cliente.setIdEnderecoEntrega(idEnderecoEntrega);
 		
 		// Editar cliente
 		ContentValues values = new ContentValues();
-		values.put(Cliente.NOME, nome);
-		values.put(Cliente.RG, dialog.getTxtRg().getText().trim());
-		values.put(Cliente.CPF, Text.toString(dialog.getTxtCpf().getValue())); // Apenas números
-		values.put(Cliente.TELEFONE, telefone);
-		values.put(Cliente.EMAIL, dialog.getTxtEmail().getText().trim());
-		values.put(Cliente.ID_ENDERECO_ENTREGA, idEnderecoEntrega);
+		values.put(Cliente.NOME, cliente.getNome());
+		values.put(Cliente.RG, cliente.getRg());
+		values.put(Cliente.CPF, cliente.getCpf());
+		values.put(Cliente.TELEFONE, cliente.getTelefone());
+		values.put(Cliente.EMAIL, cliente.getEmail());
+		values.put(Cliente.ID_ENDERECO,  cliente.getIdEndereco());
+		values.put(Cliente.ID_ENDERECO_ENTREGA, cliente.getIdEnderecoEntrega());
 		try {
 			DAO.getDatabase().update(Cliente.TABLE, values, Cliente.ID+" = ?", cliente.getId());
 		} catch (SQLException e) {
@@ -151,6 +172,10 @@ public class EditarCliente implements ActionListener {
 		
 		// Atualizar da tabela
 		Main.getFrame().getBtnClientes().doClick();
+	}
+	
+	public Cliente getCliente() {
+		return cliente;
 	}
 	
 	@Override

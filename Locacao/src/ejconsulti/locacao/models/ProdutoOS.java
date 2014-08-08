@@ -20,7 +20,6 @@ public class ProdutoOS extends Produto {
 	public static final String VALOR = "VALOR";
 	public static final String LOCADO = "LOCADO"; // 1 = Sim / 0 = Não
 	
-	private int quantidadeTotal;
 	private int dias;
 	private int locado;
 	
@@ -29,8 +28,7 @@ public class ProdutoOS extends Produto {
 	public ProdutoOS(Integer id, String nome, double valorDiario,
 			double valorMensal, int quantidadeTotal, int quantidade, 
 			int dias, int locado) {
-		super(id, nome, valorDiario, valorMensal, quantidade);
-		this.quantidadeTotal = quantidadeTotal;
+		super(id, nome, valorDiario, valorMensal, quantidadeTotal, quantidade);
 		this.dias = dias;
 		this.locado = locado;
 	}
@@ -46,10 +44,6 @@ public class ProdutoOS extends Produto {
 	
 	public void setDias(int dias) {
 		this.dias = dias;
-	}
-	
-	public int getQuantidadeTotal() {
-		return quantidadeTotal;
 	}
 	
 	public int getLocado() {

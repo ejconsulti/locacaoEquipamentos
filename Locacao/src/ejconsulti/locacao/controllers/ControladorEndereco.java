@@ -348,6 +348,8 @@ public class ControladorEndereco {
 		values.put(Endereco.REFERENCIA, panel.getTxtReferencia().getText());
 		try {
 			result = db.update(Endereco.TABLE, values, Endereco.ID+" = ?", endereco.getId());
+			if(result > -1)
+				result = endereco.getId();
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao editar endereco", e);
 		}

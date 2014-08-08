@@ -15,6 +15,7 @@ import javax.swing.SpinnerNumberModel;
 
 import net.miginfocom.swing.MigLayout;
 import eso.components.DoubleField;
+import javax.swing.ImageIcon;
 
 /**
  * Dialog de produto
@@ -96,10 +97,12 @@ public class DialogProduto extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(DialogProduto.class.getResource("/icones/confirmar.png")));
 		buttonPanel.add(btnSalvar);
 		getRootPane().setDefaultButton(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(DialogProduto.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
 	}
 

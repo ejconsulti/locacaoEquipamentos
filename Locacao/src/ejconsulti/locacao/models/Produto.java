@@ -16,22 +16,25 @@ public class Produto {
 	public static final String NOME = "nomeProduto";
 	public static final String VALOR_DIARIO = "valorDiario";
 	public static final String VALOR_MENSAL = "valorMensal";
+	public static final String QUANTIDADE_TOTAL = "quantidadeTotal";
 	public static final String QUANTIDADE = "quantidade";
 	
 	private Integer id;
 	private String nome;
 	private double valorDiario;
 	private double valorMensal;
+	private int quantidadeTotal;
 	private int quantidade;
 	
 	public Produto() {}
 
 	public Produto(Integer id, String nome, double valorDiario,
-			double valorMensal, int quantidade) {
+			double valorMensal, int quantidadeTotal, int quantidade) {
 		this.id = id;
 		this.nome = nome;
 		this.valorDiario = valorDiario;
 		this.valorMensal = valorMensal;
+		this.quantidadeTotal = quantidadeTotal;
 		this.quantidade = quantidade;
 	}
 
@@ -66,6 +69,14 @@ public class Produto {
 	public void setValorMensal(double valorMensal) {
 		this.valorMensal = valorMensal;
 	}
+	
+	public int getQuantidadeTotal() {
+		return quantidadeTotal;
+	}
+	
+	public void setQuantidadeTotal(int quantidadeTotal) {
+		this.quantidadeTotal = quantidadeTotal;
+	}
 
 	public int getQuantidade() {
 		return quantidade;
@@ -96,7 +107,7 @@ public class Produto {
 	
 	public static Produto rsToObject(ResultSet rs) throws SQLException {
 		return new Produto(rs.getInt(ID), rs.getString(NOME), rs.getDouble(VALOR_DIARIO),
-				rs.getDouble(VALOR_MENSAL),rs.getInt(QUANTIDADE));
+				rs.getDouble(VALOR_MENSAL), rs.getInt(QUANTIDADE_TOTAL), rs.getInt(QUANTIDADE));
 	}
 
 }

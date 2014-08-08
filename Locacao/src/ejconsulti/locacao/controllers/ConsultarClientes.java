@@ -121,7 +121,7 @@ public class ConsultarClientes implements ActionListener {
 			// Converte a linha do filtro para a linha do modelo
 			int index = panel.getTable().convertRowIndexToModel(row);
 			Cliente c = model.get(index);
-			new EditarCliente(c);
+			new EditarCliente(Main.getFrame(), c);
 		}
 	}
 	
@@ -178,7 +178,7 @@ public class ConsultarClientes implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		switch(evt.getActionCommand()) {
 		case "Adicionar":
-			new CadastrarCliente();
+			new CadastrarCliente(Main.getFrame());
 			break;
 		case "Editar":
 			editar();
