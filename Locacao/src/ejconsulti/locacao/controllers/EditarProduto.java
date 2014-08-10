@@ -35,7 +35,7 @@ public class EditarProduto implements ActionListener {
 		dialog.getTxtNome().setText(produto.getNome());
 		dialog.getTxtValorDiario().setValue(produto.getValorDiario());
 		dialog.getTxtValorMensal().setValue(produto.getValorMensal());
-		dialog.getSpnQuantidade().setValue(produto.getQuantidadeTotal());
+		dialog.getTxtQuantidade().setValue(produto.getQuantidadeTotal());
 		
 		addEvents();
 		
@@ -69,13 +69,19 @@ public class EditarProduto implements ActionListener {
 			dialog.getTxtValorMensal().requestFocus();
 			return;
 		}
+		String strQuantidade = dialog.getTxtValorMensal().getText();
+		if(strQuantidade.isEmpty()) {
+			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Quantidade'.");
+			dialog.getTxtQuantidade().requestFocus();
+			return;
+		}
 		
 		// Editar produto
 		ContentValues values = new ContentValues();
 		values.put(Produto.NOME, nome);
-		values.put(Produto.VALOR_DIARIO, dialog.getTxtValorDiario().doubleValue()); // Converter separadores monetários para o formato padrão
-		values.put(Produto.VALOR_MENSAL, dialog.getTxtValorMensal().doubleValue()); // Converter separadores monetários para o formato padrão
-		values.put(Produto.QUANTIDADE_TOTAL, dialog.getSpnQuantidade().getValue());
+		values.put(Produto.VALOR_DIARIO, dialog.getTxtValorDiario().doubleValue());
+		values.put(Produto.VALOR_MENSAL, dialog.getTxtValorMensal().doubleValue());
+		values.put(Produto.QUANTIDADE_TOTAL, dialog.getTxtQuantidade().doubleValue());
 		try {
 			DAO.getDatabase().update(Produto.TABLE, values, Produto.ID+" = ?", produto.getId());
 		} catch (SQLException e) {

@@ -13,12 +13,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.RowFilter;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Endereco;
 import ejconsulti.locacao.models.Funcionario;
 import ejconsulti.locacao.models.FuncionarioTableModel;
+import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.PanelConsultar;
 import eso.database.SQLiteDatabase;
 import eso.utils.Log;
@@ -53,6 +56,18 @@ public class ConsultarFuncionarios implements ActionListener {
 		addEvents();
 		
 		carregar();
+
+		//Organizar colunas
+		TableColumnModel model = panel.getTable().getColumnModel();
+		model.getColumn(FuncionarioTableModel.NOME.getIndex()).setPreferredWidth(300);
+		model.getColumn(FuncionarioTableModel.RG.getIndex()).setPreferredWidth(70);
+		model.getColumn(FuncionarioTableModel.CPF.getIndex()).setPreferredWidth(70);
+		model.getColumn(FuncionarioTableModel.TELEFONE.getIndex()).setPreferredWidth(70);
+		TableColumn c = model.getColumn(FuncionarioTableModel.SALARIO.getIndex());
+		c.setPreferredWidth(50);
+		c.setCellRenderer(new ValorCellRenderer());
+		model.getColumn(FuncionarioTableModel.DATA_ENTRADA.getIndex()).setPreferredWidth(50);
+		model.getColumn(FuncionarioTableModel.DIA_PAGAMENTO.getIndex()).setPreferredWidth(50);
 	}
 	
 	private void addEvents() {
@@ -159,16 +174,13 @@ public class ConsultarFuncionarios implements ActionListener {
 	
 	public void pesquisar() {
 		final String text = panel.getTxtPesquisar().getText();
-		if(text.length() > 0) {
-			RowFilter<FuncionarioTableModel, Integer> filter = new RowFilter<FuncionarioTableModel, Integer>() {			
-				@Override
-				public boolean include(RowFilter.Entry<? extends FuncionarioTableModel, ? extends Integer> entry) {
-					Funcionario f = entry.getModel().get(entry.getIdentifier());
-					return f.getNome().toUpperCase().contains(text.toUpperCase());
-				}
-			};
-			sorter.setRowFilter(filter);
-		}
+		sorter.setRowFilter(new RowFilter<FuncionarioTableModel, Integer>() {			
+			@Override
+			public boolean include(RowFilter.Entry<? extends FuncionarioTableModel, ? extends Integer> entry) {
+				Funcionario f = entry.getModel().get(entry.getIdentifier());
+				return f.getNome().toUpperCase().contains(text.toUpperCase());
+			}
+		});
 	}
 	
 	@Override

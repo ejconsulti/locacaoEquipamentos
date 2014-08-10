@@ -11,13 +11,16 @@ import java.util.Calendar;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.OrdemDeServico;
 import ejconsulti.locacao.models.OrdemDeServico.Status;
-import ejconsulti.locacao.models.Produto;
 import ejconsulti.locacao.models.ProdutoOS;
+import ejconsulti.locacao.models.ProdutoOSTableModel;
+import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.DialogReciboDevolucao;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -41,6 +44,21 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 		carregarProdutos(ordem);
 		carregarCliente();
 		addEvents();
+		
+		//Organizar colunas
+		TableColumnModel model = dialog.getTabela().getColumnModel();
+		model.getColumn(ProdutoOSTableModel.NOME.getIndex()).setPreferredWidth(300);
+		TableColumn c = model.getColumn(ProdutoOSTableModel.VALOR_DIARIO.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		c = model.getColumn(ProdutoOSTableModel.VALOR_MENSAL.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		model.getColumn(ProdutoOSTableModel.QUANTIDADE.getIndex()).setPreferredWidth(50);
+		model.getColumn(ProdutoOSTableModel.DIAS.getIndex()).setPreferredWidth(50);
+		c = model.getColumn(ProdutoOSTableModel.TOTAL.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
 		
 		dialog.getTxtDataEntrega().setDate(ordem.getData());
 		dialog.getTxtDataDevolucao().setDate(new Date(System.currentTimeMillis()));
@@ -90,7 +108,7 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 			//Carrega produtos da ordem de serviço
 			rs = DAO.getDatabase().select(null, ProdutoOS.VIEW, ProdutoOS.LOCADO+" = 1 AND " + ProdutoOS.ID_ORDEMSERVICO+" = ?", new Object[]{ordem.getId()}, null, null);
 
-			DefaultComboBoxModel<Produto> model = (DefaultComboBoxModel<Produto>)dialog.getCboxProdutos().getModel();
+			DefaultComboBoxModel<ProdutoOS> model = (DefaultComboBoxModel<ProdutoOS>) dialog.getCboxProdutos().getModel();
 			while(rs.next()){
 				ProdutoOS p = ProdutoOS.rsToObject(rs);
 				model.addElement(p);
@@ -108,28 +126,9 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 	}
 
 	public void adicionar() {
-		Produto p = (Produto) dialog.getCboxProdutos().getSelectedItem();
-		if(p != null) {		
-			ResultSet rs = null;
-			try {
-				//Carrega produtos da ordem de serviço
-				rs = DAO.getDatabase().select(null, ProdutoOS.VIEW, ProdutoOS.ID+" = ?", new Object[]{p.getId()}, null, null);
-
-				if (rs.next()){
-					dialog.getProdutoOrdemTableModel().add(new ProdutoOS(p, p.getQuantidade(), rs.getInt("dias"), 1));
-				}
-
-			} catch (SQLException ex) {
-				Log.e(TAG, "Erro ao adicionar produto", ex);
-			} finally {
-				if(rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException ex) {}
-				}
-			}	
-			
-		}
+		ProdutoOS p = (ProdutoOS) dialog.getCboxProdutos().getSelectedItem();
+		if(p != null)
+			dialog.getProdutoOrdemTableModel().add(p);
 	}
 	
 	
@@ -139,19 +138,16 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 			dialog.getProdutoOrdemTableModel().remove(row);
 	}
 	
-	private void salvar() {
-		int row = dialog.getProdutoOrdemTableModel().getRowCount();
-		
-		for (int i = 0; i < row; i++){
+	private void salvar() {		
+		for (ProdutoOS p : dialog.getProdutoOrdemTableModel().getRows()) {
 			try {
 				//altera o status dos produtos locados
-				ProdutoOS p = dialog.getProdutoOrdemTableModel().get(i);
 				ContentValues contValues = new ContentValues();
 				contValues.put(ProdutoOS.LOCADO, 0);
 				contValues.put(ProdutoOS.DATA_DEVOLUCAO, new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()).toString());
 				DAO.getDatabase().update(ProdutoOS.TABLE, contValues, ProdutoOS.ID+" = ? and " + ProdutoOS.ID_ORDEMSERVICO+" = ?", new Object[]{p.getId(), ordem.getId()});
 			} catch (Exception e) {
-				Log.e(TAG, "Erro ao Devolver produtos ", e);
+				Log.e(TAG, "Erro ao Devolver produto: "+p.getNome(), e);
 			}
 		}
 		
@@ -162,7 +158,7 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 			rs = DAO.getDatabase().executeQuery("SELECT * FROM v_produtoslocados WHERE IDORDEMSERVICO = ? AND LOCADO > 0", new Object[]{ordem.getId()});
 			
 			if (!rs.next()){
-				if (ordem.getRecebimento() == 0){
+				if (ordem.getRecebimento() == 0) {
 					ContentValues contValues = new ContentValues();
 					contValues.put(OrdemDeServico.STATUS, Status.PagamentoPendente.getId());
 					DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});

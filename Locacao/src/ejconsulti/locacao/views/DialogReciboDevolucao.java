@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Window;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -16,13 +17,12 @@ import javax.swing.JTable;
 
 import net.miginfocom.swing.MigLayout;
 import ejconsulti.locacao.models.Cliente;
-import ejconsulti.locacao.models.Produto;
+import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.ProdutoOSTableModel;
 import eso.components.DateField;
 import eso.components.DoubleField;
 import eso.document.AutoCompleteDecorator;
 import eso.utils.Text;
-import javax.swing.ImageIcon;
 
 /**
  * Dialog do Recibo de Devolução
@@ -36,7 +36,7 @@ public class DialogReciboDevolucao extends JDialog{
 
 	private JComboBox<Cliente> cboxNome;
 	private JFormattedTextField txtTelefone;
-	private JComboBox<Produto> cboxProdutos;
+	private JComboBox<ProdutoOS> cboxProdutos;
 	private DoubleField txtTotal;
 	private DateField txtDataEntrega;
 	private DateField txtDataDevolucao;
@@ -80,16 +80,16 @@ public class DialogReciboDevolucao extends JDialog{
 		txtTelefone.setColumns(9);
 		contentPanel.add(txtTelefone, "cell 1 1");
 
-		cboxProdutos = new JComboBox<Produto>();
+		cboxProdutos = new JComboBox<ProdutoOS>();
 		cboxProdutos.setMinimumSize(new Dimension(430, 10));
 		contentPanel.add(cboxProdutos, "cell 0 2 2 1,growx");
 
 		produtoOrdemTableModel = new ProdutoOSTableModel();
-		
-				btnAdicionar = new JButton("Adicionar");
-				btnAdicionar.setIcon(new ImageIcon(DialogReciboDevolucao.class.getResource("/icones/adicionar.png")));
-				contentPanel.add(btnAdicionar, "cell 2 2,alignx right");
-		
+
+		btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.setIcon(new ImageIcon(DialogReciboDevolucao.class.getResource("/icones/adicionar.png")));
+		contentPanel.add(btnAdicionar, "cell 2 2,alignx right");
+
 		btnExcluir = new JButton("Excluir");
 		btnExcluir.setIcon(new ImageIcon(DialogReciboDevolucao.class.getResource("/icones/excluir.png")));
 		contentPanel.add(btnExcluir, "cell 3 2,alignx right");
@@ -107,32 +107,32 @@ public class DialogReciboDevolucao extends JDialog{
 		l1.setForeground(Color.RED);
 		l1.setEnabled(false);
 		contentPanel.add(l1, "cell 0 0");
-		
+
 		panel = new JPanel();
 		contentPanel.add(panel, "cell 0 4 2 1,grow");
-		
+
 
 		JLabel lblData = new JLabel("Data entrega");
 		panel.add(lblData);
-		
-				txtDataEntrega = new DateField();
-				panel.add(txtDataEntrega);
-				txtDataEntrega.setColumns(7);
-				
-						JLabel lblDataDevoluo = new JLabel("Data devolu\u00E7\u00E3o");
-						panel.add(lblDataDevoluo);
-						
-								txtDataDevolucao = new DateField();
-								panel.add(txtDataDevolucao);
-								txtDataDevolucao.setColumns(7);
-										
-												JLabel lblTotal = new JLabel("Total");
-												contentPanel.add(lblTotal, "flowx,cell 2 4,alignx right,gapx 60");
-								
-										txtTotal = new DoubleField();
-										txtTotal.setValue(0.0);
-										txtTotal.setColumns(10);
-										contentPanel.add(txtTotal, "cell 3 4");
+
+		txtDataEntrega = new DateField();
+		panel.add(txtDataEntrega);
+		txtDataEntrega.setColumns(7);
+
+		JLabel lblDataDevoluo = new JLabel("Data devolu\u00E7\u00E3o");
+		panel.add(lblDataDevoluo);
+
+		txtDataDevolucao = new DateField();
+		panel.add(txtDataDevolucao);
+		txtDataDevolucao.setColumns(7);
+
+		JLabel lblTotal = new JLabel("Total");
+		contentPanel.add(lblTotal, "flowx,cell 2 4,alignx right,gapx 60");
+
+		txtTotal = new DoubleField();
+		txtTotal.setValue(0.0);
+		txtTotal.setColumns(10);
+		contentPanel.add(txtTotal, "cell 3 4");
 
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
@@ -173,7 +173,7 @@ public class DialogReciboDevolucao extends JDialog{
 		return btnExcluir;
 	}
 
-	public JComboBox<Produto> getCboxProdutos (){
+	public JComboBox<ProdutoOS> getCboxProdutos (){
 		return cboxProdutos;
 	}
 

@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.RowFilter;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
@@ -53,6 +54,13 @@ public class ConsultarClientes implements ActionListener {
 		addEvents();
 		
 		carregar();
+		
+		TableColumnModel model = panel.getTable().getColumnModel();
+		model.getColumn(ClienteTableModel.NOME.getIndex()).setPreferredWidth(400);
+		model.getColumn(ClienteTableModel.RG.getIndex()).setPreferredWidth(70);
+		model.getColumn(ClienteTableModel.CPF.getIndex()).setPreferredWidth(70);
+		model.getColumn(ClienteTableModel.TELEFONE.getIndex()).setPreferredWidth(70);
+		model.getColumn(ClienteTableModel.EMAIL.getIndex()).setPreferredWidth(100);
 	}
 	
 	private void addEvents() {
@@ -162,16 +170,13 @@ public class ConsultarClientes implements ActionListener {
 	
 	public void pesquisar() {
 		final String text = panel.getTxtPesquisar().getText();
-		if(text.length() > 0) {
-			RowFilter<ClienteTableModel, Integer> filter = new RowFilter<ClienteTableModel, Integer>() {			
-				@Override
-				public boolean include(RowFilter.Entry<? extends ClienteTableModel, ? extends Integer> entry) {
-					Cliente c = entry.getModel().get(entry.getIdentifier());
-					return c.getNome().toUpperCase().contains(text.toUpperCase());
-				}
-			};
-			sorter.setRowFilter(filter);
-		}
+		sorter.setRowFilter(new RowFilter<ClienteTableModel, Integer>() {			
+			@Override
+			public boolean include(RowFilter.Entry<? extends ClienteTableModel, ? extends Integer> entry) {
+				Cliente c = entry.getModel().get(entry.getIdentifier());
+				return c.getNome().toUpperCase().contains(text.toUpperCase());
+			}
+		});
 	}
 	
 	@Override

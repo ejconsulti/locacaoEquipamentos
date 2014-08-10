@@ -26,14 +26,14 @@ public class ProdutoOS extends Produto {
 	public ProdutoOS() {}
 
 	public ProdutoOS(Integer id, String nome, double valorDiario,
-			double valorMensal, int quantidadeTotal, int quantidade, 
+			double valorMensal, double quantidadeTotal, double quantidade, 
 			int dias, int locado) {
 		super(id, nome, valorDiario, valorMensal, quantidadeTotal, quantidade);
 		this.dias = dias;
 		this.locado = locado;
 	}
 	
-	public ProdutoOS(Produto p, int quantidade, int dias, int locado) {
+	public ProdutoOS(Produto p, double quantidade, int dias, int locado) {
 		this(p.getId(), p.getNome(), p.getValorDiario(), p.getValorMensal(), 
 				p.getQuantidade(), quantidade, dias, locado);
 	}
@@ -66,7 +66,7 @@ public class ProdutoOS extends Produto {
 	
 	public static ProdutoOS rsToObject(ResultSet rs) throws SQLException {
 		return new ProdutoOS(rs.getInt(ID), rs.getString(NOME), rs.getDouble(VALOR_DIARIO),
-				rs.getDouble(VALOR_MENSAL), rs.getInt(QUANTIDADE), rs.getInt(QUANTIDADE_LOCADA), 
+				rs.getDouble(VALOR_MENSAL), rs.getDouble(QUANTIDADE), rs.getDouble(QUANTIDADE_LOCADA), 
 				rs.getInt(DIAS), rs.getInt(LOCADO));
 	}
 

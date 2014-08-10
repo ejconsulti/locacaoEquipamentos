@@ -62,14 +62,19 @@ public class CadastrarProduto implements ActionListener {
 			dialog.getTxtValorMensal().requestFocus();
 			return;
 		}
+		String strQuantidade = dialog.getTxtValorMensal().getText();
+		if(strQuantidade.isEmpty()) {
+			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Quantidade'.");
+			dialog.getTxtQuantidade().requestFocus();
+			return;
+		}
 		
 		// Cadastrar produto
 		ContentValues values = new ContentValues();
 		values.put(Produto.NOME, nome);
 		values.put(Produto.VALOR_DIARIO, dialog.getTxtValorDiario().doubleValue());
 		values.put(Produto.VALOR_MENSAL, dialog.getTxtValorMensal().doubleValue());
-		
-		int quantidade = (int) dialog.getSpnQuantidade().getValue();
+		Double quantidade = dialog.getTxtQuantidade().doubleValue();
 		values.put(Produto.QUANTIDADE_TOTAL, quantidade);
 		values.put(Produto.QUANTIDADE, quantidade);
 		try {

@@ -13,11 +13,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.RowFilter;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Produto;
 import ejconsulti.locacao.models.ProdutoTableModel;
+import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.PanelConsultar;
 import eso.database.SQLiteDatabase;
 import eso.utils.Log;
@@ -52,6 +55,19 @@ public class ConsultarProdutos implements ActionListener {
 		addEvents();
 		
 		carregar();
+
+		//Organizar colunas
+		TableColumnModel model = panel.getTable().getColumnModel();
+		model.getColumn(ProdutoTableModel.NOME.getIndex()).setPreferredWidth(400);
+		TableColumn c = model.getColumn(ProdutoTableModel.VALOR_DIARIO.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		c = model.getColumn(ProdutoTableModel.VALOR_MENSAL.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		model.getColumn(ProdutoTableModel.QTD_DISPONIVEL.getIndex()).setPreferredWidth(50);
+		model.getColumn(ProdutoTableModel.QTD_LOCADO.getIndex()).setPreferredWidth(50);
+		model.getColumn(ProdutoTableModel.QTD_TOTAL.getIndex()).setPreferredWidth(50);
 	}
 	
 	private void addEvents() {

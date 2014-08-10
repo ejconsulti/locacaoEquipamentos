@@ -2,20 +2,19 @@ package ejconsulti.locacao.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Window;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 
 import net.miginfocom.swing.MigLayout;
 import eso.components.DoubleField;
-import javax.swing.ImageIcon;
 
 /**
  * Dialog de produto
@@ -29,7 +28,7 @@ public class DialogProduto extends JDialog {
 	private JTextField txtNome;
 	private DoubleField txtValorDiario;
 	private DoubleField txtValorMensal;
-	private JSpinner spnQuantidade;
+	private DoubleField spnQuantidade;
 
 	private JButton btnSalvar;
 	private JButton btnCancelar;
@@ -67,6 +66,21 @@ public class DialogProduto extends JDialog {
 		contentPanel.add(l2, "cell 1 1,alignx trailing");
 		
 		txtValorDiario = new DoubleField(0.0);
+		txtValorDiario.addFocusListener(new FocusListener() {
+			double valor;
+			@Override
+			public void focusLost(FocusEvent e) {
+				double valorAtual = txtValorDiario.doubleValue();
+				if (valorAtual != valor) {
+					txtValorMensal.setValue(valorAtual * 30);
+				}
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				valor = txtValorDiario.doubleValue();
+			}
+		});
 		txtValorDiario.setColumns(8);
 		contentPanel.add(txtValorDiario, "cell 2 1");
 		
@@ -88,9 +102,9 @@ public class DialogProduto extends JDialog {
 		l4.setForeground(Color.RED);
 		contentPanel.add(l4, "cell 1 3,alignx trailing");
 		
-		spnQuantidade = new JSpinner();
-		spnQuantidade.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		spnQuantidade.setMinimumSize(new Dimension(100, 10));
+		spnQuantidade = new DoubleField();
+		spnQuantidade.setColumns(8);
+		spnQuantidade.setMinValue(0.0);
 		contentPanel.add(spnQuantidade, "cell 2 3");
 		
 		JPanel buttonPanel = new JPanel();
@@ -118,7 +132,7 @@ public class DialogProduto extends JDialog {
 		return txtValorMensal;
 	}
 
-	public JSpinner getSpnQuantidade() {
+	public DoubleField getTxtQuantidade() {
 		return spnQuantidade;
 	}
 

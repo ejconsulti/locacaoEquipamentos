@@ -14,11 +14,11 @@ public class ProdutoOSTableModel extends TableModel<ProdutoOS> {
 	private static final long serialVersionUID = 1L;
 	
 	public static final TableColumn NOME = new TableColumn("Nome", String.class, false);
-    public static final TableColumn VALOR_DIARIO = new TableColumn("Valor diário", String.class, false);
-    public static final TableColumn VALOR_MENSAL = new TableColumn("Valor mensal", String.class, false);
-    public static final TableColumn QUANTIDADE = new TableColumn("Quantidade", Integer.class, true);
+    public static final TableColumn VALOR_DIARIO = new TableColumn("Valor diário", Double.class, false);
+    public static final TableColumn VALOR_MENSAL = new TableColumn("Valor mensal", Double.class, false);
+    public static final TableColumn QUANTIDADE = new TableColumn("Quantidade", Double.class, true);
     public static final TableColumn DIAS = new TableColumn("Dias", Integer.class, true);
-    public static final TableColumn TOTAL = new TableColumn("Total", String.class, false);
+    public static final TableColumn TOTAL = new TableColumn("Total", Double.class, false);
     
     public ProdutoOSTableModel() {
     	super(NOME, VALOR_DIARIO, VALOR_MENSAL, QUANTIDADE, DIAS, TOTAL); //Inicializar colunas
@@ -38,15 +38,15 @@ public class ProdutoOSTableModel extends TableModel<ProdutoOS> {
 		if(columnIndex == NOME.getIndex()) {
         	return o.toString();
         } if(columnIndex == VALOR_DIARIO.getIndex()) {
-        	return String.format("%.2f", o.getValorDiario());
+        	return o.getValorDiario();
         } if(columnIndex == VALOR_MENSAL.getIndex()) {
-        	return String.format("%.2f", o.getValorMensal());
+        	return o.getValorMensal();
         } if(columnIndex == QUANTIDADE.getIndex()) {
         	return o.getQuantidade();
         } if(columnIndex == DIAS.getIndex()) {
         	return o.getDias();
         } if(columnIndex == TOTAL.getIndex()) {
-        	return String.format("%.2f", o.getTotal());
+        	return o.getTotal();
         }
 		
         throw new IndexOutOfBoundsException();

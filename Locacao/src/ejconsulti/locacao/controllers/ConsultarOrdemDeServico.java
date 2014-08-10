@@ -14,6 +14,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.RowFilter;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
@@ -21,6 +23,7 @@ import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.OrdemDeServico;
 import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.OrdemDeServicoTableModel;
+import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.PanelConsultarOS;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -58,6 +61,16 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		addEvents();
 
 		carregar();
+		
+		//Organizar colunas
+		TableColumnModel model = panel.getTable().getColumnModel();
+		model.getColumn(OrdemDeServicoTableModel.CODIGO.getIndex()).setPreferredWidth(30);
+		model.getColumn(OrdemDeServicoTableModel.NOME_CLIENTE.getIndex()).setPreferredWidth(400);
+		model.getColumn(OrdemDeServicoTableModel.DATA.getIndex()).setPreferredWidth(50);
+		TableColumn c = model.getColumn(OrdemDeServicoTableModel.VALOR_TOTAL.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		model.getColumn(OrdemDeServicoTableModel.STATUS.getIndex()).setPreferredWidth(70);
 	}
 
 	private void addEvents() {
@@ -220,14 +233,13 @@ public class ConsultarOrdemDeServico implements ActionListener {
 
 	public void pesquisar() {
 		final String text = panel.getTxtPesquisar().getText();
-		RowFilter<OrdemDeServicoTableModel, Integer> filterNomeCliente = new RowFilter<OrdemDeServicoTableModel, Integer>() {			
+		sorter.setRowFilter(new RowFilter<OrdemDeServicoTableModel, Integer>() {			
 			@Override
 			public boolean include(RowFilter.Entry<? extends OrdemDeServicoTableModel, ? extends Integer> entry) {
 				OrdemDeServico o = entry.getModel().get(entry.getIdentifier());
 				return o.getNomeCliente().toUpperCase().contains(text.toUpperCase());
 			}
-		};
-		sorter.setRowFilter(filterNomeCliente);
+		});
 	}
 
 	@Override

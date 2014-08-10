@@ -9,11 +9,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.Endereco;
 import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.ProdutoOSTableModel;
+import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.views.DialogOrdemDeServico;
@@ -47,6 +51,21 @@ public class EditarOrdemDeServico implements ActionListener {
 
 		carregarCliente();
 
+		//Organizar colunas
+		TableColumnModel model = dialog.getTabela().getColumnModel();
+		model.getColumn(ProdutoOSTableModel.NOME.getIndex()).setPreferredWidth(300);
+		TableColumn c = model.getColumn(ProdutoOSTableModel.VALOR_DIARIO.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		c = model.getColumn(ProdutoOSTableModel.VALOR_MENSAL.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+		model.getColumn(ProdutoOSTableModel.QUANTIDADE.getIndex()).setPreferredWidth(50);
+		model.getColumn(ProdutoOSTableModel.DIAS.getIndex()).setPreferredWidth(50);
+		c = model.getColumn(ProdutoOSTableModel.TOTAL.getIndex());
+		c.setPreferredWidth(70);
+		c.setCellRenderer(new ValorCellRenderer());
+				
 		dialog.getCboxNome().setEnabled(false);
 		dialog.getTxtTelefone().setEnabled(false);
 		dialog.getCboxProdutos().setEnabled(false);

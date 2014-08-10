@@ -14,26 +14,29 @@ import eso.table.TableModel;
  */
 public class OrdemDeServicoTableModel extends TableModel<OrdemDeServico> {
 	private static final long serialVersionUID = 1L;
-	
+
+	public static final TableColumn CODIGO = new TableColumn("Código", Integer.class, false);
 	public static final TableColumn NOME_CLIENTE = new TableColumn("Cliente", String.class, false);
     public static final TableColumn DATA = new TableColumn("Data", Date.class, false);
-    public static final TableColumn VALOR_TOTAL = new TableColumn("Valor Total", String.class, false);
+    public static final TableColumn VALOR_TOTAL = new TableColumn("Valor Total", Double.class, false);
     public static final TableColumn STATUS = new TableColumn("Status", Status.class, true);
     
     public OrdemDeServicoTableModel() {
-    	super(NOME_CLIENTE, DATA, VALOR_TOTAL, STATUS); //Inicializar colunas
+    	super(CODIGO, NOME_CLIENTE, DATA, VALOR_TOTAL, STATUS); //Inicializar colunas
     }
     
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		OrdemDeServico o = getRows().get(rowIndex);
 		
-		if(columnIndex == NOME_CLIENTE.getIndex()) {
+		if(columnIndex == CODIGO.getIndex()) {
+			return o.getId();
+		} if(columnIndex == NOME_CLIENTE.getIndex()) {
 			return o.getNomeCliente();
         } if(columnIndex == DATA.getIndex()) {
         	return o.getData();
         } if(columnIndex == VALOR_TOTAL.getIndex()) {
-        	return String.format("%.2f", o.getValor());
+        	return o.getValor();
         } if(columnIndex == STATUS.getIndex()) {
         	return o.getStatus();
         }

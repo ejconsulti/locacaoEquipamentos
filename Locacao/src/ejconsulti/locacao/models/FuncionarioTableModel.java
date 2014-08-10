@@ -19,7 +19,7 @@ public class FuncionarioTableModel extends TableModel<Funcionario> {
 	public static final TableColumn RG = new TableColumn("RG", String.class, false);
 	public static final TableColumn CPF = new TableColumn("CPF", String.class, false);
     public static final TableColumn TELEFONE = new TableColumn("Telefone", String.class, false);
-    public static final TableColumn SALARIO = new TableColumn("Salário", String.class, false);
+    public static final TableColumn SALARIO = new TableColumn("Salário", Double.class, false);
     public static final TableColumn DATA_ENTRADA = new TableColumn("Data de entrada", Date.class, false);
     public static final TableColumn DIA_PAGAMENTO = new TableColumn("Dia de pagamento", Integer.class, false);
     public static final TableColumn PREVISAO_FERIAS = new TableColumn("Previsão de férias", Date.class, false);
@@ -42,7 +42,7 @@ public class FuncionarioTableModel extends TableModel<Funcionario> {
         } if(columnIndex == TELEFONE.getIndex()) {
         	return Text.formatTel(o.getTelefone());
         } if(columnIndex == SALARIO.getIndex()) {
-        	return String.format("%.2f", o.getSalario());
+        	return o.getSalario();
         } if(columnIndex == DATA_ENTRADA.getIndex()) {
         	return o.getDataEntrada();
         } if(columnIndex == DIA_PAGAMENTO.getIndex()) {

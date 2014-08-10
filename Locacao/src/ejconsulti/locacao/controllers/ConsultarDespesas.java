@@ -92,7 +92,6 @@ public class ConsultarDespesas implements ActionListener {
 	public void carregar(int condition) {
 		ResultSet rs = null;
 		model = new DespesaTableModel();
-		model = new DespesaTableModel();
 		panel.getTable().setModel(model);
 		sorter = new TableRowSorter<DespesaTableModel>(model);
 		panel.getTable().setRowSorter(sorter);
@@ -168,16 +167,13 @@ public class ConsultarDespesas implements ActionListener {
 	
 	public void pesquisar() {
 		final String text = panel.getTxtPesquisar().getText();
-//		if(text.length() > 0) {
-			RowFilter<DespesaTableModel, Integer> filter = new RowFilter<DespesaTableModel, Integer>() {			
-				@Override
-				public boolean include(RowFilter.Entry<? extends DespesaTableModel, ? extends Integer> entry) {
-					Despesa d = entry.getModel().get(entry.getIdentifier());
-					return d.getNome().toUpperCase().contains(text.toUpperCase());
-				}
-			};
-			sorter.setRowFilter(filter);
-//		}
+		sorter.setRowFilter(new RowFilter<DespesaTableModel, Integer>() {			
+			@Override
+			public boolean include(RowFilter.Entry<? extends DespesaTableModel, ? extends Integer> entry) {
+				Despesa d = entry.getModel().get(entry.getIdentifier());
+				return d.getNome().toUpperCase().contains(text.toUpperCase());
+			}
+		});
 	}
 	
 	public void consultarPeriodo() {
