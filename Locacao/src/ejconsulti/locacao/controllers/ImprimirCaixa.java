@@ -21,7 +21,6 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import ejconsulti.locacao.assets.Config;
 import ejconsulti.locacao.models.Caixa;
-import ejconsulti.locacao.models.TipoRecebimento;
 import eso.utils.Log;
 
 public class ImprimirCaixa extends Imprimir {
@@ -90,12 +89,12 @@ public class ImprimirCaixa extends Imprimir {
         tabela_caixa.addCell(header_Saida);
         tabela_caixa.addCell(header_ValorSaida);
         
-        for (int i = 0; i < lista.size(); i++){
-        	PdfPCell linha_data = new PdfPCell(new Phrase(new SimpleDateFormat("dd/MM/yyyy").format(lista.get(i).getData().getTime()).toString()));
-        	PdfPCell linha_entrada = new PdfPCell(new Phrase(TipoRecebimento.valueOf(lista.get(i).getTipoEntrada()).toString()));
-        	PdfPCell linha_valorEntrada = new PdfPCell(new Phrase(String.format("%.2f", lista.get(i).getValorEntrada())));
-        	PdfPCell linha_saida = new PdfPCell(new Phrase(lista.get(i).getTipoSaida()));
-        	PdfPCell linha_valorSaida = new PdfPCell(new Phrase(String.format("%.2f", lista.get(i).getValorSaida())));
+        for (Caixa c : lista){
+        	PdfPCell linha_data = new PdfPCell(new Phrase(new SimpleDateFormat("dd/MM/yyyy").format(c.getData())));
+        	PdfPCell linha_entrada = new PdfPCell(new Phrase(c.getTipoEntrada().toString()));
+        	PdfPCell linha_valorEntrada = new PdfPCell(new Phrase(String.format("%.2f", c.getValorEntrada())));
+        	PdfPCell linha_saida = new PdfPCell(new Phrase(c.getTipoSaida()));
+        	PdfPCell linha_valorSaida = new PdfPCell(new Phrase(String.format("%.2f", c.getValorSaida())));
         	
         	linha_data.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         	linha_entrada.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);

@@ -8,20 +8,21 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.RowFilter;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Caixa;
 import ejconsulti.locacao.models.Despesa;
 import ejconsulti.locacao.models.DespesaTableModel;
+import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.DialogCaixa;
 import ejconsulti.locacao.views.PanelConsultarPeriodo;
 import eso.database.SQLiteDatabase;
@@ -31,11 +32,11 @@ public class ConsultarDespesas implements ActionListener {
 	public static final String TAG = ConsultarDespesas.class.getSimpleName();
 	
 	private PanelConsultarPeriodo panel;
-	private DespesaTableModel model;
-	private DialogCaixa dialog;
-	private TableRowSorter<DespesaTableModel> sorter;
 	
-	private List<Despesa> lista;
+	private DespesaTableModel model;
+	private TableRowSorter<DespesaTableModel> sorter;
+
+	private DialogCaixa dialog;
 	
 	public ConsultarDespesas() {
 		initialize();
@@ -44,9 +45,26 @@ public class ConsultarDespesas implements ActionListener {
 	private void initialize() {
 		panel = new PanelConsultarPeriodo();
 		
+		model = new DespesaTableModel();
+		panel.getTable().setModel(model);
+
+		sorter = new TableRowSorter<DespesaTableModel>(model);
+		panel.getTable().setRowSorter(sorter);
+		
 		addEvents();
 		
 		carregar(0);
+		
+		//Organizar colunas
+		TableColumnModel model = panel.getTable().getColumnModel();
+		model.getColumn(DespesaTableModel.NOME.getIndex()).setPreferredWidth(300);
+		model.getColumn(DespesaTableModel.DESCRICAO.getIndex()).setPreferredWidth(70);
+		model.getColumn(DespesaTableModel.DATA_PAGAMENTO.getIndex()).setPreferredWidth(70);
+		TableColumn c = model.getColumn(DespesaTableModel.VALOR.getIndex());
+		c.setPreferredWidth(50);
+		c.setCellRenderer(new ValorCellRenderer());
+		model.getColumn(DespesaTableModel.STATUS.getIndex()).setPreferredWidth(50);
+		model.getColumn(DespesaTableModel.TIPO.getIndex()).setPreferredWidth(50);
 	}
 	
 	private void addEvents() {
@@ -91,11 +109,7 @@ public class ConsultarDespesas implements ActionListener {
 	
 	public void carregar(int condition) {
 		ResultSet rs = null;
-		model = new DespesaTableModel();
-		panel.getTable().setModel(model);
-		sorter = new TableRowSorter<DespesaTableModel>(model);
-		panel.getTable().setRowSorter(sorter);
-		lista = new ArrayList<Despesa>();
+		model.clear();
 		try {
 			if (condition == 0) {
 				rs = DAO.getDatabase().select(null, Despesa.TABLE, null, null, null, Despesa.ID_DESPESA);
@@ -108,7 +122,6 @@ public class ConsultarDespesas implements ActionListener {
 			while(rs.next()) {
 				Despesa d = Despesa.rsToObject(rs);
 				model.add(d);
-				lista.add(d);
 			}
 		} catch (SQLException ex) {
 			Log.e(TAG, "Erro ao carregar despesas", ex);
@@ -189,7 +202,7 @@ public class ConsultarDespesas implements ActionListener {
 	}
 	
 	public void imprimir() {
-		new ImprimirDespesa(lista);
+		new ImprimirDespesa(model.getRows());
 	}
 	
 	@Override

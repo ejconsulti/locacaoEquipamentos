@@ -10,8 +10,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
 import ejconsulti.locacao.models.StatusCellRenderer;
+import ejconsulti.locacao.models.StatusColor;
 
 /**
  * Painel gen�rico para consulta, adi��o, edi��o e exclus�o
@@ -44,7 +44,7 @@ public class PanelConsultarPeriodo extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		table = new JTable();
-		table.setDefaultRenderer(Status.class, new StatusCellRenderer());
+		table.setDefaultRenderer(StatusColor.class, new StatusCellRenderer());
 		scrollPane.setViewportView(table);
 		
 		JPanel headerPanel = new JPanel();

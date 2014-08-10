@@ -2,6 +2,7 @@ package ejconsulti.locacao.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
@@ -49,42 +50,39 @@ public class CadastrarDespesa implements ActionListener {
 			dialog.getTxtNome().requestFocus();
 			return;
 		}
-		
-		String data = dialog.getDataPagamento().getText().trim();
-		if (data.equals("__/__/____")) {
+		Date data = dialog.getDataPagamento().getDate();
+		if (data == null) {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Data Pagamento'.");
 			dialog.getDataPagamento().requestFocus();
 			return;
 		}
-		
 		String valor = dialog.getTxtValor().getText().trim();
 		if (valor.isEmpty()) {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Valor'.");
 			dialog.getTxtValor().requestFocus();
 			return;
 		}
-		
-		int status = dialog.getJcbStatus().getSelectedIndex();
-		if (status == 0) {
-			JOptionPane.showMessageDialog(dialog, "Favor escolher uma opção de status.");
-			dialog.getJcbStatus().requestFocus();
+		Despesa.Status status = (Despesa.Status) dialog.getCboxStatus().getSelectedItem();
+		if (status == null) {
+			JOptionPane.showMessageDialog(dialog, "Favor escolher um status.");
+			dialog.getCboxStatus().requestFocus();
+			return;
+		}
+		Despesa.Tipo tipo = (Despesa.Tipo) dialog.getCboxTipo().getSelectedItem();
+		if (tipo == null) {
+			JOptionPane.showMessageDialog(dialog, "Favor escolher um tipo.");
+			dialog.getCboxTipo().requestFocus();
 			return;
 		}
 		
-		int tipo = dialog.getJcbTipo().getSelectedIndex();
-		if (tipo == 0) {
-			JOptionPane.showMessageDialog(dialog, "Favor escolher uma opção de tipo.");
-			dialog.getJcbTipo().requestFocus();
-			return;
-		}
 		// Cadastrar despesa
 		ContentValues values = new ContentValues();
-		values.put(Despesa.NOME, dialog.getTxtNome().getText().trim());
+		values.put(Despesa.NOME, nome);
 		values.put(Despesa.DESCRICAO, dialog.getTxtDescricao().getText().trim());
-		values.put(Despesa.DATA_PAGAMENTO, dialog.getDataPagamento().getDate());
+		values.put(Despesa.DATA_PAGAMENTO, data);
 		values.put(Despesa.VALOR, dialog.getTxtValor().doubleValue());
-		values.put(Despesa.STATUS, dialog.getJcbStatus().getSelectedIndex());
-		values.put(Despesa.TIPO, dialog.getJcbTipo().getSelectedIndex());
+		values.put(Despesa.STATUS, status.getId());
+		values.put(Despesa.TIPO, tipo.getId());
 		try {
 			DAO.getDatabase().insert(Despesa.TABLE, values);
 		} catch (SQLException e) {
@@ -94,7 +92,7 @@ public class CadastrarDespesa implements ActionListener {
 		
 		dialog.dispose();
 		
-		// Atualiza��o da tabela
+		// Atualização da tabela
 		Main.getFrame().getBtnDespesas().doClick();
 	}
 	

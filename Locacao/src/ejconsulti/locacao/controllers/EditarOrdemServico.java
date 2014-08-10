@@ -15,10 +15,10 @@ import javax.swing.table.TableColumnModel;
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.Endereco;
-import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.ProdutoOSTableModel;
 import ejconsulti.locacao.models.ValorCellRenderer;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.OrdemServico.Status;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.views.DialogOrdemDeServico;
 import eso.database.ContentValues;
@@ -31,18 +31,18 @@ import eso.utils.Log;
  * @author Edison Jr
  *
  */
-public class EditarOrdemDeServico implements ActionListener {
-	public static final String TAG = EditarOrdemDeServico.class.getSimpleName();
+public class EditarOrdemServico implements ActionListener {
+	public static final String TAG = EditarOrdemServico.class.getSimpleName();
 
 	private DialogOrdemDeServico dialog;
 
-	private OrdemDeServico ordem;
+	private OrdemServico ordem;
 
-	public EditarOrdemDeServico(OrdemDeServico ordem) {
+	public EditarOrdemServico(OrdemServico ordem) {
 		initialize(ordem);
 	}
 
-	private void initialize(OrdemDeServico ordem) {
+	private void initialize(OrdemServico ordem) {
 		dialog = new DialogOrdemDeServico(Main.getFrame(), "Ordem de Serviço");
 		this.ordem = ordem;
 
@@ -88,7 +88,7 @@ public class EditarOrdemDeServico implements ActionListener {
 		dialog.getBtnCancelar().addActionListener(this);
 	}
 
-	private void addProdutosTabela(OrdemDeServico ordem) {
+	private void addProdutosTabela(OrdemServico ordem) {
 		ResultSet rs = null;
 		try {
 			//Carrega produtos da ordem de serviço
@@ -160,8 +160,8 @@ public class EditarOrdemDeServico implements ActionListener {
 		if(!data.equals(ordem.getData())) {
 			try {
 				ContentValues values = new ContentValues();
-				values.put(OrdemDeServico.DATA_ENTREGA, data);
-				DAO.getDatabase().update(OrdemDeServico.TABLE, values, OrdemDeServico.ID + " = ?", new Object[]{ordem.getId()});
+				values.put(OrdemServico.DATA_ENTREGA, data);
+				DAO.getDatabase().update(OrdemServico.TABLE, values, OrdemServico.ID + " = ?", new Object[]{ordem.getId()});
 			} catch (SQLException e) {
 				Log.e(TAG, "Erro ao alterar ordem de serviço.");
 				return;
@@ -181,8 +181,8 @@ public class EditarOrdemDeServico implements ActionListener {
 			try {
 				//altera o status da ordem de serviço
 				ContentValues contValues = new ContentValues();
-				contValues.put(OrdemDeServico.STATUS, Status.Cancelada.getId());
-				DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});
+				contValues.put(OrdemServico.STATUS, Status.Cancelada.getId());
+				DAO.getDatabase().update(OrdemServico.TABLE, contValues, OrdemServico.ID+" = ?", new Object[]{ordem.getId()});
 			} catch (Exception e) {
 				Log.e(TAG, "Erro ao cancelar ordem de serviço.", e);
 			}

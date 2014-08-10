@@ -1,6 +1,7 @@
 
 package ejconsulti.locacao.models;
 
+import java.awt.Color;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,8 +24,8 @@ public class Despesa {
 	private String descricao;
 	private Date dataPagamento;
 	private Double valor;
-	private Integer status;
-	private Integer tipo;
+	private Status status;
+	private Tipo tipo;
 	
 	public Despesa() {}
 	
@@ -33,8 +34,8 @@ public class Despesa {
 					String descricao, 
 					Date dataPagamento,
 					Double valor,
-					Integer status,
-					Integer tipo) {
+					Status status,
+					Tipo tipo) {
 		this.id = id;
 		this.nome = nome;
 		this.descricao = descricao;
@@ -72,11 +73,11 @@ public class Despesa {
 		this.dataPagamento = dataPagamento;
 	}
 
-	public Integer getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
@@ -88,11 +89,11 @@ public class Despesa {
 		this.valor = valor;
 	}
 	
-	public Integer getTipo() {
+	public Tipo getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(Integer tipo) {
+	public void setTipo(Tipo tipo) {
 		this.tipo = tipo;
 	}
 
@@ -121,8 +122,72 @@ public class Despesa {
 						   rs.getString(DESCRICAO), 
 						   ContentValues.getAsDate(rs.getString(DATA_PAGAMENTO)), 
 						   rs.getDouble(VALOR), 
-						   rs.getInt(STATUS),
-						   rs.getInt(TIPO));
+						   Status.valueOf(rs.getInt(STATUS)),
+						   Tipo.valueOf(rs.getInt(TIPO)));
 	}
 	
+	public static enum Status implements StatusColor {
+
+		Pago(1, "Pago", Color.BLACK),
+		NaoPago(2, "Não Pago", Color.RED);
+		
+		private int id;
+		private String nome;
+		private Color cor;
+		
+		Status(int id, String nome, Color cor) {
+			this.id = id;
+			this.nome = nome;
+			this.cor = cor;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		
+		public Color getCor() {
+			return cor;
+		}
+		
+		public String toString() {
+			return nome; 
+		}
+		
+		public static Status valueOf(int id) {
+			for(Status o : values())
+				if(o.getId() == id)
+					return o;
+			return null;
+		}
+	}
+	
+	public enum Tipo {
+
+		Fixa(1, "Fixa"),
+		Variavel(2, "Variável");
+		
+		private int id;
+		private String nome;
+		
+		Tipo(int id, String nome) {
+			this.id = id;
+			this.nome = nome;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		
+		public String toString() {
+			return nome; 
+		}
+		
+		public static Tipo valueOf(int id) {
+			for(Tipo o : values())
+				if(o.getId() == id)
+					return o;
+			return null;
+		}
+		
+	}
 }

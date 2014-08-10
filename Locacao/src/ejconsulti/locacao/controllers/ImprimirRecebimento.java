@@ -21,8 +21,6 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import ejconsulti.locacao.assets.Config;
 import ejconsulti.locacao.models.Recebimento;
-import ejconsulti.locacao.models.StatusRecebimento;
-import ejconsulti.locacao.models.TipoRecebimento;
 import eso.utils.Log;
 
 public class ImprimirRecebimento extends Imprimir {
@@ -94,13 +92,13 @@ public class ImprimirRecebimento extends Imprimir {
         tabela_caixa.addCell(header_quantidadeTotal);
         tabela_caixa.addCell(header_status);
         
-        for (int i = 0; i < lista.size(); i++){
-        	PdfPCell linha_ordem = new PdfPCell(new Phrase(lista.get(i).getIdOrdemServico().toString()));
-        	PdfPCell linha_tipoUltimaEntrada = new PdfPCell(new Phrase(TipoRecebimento.valueOf(lista.get(i).getTipo()).toString()));
-        	PdfPCell linha_quantidadeParcial = new PdfPCell(new Phrase(String.format("%.2f", lista.get(i).getQuantidadeParcial())));
-        	PdfPCell linha_quantidadeRestante = new PdfPCell(new Phrase(String.format("%.2f", lista.get(i).getQuantidadeTotal() - lista.get(i).getQuantidadeParcial())));
-        	PdfPCell linha_quantidadeTotal = new PdfPCell(new Phrase(String.format("%.2f", lista.get(i).getQuantidadeTotal())));
-        	PdfPCell linha_status = new PdfPCell(new Phrase(StatusRecebimento.valueOf(lista.get(i).getStatus()).toString()));
+        for (Recebimento r : lista){
+        	PdfPCell linha_ordem = new PdfPCell(new Phrase(r.getIdOrdemServico().toString()));
+        	PdfPCell linha_tipoUltimaEntrada = new PdfPCell(new Phrase(r.getTipo().toString()));
+        	PdfPCell linha_quantidadeParcial = new PdfPCell(new Phrase(String.format("%.2f", r.getValorParcial())));
+        	PdfPCell linha_quantidadeRestante = new PdfPCell(new Phrase(String.format("%.2f", r.getValorTotal() - r.getValorParcial())));
+        	PdfPCell linha_quantidadeTotal = new PdfPCell(new Phrase(String.format("%.2f", r.getValorTotal())));
+        	PdfPCell linha_status = new PdfPCell(new Phrase(r.getStatus().toString()));
         	
         	linha_ordem.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         	linha_tipoUltimaEntrada.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);

@@ -21,7 +21,7 @@ public class Caixa {
 	
 	private Integer id;
 	private Date data;
-	private Integer tipoEntrada;
+	private Recebimento.Tipo tipoEntrada;
 	private Double valorEntrada;
 	private String tipoSaida;
 	private Double valorSaida;
@@ -32,7 +32,7 @@ public class Caixa {
 	
 	public Caixa(Integer id, 
 			Date data, 
-			Integer tipoEntrada, 
+			Recebimento.Tipo tipoEntrada, 
 			Double valorEntrada,
 			String tipoSaida,
 			Double valorSaida,
@@ -60,11 +60,11 @@ public class Caixa {
 		this.data = data;
 	}
 
-	public Integer getTipoEntrada() {
+	public Recebimento.Tipo getTipoEntrada() {
 		return tipoEntrada;
 	}
 
-	public void setTipoEntrada(Integer tipoEntrada) {
+	public void setTipoEntrada(Recebimento.Tipo tipoEntrada) {
 		this.tipoEntrada = tipoEntrada;
 	}
 
@@ -125,12 +125,12 @@ public class Caixa {
 	public static Caixa rsToObject(ResultSet rs) throws SQLException {
 		return new Caixa(rs.getInt(ID_CAIXA), 
 						 ContentValues.getAsDate(rs.getString(DATA)), 
-						   rs.getInt(TIPO_ENTRADA), 
-						   rs.getDouble(VALOR_ENTRADA), 
-						   rs.getString(TIPO_SAIDA),
-						   rs.getDouble(VALOR_SAIDA),
-						   rs.getInt(ID_ENTRADA),
-						   rs.getInt(ID_SAIDA));
+						 Recebimento.Tipo.valueOf(rs.getInt(TIPO_ENTRADA)), 
+						 rs.getDouble(VALOR_ENTRADA), 
+						 rs.getString(TIPO_SAIDA),
+						 rs.getDouble(VALOR_SAIDA),
+						 rs.getInt(ID_ENTRADA),
+						 rs.getInt(ID_SAIDA));
 	}
 	
 }

@@ -28,18 +28,18 @@ import ejconsulti.locacao.assets.Config;
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.Endereco;
-import ejconsulti.locacao.models.OrdemDeServico;
+import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.Produto;
 import ejconsulti.locacao.models.ProdutoOS;
 import eso.utils.Log;
 
 public class GerarReciboEntrega extends Imprimir {
 	
-	private OrdemDeServico ordem;
+	private OrdemServico ordem;
 	private Cliente cliente;
 	private List<ProdutoOS> produtos;
 	
-	public GerarReciboEntrega (OrdemDeServico ordem) {
+	public GerarReciboEntrega (OrdemServico ordem) {
 		super("recibos/entrega/", 
 				new SimpleDateFormat("yyyy-MMM-dd, EEE HH-mm-ss").format(new Date())+".pdf");
 		this.ordem = ordem;

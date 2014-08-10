@@ -19,7 +19,7 @@ public class HistoricoRecebimento {
 	private Integer idRecebimento;
 	private Double valor;
 	private Date data;
-	private Integer tipoRecebimento;
+	private Recebimento.Tipo tipoRecebimento;
 	
 	public HistoricoRecebimento() {}
 	
@@ -27,7 +27,7 @@ public class HistoricoRecebimento {
 								Integer idRecebimento, 
 								Double valor, 
 								Date data,
-								Integer tipoRecebimento) {
+								Recebimento.Tipo tipoRecebimento) {
 		this.idHistorico = idHistorico;
 		this.idRecebimento = idRecebimento;
 		this.valor = valor;
@@ -63,11 +63,11 @@ public class HistoricoRecebimento {
 		this.data = data;
 	}
 	
-	public Integer getTipoRecebimento() {
+	public Recebimento.Tipo getTipoRecebimento() {
 		return tipoRecebimento;
 	}
 	
-	public void setTipoRecebimento(Integer tipoRecebimento) {
+	public void setTipoRecebimento(Recebimento.Tipo tipoRecebimento) {
 		this.tipoRecebimento = tipoRecebimento;
 	}
 
@@ -90,7 +90,7 @@ public class HistoricoRecebimento {
 						   				rs.getInt(ID_RECEBIMENTO), 
 						   				rs.getDouble(VALOR), 
 						   				ContentValues.getAsDate(rs.getString(DATA)),
-						   				rs.getInt(TIPO_RECEBIMENTO));
+						   				Recebimento.Tipo.valueOf(rs.getInt(TIPO_RECEBIMENTO)));
 	}
 	
 }

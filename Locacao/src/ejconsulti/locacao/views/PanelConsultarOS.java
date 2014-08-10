@@ -10,7 +10,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.Despesa;
+import ejconsulti.locacao.models.OrdemServico;
+import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.StatusCellRenderer;
 
 /**
@@ -46,7 +48,9 @@ public class PanelConsultarOS extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		table = new JTable();
-		table.setDefaultRenderer(Status.class, new StatusCellRenderer());
+		table.setDefaultRenderer(Despesa.Status.class, new StatusCellRenderer());
+		table.setDefaultRenderer(OrdemServico.Status.class, new StatusCellRenderer());
+		table.setDefaultRenderer(Recebimento.Status.class, new StatusCellRenderer());
 		scrollPane.setViewportView(table);
 		
 		JPanel headerPanel = new JPanel();

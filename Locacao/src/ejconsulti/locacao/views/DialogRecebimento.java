@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Window;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -15,22 +16,21 @@ import javax.swing.JTable;
 
 import net.miginfocom.swing.MigLayout;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
-import ejconsulti.locacao.models.OrdemDeServico;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.OrdemServico;
+import ejconsulti.locacao.models.OrdemServico.Status;
+import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.StatusCellRenderer;
-import ejconsulti.locacao.models.TipoRecebimento;
 import eso.components.DoubleField;
-import javax.swing.ImageIcon;
 
 public class DialogRecebimento extends JDialog {
 private static final long serialVersionUID = 1L;
 	
 	private JTable table;
 
-	private JComboBox<OrdemDeServico> jcbOrdemServico;
-	private JComboBox<TipoRecebimento> jcbTipo;
-	private DoubleField txtQuantidadeReceber;
-	private DoubleField txtQuantidadeTotal;
+	private JComboBox<OrdemServico> cboxOrdemServico;
+	private JComboBox<Recebimento.Tipo> cboxTipo;
+	private DoubleField txtValorReceber;
+	private DoubleField txtValorTotal;
 	private HistoricoRecebimentoTableModel historicoRecebimentoTableModel;
 	private JTable tabela;
 
@@ -66,8 +66,8 @@ private static final long serialVersionUID = 1L;
 		l1.setForeground(Color.RED);
 		contentPanel.add(l1, "cell 1 0,alignx trailing");
 		
-		jcbOrdemServico = new JComboBox<OrdemDeServico>();
-		contentPanel.add(jcbOrdemServico, "cell 2 0");
+		cboxOrdemServico = new JComboBox<OrdemServico>();
+		contentPanel.add(cboxOrdemServico, "cell 2 0");
 		
 		JLabel lblTipoRecebimento = new JLabel("Tipo de Entrada");
 		contentPanel.add(lblTipoRecebimento, "cell 0 1");
@@ -76,30 +76,30 @@ private static final long serialVersionUID = 1L;
 		l2.setForeground(Color.RED);
 		contentPanel.add(l2, "cell 1 1,alignx trailing");
 		
-		jcbTipo = new JComboBox<TipoRecebimento>(TipoRecebimento.values());
-		contentPanel.add(jcbTipo, "cell 2 1");
+		cboxTipo = new JComboBox<Recebimento.Tipo>(Recebimento.Tipo.values());
+		contentPanel.add(cboxTipo, "cell 2 1");
 		
-		JLabel lblQuantidadeReceber = new JLabel("Quantidade a receber");
+		JLabel lblQuantidadeReceber = new JLabel("Valor à receber");
 		contentPanel.add(lblQuantidadeReceber, "cell 0 2");
 		
 		JLabel l3 = new JLabel("*");
 		l3.setForeground(Color.RED);
 		contentPanel.add(l3, "cell 1 2,alignx trailing");
 		
-		txtQuantidadeReceber = new DoubleField(0.0);
-		txtQuantidadeReceber.setColumns(8);
-		contentPanel.add(txtQuantidadeReceber, "cell 2 2");
+		txtValorReceber = new DoubleField(0.0);
+		txtValorReceber.setColumns(8);
+		contentPanel.add(txtValorReceber, "cell 2 2");
 		
-		JLabel lblQuantidadeTotal = new JLabel("Quantidade total");
+		JLabel lblQuantidadeTotal = new JLabel("Valor total");
 		contentPanel.add(lblQuantidadeTotal, "cell 0 3");
 		
 		JLabel l5 = new JLabel("*");
 		l5.setForeground(Color.RED);
 		contentPanel.add(l5, "cell 1 3,alignx trailing");
 		
-		txtQuantidadeTotal = new DoubleField(0.0);
-		txtQuantidadeTotal.setColumns(8);
-		contentPanel.add(txtQuantidadeTotal, "cell 2 3");
+		txtValorTotal = new DoubleField(0.0);
+		txtValorTotal.setColumns(8);
+		contentPanel.add(txtValorTotal, "cell 2 3");
 		
 		historicoRecebimentoTableModel = new HistoricoRecebimentoTableModel();
 
@@ -124,20 +124,20 @@ private static final long serialVersionUID = 1L;
 		return table;
 	}
 
-	public JComboBox<OrdemDeServico> getJcbOrdemServico() {
-		return jcbOrdemServico;
+	public JComboBox<OrdemServico> getCboxOrdemServico() {
+		return cboxOrdemServico;
 	}
 
-	public JComboBox<TipoRecebimento> getJcbTipo() {
-		return jcbTipo;
+	public JComboBox<Recebimento.Tipo> getCboxTipo() {
+		return cboxTipo;
 	}
 	
-	public DoubleField getTxtQuantidadeReceber() {
-		return txtQuantidadeReceber;
+	public DoubleField getTxtValorReceber() {
+		return txtValorReceber;
 	}
 
-	public DoubleField getTxtQuantidadeTotal() {
-		return txtQuantidadeTotal;
+	public DoubleField getTxtValorTotal() {
+		return txtValorTotal;
 	}
 
 	public JButton getBtnSalvar() {

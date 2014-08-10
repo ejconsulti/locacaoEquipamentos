@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Window;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -12,11 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import ejconsulti.locacao.models.StatusDespesa;
-import ejconsulti.locacao.models.TipoDespesa;
+import ejconsulti.locacao.models.Despesa;
 import eso.components.DateField;
 import eso.components.DoubleField;
-import javax.swing.ImageIcon;
 
 /**
  * Dialog de despesa
@@ -31,8 +30,8 @@ public class DialogDespesa extends JDialog {
 	private JTextField txtDescricao;
 	private DateField dataPagamento;
 	private DoubleField txtValor;
-	private JComboBox<StatusDespesa> jcbStatus;
-	private JComboBox<TipoDespesa> jcbTipo;
+	private JComboBox<Despesa.Status> cboxStatus;
+	private JComboBox<Despesa.Tipo> cboxTipo;
 
 	private JButton btnSalvar;
 	private JButton btnCancelar;
@@ -97,8 +96,8 @@ public class DialogDespesa extends JDialog {
 		l4.setForeground(Color.RED);
 		contentPanel.add(l4, "cell 1 4,alignx trailing");
 		
-		jcbStatus = new JComboBox<StatusDespesa>(StatusDespesa.values());
-		contentPanel.add(jcbStatus, "cell 2 4");
+		cboxStatus = new JComboBox<Despesa.Status>(Despesa.Status.values());
+		contentPanel.add(cboxStatus, "cell 2 4");
 		
 		JLabel lblTipo = new JLabel("Tipo");
 		contentPanel.add(lblTipo, "cell 0 5, alignx trailing");
@@ -107,8 +106,8 @@ public class DialogDespesa extends JDialog {
 		l5.setForeground(Color.RED);
 		contentPanel.add(l5, "cell 1 5,alignx trailing");
 		
-		jcbTipo = new JComboBox<TipoDespesa>(TipoDespesa.values());
-		contentPanel.add(jcbTipo, "cell 2 5");
+		cboxTipo = new JComboBox<Despesa.Tipo>(Despesa.Tipo.values());
+		contentPanel.add(cboxTipo, "cell 2 5");
 		
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
@@ -141,12 +140,12 @@ public class DialogDespesa extends JDialog {
 		return txtValor;
 	}
 
-	public JComboBox<StatusDespesa> getJcbStatus() {
-		return jcbStatus;
+	public JComboBox<Despesa.Status> getCboxStatus() {
+		return cboxStatus;
 	}
 	
-	public JComboBox<TipoDespesa> getJcbTipo() {
-		return jcbTipo;
+	public JComboBox<Despesa.Tipo> getCboxTipo() {
+		return cboxTipo;
 	}
 
 	public JButton getBtnSalvar() {

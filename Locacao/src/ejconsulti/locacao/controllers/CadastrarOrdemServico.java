@@ -15,8 +15,8 @@ import javax.swing.event.TableModelListener;
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.Endereco;
-import ejconsulti.locacao.models.OrdemDeServico;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.OrdemServico;
+import ejconsulti.locacao.models.OrdemServico.Status;
 import ejconsulti.locacao.models.Produto;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.views.DialogOrdemDeServico;
@@ -31,15 +31,15 @@ import eso.utils.Log;
  * @author Edison Junior
  *
  */
-public class CadastrarOrdemDeServico implements ActionListener, TableModelListener {
-	public static final String TAG = CadastrarOrdemDeServico.class.getSimpleName();
+public class CadastrarOrdemServico implements ActionListener, TableModelListener {
+	public static final String TAG = CadastrarOrdemServico.class.getSimpleName();
 	
 	private DialogOrdemDeServico dialog;
 	
 	private Cliente cliente;
 	private Integer idEndereco;
 
-	public CadastrarOrdemDeServico() {
+	public CadastrarOrdemServico() {
 		initialize();
 	}
 	
@@ -169,14 +169,14 @@ public class CadastrarOrdemDeServico implements ActionListener, TableModelListen
 		try {
 			//Cadastra a ordem de servi�o
 			ContentValues values = new ContentValues();
-			values.put(OrdemDeServico.ID_CLIENTE, cliente.getId());
-			values.put(OrdemDeServico.ID_ENDERECO_ENTREGA, idEndereco);
-			values.put(OrdemDeServico.DATA_ENTREGA, data);
-			values.put(OrdemDeServico.TOTAL, dialog.getTxtTotal().doubleValue());
-			values.put(OrdemDeServico.STATUS, Status.EmAndamento.getId());
-			values.put(OrdemDeServico.RECEBIMENTO, 0);
+			values.put(OrdemServico.ID_CLIENTE, cliente.getId());
+			values.put(OrdemServico.ID_ENDERECO_ENTREGA, idEndereco);
+			values.put(OrdemServico.DATA_ENTREGA, data);
+			values.put(OrdemServico.TOTAL, dialog.getTxtTotal().doubleValue());
+			values.put(OrdemServico.STATUS, Status.EmAndamento.getId());
+			values.put(OrdemServico.RECEBIMENTO, 0);
 			
-			idOrdemServicoAtual = DAO.getDatabase().insert(OrdemDeServico.TABLE, values);
+			idOrdemServicoAtual = DAO.getDatabase().insert(OrdemServico.TABLE, values);
 		} catch (SQLException e) {
 			Log.e(TAG, "Erro ao cadastrar Ordem de Servi\u00e7o.", e);
 			return;

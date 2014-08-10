@@ -11,7 +11,7 @@ public class HistoricoRecebimentoTableModel extends TableModel<HistoricoRecebime
 	
 	public static final TableColumn VALOR = new TableColumn("Valor", String.class, false);
 	public static final TableColumn DATA = new TableColumn("Data de Entrada", Date.class, false);
-	public static final TableColumn TIPO = new TableColumn("Tipo da Entrada", TipoRecebimento.class, false);
+	public static final TableColumn TIPO = new TableColumn("Tipo da Entrada", Recebimento.Tipo.class, false);
 	
 	public HistoricoRecebimentoTableModel() {
 		super(VALOR, DATA, TIPO);
@@ -26,7 +26,7 @@ public class HistoricoRecebimentoTableModel extends TableModel<HistoricoRecebime
         } if(columnIndex == DATA.getIndex()) {
         	return h.getData();
         } if(columnIndex == TIPO.getIndex()) {
-        	return TipoRecebimento.valueOf(h.getTipoRecebimento());
+        	return h.getTipoRecebimento();
         }
         
         throw new IndexOutOfBoundsException();

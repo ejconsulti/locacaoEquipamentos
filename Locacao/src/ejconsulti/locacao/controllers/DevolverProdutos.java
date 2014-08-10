@@ -16,8 +16,8 @@ import javax.swing.table.TableColumnModel;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
-import ejconsulti.locacao.models.OrdemDeServico;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.OrdemServico;
+import ejconsulti.locacao.models.OrdemServico.Status;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.ProdutoOSTableModel;
 import ejconsulti.locacao.models.ValorCellRenderer;
@@ -30,13 +30,13 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 
 	private DialogReciboDevolucao dialog;
 
-	private OrdemDeServico ordem;
+	private OrdemServico ordem;
 
-	public DevolverProdutos(OrdemDeServico ordem) {
+	public DevolverProdutos(OrdemServico ordem) {
 		initialize(ordem);
 	}
 
-	private void initialize(OrdemDeServico ordem) {
+	private void initialize(OrdemServico ordem) {
 		dialog = new DialogReciboDevolucao(Main.getFrame(), "Recibo de Devolução");
 		this.ordem = ordem;
 
@@ -102,7 +102,7 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 		}
 	}
 	
-	private void carregarProdutos(OrdemDeServico ordem) {
+	private void carregarProdutos(OrdemServico ordem) {
 		ResultSet rs = null;
 		try {
 			//Carrega produtos da ordem de serviço
@@ -160,13 +160,13 @@ public class DevolverProdutos implements ActionListener, TableModelListener{
 			if (!rs.next()){
 				if (ordem.getRecebimento() == 0) {
 					ContentValues contValues = new ContentValues();
-					contValues.put(OrdemDeServico.STATUS, Status.PagamentoPendente.getId());
-					DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});
+					contValues.put(OrdemServico.STATUS, Status.PagamentoPendente.getId());
+					DAO.getDatabase().update(OrdemServico.TABLE, contValues, OrdemServico.ID+" = ?", new Object[]{ordem.getId()});
 				}
 				else{
 					ContentValues contValues = new ContentValues();
-					contValues.put(OrdemDeServico.STATUS, Status.Concluida.getId());
-					DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{ordem.getId()});
+					contValues.put(OrdemServico.STATUS, Status.Concluida.getId());
+					DAO.getDatabase().update(OrdemServico.TABLE, contValues, OrdemServico.ID+" = ?", new Object[]{ordem.getId()});
 				}
 			}
 

@@ -2,7 +2,7 @@ package ejconsulti.locacao.models;
 
 import java.sql.Date;
 
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.OrdemServico.Status;
 import eso.table.TableColumn;
 import eso.table.TableModel;
 
@@ -12,7 +12,7 @@ import eso.table.TableModel;
  * @author �rico Jr
  *
  */
-public class OrdemDeServicoTableModel extends TableModel<OrdemDeServico> {
+public class OrdemServicoTableModel extends TableModel<OrdemServico> {
 	private static final long serialVersionUID = 1L;
 
 	public static final TableColumn CODIGO = new TableColumn("Código", Integer.class, false);
@@ -21,13 +21,13 @@ public class OrdemDeServicoTableModel extends TableModel<OrdemDeServico> {
     public static final TableColumn VALOR_TOTAL = new TableColumn("Valor Total", Double.class, false);
     public static final TableColumn STATUS = new TableColumn("Status", Status.class, true);
     
-    public OrdemDeServicoTableModel() {
+    public OrdemServicoTableModel() {
     	super(CODIGO, NOME_CLIENTE, DATA, VALOR_TOTAL, STATUS); //Inicializar colunas
     }
     
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		OrdemDeServico o = getRows().get(rowIndex);
+		OrdemServico o = getRows().get(rowIndex);
 		
 		if(columnIndex == CODIGO.getIndex()) {
 			return o.getId();
@@ -46,7 +46,7 @@ public class OrdemDeServicoTableModel extends TableModel<OrdemDeServico> {
 	
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		OrdemDeServico o = getRows().get(rowIndex);
+		OrdemServico o = getRows().get(rowIndex);
 		
 		 if(columnIndex == STATUS.getIndex()) {
 			 o.setStatus((Status) aValue);

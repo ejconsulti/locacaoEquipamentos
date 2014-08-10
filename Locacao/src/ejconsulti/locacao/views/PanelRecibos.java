@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
+import ejconsulti.locacao.models.OrdemServico.Status;
 import ejconsulti.locacao.models.StatusCellRenderer;
 
 public class PanelRecibos extends JPanel{

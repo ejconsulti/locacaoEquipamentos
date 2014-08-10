@@ -13,7 +13,7 @@ import eso.database.ContentValues;
  * @author ���rico Jr
  *
  */
-public class OrdemDeServico {
+public class OrdemServico {
 	public static final String TABLE = "ordemServico";
 	public static final String ID = "idOrdemServico";
 	public static final String ID_CLIENTE = "idCliente";
@@ -33,9 +33,9 @@ public class OrdemDeServico {
 	
 	private String nomeCliente;
 	
-	public OrdemDeServico() {}
+	public OrdemServico() {}
 
-	public OrdemDeServico(Integer id, Integer idCliente,
+	public OrdemServico(Integer id, Integer idCliente,
 			Integer idEnderecoEntrega, Date data,
 			Double valor, Status status, Integer recebimento) {
 		this.id = id;
@@ -120,8 +120,8 @@ public class OrdemDeServico {
 	public boolean equals(Object obj) {
 		if(obj == null)
 			return false;
-		if(obj instanceof OrdemDeServico)
-			return ((OrdemDeServico) obj).id == id;
+		if(obj instanceof OrdemServico)
+			return ((OrdemServico) obj).id == id;
 		return false;
 	}
 	
@@ -130,18 +130,18 @@ public class OrdemDeServico {
 		return "" + id;
 	}
 	
-	public static OrdemDeServico rsToObject(ResultSet rs) throws SQLException {
-		return new OrdemDeServico(rs.getInt(ID), rs.getInt(ID_CLIENTE), rs.getInt(ID_ENDERECO_ENTREGA)
+	public static OrdemServico rsToObject(ResultSet rs) throws SQLException {
+		return new OrdemServico(rs.getInt(ID), rs.getInt(ID_CLIENTE), rs.getInt(ID_ENDERECO_ENTREGA)
 				, ContentValues.getAsDate(rs.getString(DATA_ENTREGA)), rs.getDouble(TOTAL), Status.valueOf(rs.getInt(STATUS)), rs.getInt(RECEBIMENTO));
 	}
 	
 	/**
-	 * Status da Ordem de Servi���o
+	 * Status da Ordem de Serviço
 	 * 
 	 * @author Edison Jr
 	 *
 	 */
-	public static enum Status {
+	public static enum Status implements StatusColor {
 
 		Cancelada (-1, "Cancelada", Color.RED),
 		Concluida (0, "Concluída", Color.GREEN),

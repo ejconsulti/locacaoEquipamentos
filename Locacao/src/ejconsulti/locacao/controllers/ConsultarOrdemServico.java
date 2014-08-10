@@ -20,9 +20,9 @@ import javax.swing.table.TableRowSorter;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cliente;
-import ejconsulti.locacao.models.OrdemDeServico;
-import ejconsulti.locacao.models.OrdemDeServico.Status;
-import ejconsulti.locacao.models.OrdemDeServicoTableModel;
+import ejconsulti.locacao.models.OrdemServico;
+import ejconsulti.locacao.models.OrdemServico.Status;
+import ejconsulti.locacao.models.OrdemServicoTableModel;
 import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.PanelConsultarOS;
 import eso.database.ContentValues;
@@ -35,25 +35,25 @@ import eso.utils.Log;
  * @author Edison Jr
  *
  */
-public class ConsultarOrdemDeServico implements ActionListener {
-	public static final String TAG = ConsultarOrdemDeServico.class.getSimpleName();
+public class ConsultarOrdemServico implements ActionListener {
+	public static final String TAG = ConsultarOrdemServico.class.getSimpleName();
 
 	private PanelConsultarOS panel;
 
-	private OrdemDeServicoTableModel model;
-	private TableRowSorter<OrdemDeServicoTableModel> sorter;
+	private OrdemServicoTableModel model;
+	private TableRowSorter<OrdemServicoTableModel> sorter;
 
-	public ConsultarOrdemDeServico() {
+	public ConsultarOrdemServico() {
 		initialize();
 	}
 
 	private void initialize() {
 		panel = new PanelConsultarOS();
 
-		model = new OrdemDeServicoTableModel();
+		model = new OrdemServicoTableModel();
 		panel.getTable().setModel(model);
 
-		sorter = new TableRowSorter<OrdemDeServicoTableModel>(model);
+		sorter = new TableRowSorter<OrdemServicoTableModel>(model);
 		panel.getTable().setRowSorter(sorter);
 
 		panel.getBtnExcluir().setText("Cancelar");
@@ -64,13 +64,13 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		
 		//Organizar colunas
 		TableColumnModel model = panel.getTable().getColumnModel();
-		model.getColumn(OrdemDeServicoTableModel.CODIGO.getIndex()).setPreferredWidth(30);
-		model.getColumn(OrdemDeServicoTableModel.NOME_CLIENTE.getIndex()).setPreferredWidth(400);
-		model.getColumn(OrdemDeServicoTableModel.DATA.getIndex()).setPreferredWidth(50);
-		TableColumn c = model.getColumn(OrdemDeServicoTableModel.VALOR_TOTAL.getIndex());
+		model.getColumn(OrdemServicoTableModel.CODIGO.getIndex()).setPreferredWidth(30);
+		model.getColumn(OrdemServicoTableModel.NOME_CLIENTE.getIndex()).setPreferredWidth(400);
+		model.getColumn(OrdemServicoTableModel.DATA.getIndex()).setPreferredWidth(50);
+		TableColumn c = model.getColumn(OrdemServicoTableModel.VALOR_TOTAL.getIndex());
 		c.setPreferredWidth(70);
 		c.setCellRenderer(new ValorCellRenderer());
-		model.getColumn(OrdemDeServicoTableModel.STATUS.getIndex()).setPreferredWidth(70);
+		model.getColumn(OrdemServicoTableModel.STATUS.getIndex()).setPreferredWidth(70);
 	}
 
 	private void addEvents() {
@@ -91,11 +91,11 @@ public class ConsultarOrdemDeServico implements ActionListener {
 					JPopupMenu menu = new JPopupMenu();
 
 					JMenuItem editar = new JMenuItem("Editar");
-					editar.addActionListener(ConsultarOrdemDeServico.this);
+					editar.addActionListener(ConsultarOrdemServico.this);
 					menu.add(editar);
 					
 					JMenuItem cancelar = new JMenuItem("Cancelar");
-					cancelar.addActionListener(ConsultarOrdemDeServico.this);
+					cancelar.addActionListener(ConsultarOrdemServico.this);
 					menu.add(cancelar);
 
 					JMenu recibo = new JMenu("Recibo");
@@ -103,12 +103,12 @@ public class ConsultarOrdemDeServico implements ActionListener {
 					
 					JMenuItem reeciboEntrega = new JMenuItem("Entrega");
 					reeciboEntrega.setActionCommand("Recibo de Entrega");
-					reeciboEntrega.addActionListener(ConsultarOrdemDeServico.this);
+					reeciboEntrega.addActionListener(ConsultarOrdemServico.this);
 					recibo.add(reeciboEntrega);
 					
 					JMenuItem reciboDevolucao = new JMenuItem("Devolução");
 					reciboDevolucao.setActionCommand("Recibo de Devolução");
-					reciboDevolucao.addActionListener(ConsultarOrdemDeServico.this);
+					reciboDevolucao.addActionListener(ConsultarOrdemServico.this);
 					recibo.add(reciboDevolucao);
 
 					menu.show(panel.getTable(), e.getX(), e.getY());
@@ -130,11 +130,11 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		ResultSet rs = null;
 		try {
 			rs = DAO.getDatabase().select(new String[] {"o.*", "c."+Cliente.NOME}, 
-					OrdemDeServico.TABLE+" o INNER JOIN "+Cliente.TABLE+" c ON c."+Cliente.ID+" = o."+OrdemDeServico.ID_CLIENTE, 
-					null, null, null, OrdemDeServico.DATA_ENTREGA);
+					OrdemServico.TABLE+" o INNER JOIN "+Cliente.TABLE+" c ON c."+Cliente.ID+" = o."+OrdemServico.ID_CLIENTE, 
+					null, null, null, OrdemServico.DATA_ENTREGA);
 
 			while(rs.next()) {
-				OrdemDeServico o = OrdemDeServico.rsToObject(rs);
+				OrdemServico o = OrdemServico.rsToObject(rs);
 				o.setNomeCliente(rs.getString(Cliente.NOME));
 				model.add(o);
 			}
@@ -155,8 +155,8 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		
 		if(row > -1) {
 			int index = panel.getTable().convertRowIndexToModel(row);
-			OrdemDeServico o = model.get(index);
-			new EditarOrdemDeServico(o);
+			OrdemServico o = model.get(index);
+			new EditarOrdemServico(o);
 		}
 	}
 
@@ -178,13 +178,13 @@ public class ConsultarOrdemDeServico implements ActionListener {
 					// Converte a linha do filtro para a linha do modelo
 					int index = panel.getTable().convertRowIndexToModel(row);
 					
-					OrdemDeServico o = model.get(index);
+					OrdemServico o = model.get(index);
 					if(o.getStatus().getId() > 0) {
 						try {
 							//altera o status da ordem de servi�o
 							ContentValues contValues = new ContentValues();
-							contValues.put(OrdemDeServico.STATUS, Status.Cancelada.getId());
-							DAO.getDatabase().update(OrdemDeServico.TABLE, contValues, OrdemDeServico.ID+" = ?", new Object[]{o.getId()});
+							contValues.put(OrdemServico.STATUS, Status.Cancelada.getId());
+							DAO.getDatabase().update(OrdemServico.TABLE, contValues, OrdemServico.ID+" = ?", new Object[]{o.getId()});
 						} catch (Exception e) {
 							Log.e(TAG, "Erro ao cancelar ordem de servi�o na linha "+index, e);
 						}
@@ -203,11 +203,11 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		
 		if(row > -1) {
 			int index = panel.getTable().convertRowIndexToModel(row);
-			OrdemDeServico o = model.get(index);
+			OrdemServico o = model.get(index);
 
 			o = model.get(index);
 
-			if (o.getStatus() == OrdemDeServico.Status.Cancelada)
+			if (o.getStatus() == OrdemServico.Status.Cancelada)
 				JOptionPane.showMessageDialog(panel, "Ordem de serviço cancelada.");
 			else 
 				new GerarReciboEntrega(o);
@@ -219,12 +219,12 @@ public class ConsultarOrdemDeServico implements ActionListener {
 		
 		if(row > -1) {
 			int index = panel.getTable().convertRowIndexToModel(row);
-			OrdemDeServico o = model.get(index);
+			OrdemServico o = model.get(index);
 
 			o = model.get(index);
 
-			if (o.getStatus() == OrdemDeServico.Status.EmAndamento || 
-					o.getStatus() == OrdemDeServico.Status.DevolucaoPendente)
+			if (o.getStatus() == OrdemServico.Status.EmAndamento || 
+					o.getStatus() == OrdemServico.Status.DevolucaoPendente)
 				new DevolverProdutos(o);
 			else
 				JOptionPane.showMessageDialog(panel, "Ordem de serviço "+o.getStatus().toString().toLowerCase());
@@ -233,10 +233,10 @@ public class ConsultarOrdemDeServico implements ActionListener {
 
 	public void pesquisar() {
 		final String text = panel.getTxtPesquisar().getText();
-		sorter.setRowFilter(new RowFilter<OrdemDeServicoTableModel, Integer>() {			
+		sorter.setRowFilter(new RowFilter<OrdemServicoTableModel, Integer>() {			
 			@Override
-			public boolean include(RowFilter.Entry<? extends OrdemDeServicoTableModel, ? extends Integer> entry) {
-				OrdemDeServico o = entry.getModel().get(entry.getIdentifier());
+			public boolean include(RowFilter.Entry<? extends OrdemServicoTableModel, ? extends Integer> entry) {
+				OrdemServico o = entry.getModel().get(entry.getIdentifier());
 				return o.getNomeCliente().toUpperCase().contains(text.toUpperCase());
 			}
 		});
@@ -246,7 +246,7 @@ public class ConsultarOrdemDeServico implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		switch(evt.getActionCommand()) {
 		case "Adicionar":
-			new CadastrarOrdemDeServico();
+			new CadastrarOrdemServico();
 			break;
 		case "Editar":
 			editar();

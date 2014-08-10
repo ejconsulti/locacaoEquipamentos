@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.HistoricoRecebimento;
-import ejconsulti.locacao.models.Produto;
 import ejconsulti.locacao.models.Recebimento;
+import ejconsulti.locacao.models.Recebimento.Tipo;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -26,9 +26,7 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 	
 	private Recebimento recebimento;
 
-	double value;
-	
-	ArrayList<Produto> produto = new ArrayList<Produto>();
+	double valorPendente;
 	
 	public EditarRecebimento(Recebimento recebimento) {
 		this.recebimento = recebimento;
@@ -37,15 +35,16 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 	
 	private void initialize(Recebimento recebimento) {
 		dialog = new DialogRecebimento(Main.getFrame(), "Editar Recebimento");
-		dialog.getJcbOrdemServico().setEnabled(false);
-		dialog.getJcbTipo().setSelectedIndex(recebimento.getTipo());
-		value = recebimento.getQuantidadeTotal() - recebimento.getQuantidadeParcial();
-		dialog.getTxtQuantidadeTotal().setValue(value);
-		dialog.getTxtQuantidadeTotal().setFocusable(false);
-		if (recebimento.getStatus() == 0) {
-			dialog.getJcbTipo().setEnabled(false);
-			dialog.getTxtQuantidadeReceber().setEnabled(false);
-			dialog.getTxtQuantidadeTotal().setEnabled(false);
+		dialog.getCboxOrdemServico().setEnabled(false);
+		dialog.getCboxTipo().setSelectedItem(recebimento.getTipo());
+		valorPendente = recebimento.getValorTotal() - recebimento.getValorParcial();
+		dialog.getTxtValorTotal().setValue(valorPendente);
+		dialog.getTxtValorTotal().setFocusable(false);
+		
+		if (recebimento.getStatus() == Recebimento.Status.Finalizado) {
+			dialog.getCboxTipo().setEnabled(false);
+			dialog.getTxtValorReceber().setEnabled(false);
+			dialog.getTxtValorTotal().setEnabled(false);
 			dialog.getBtnSalvar().setEnabled(false);
 		}
 		addEvents();
@@ -64,36 +63,36 @@ public static final String TAG = EditarRecebimento.class.getSimpleName();
 		
 		// Verificar campos obrigat�rios
 		
-		int tipoRecebimento = dialog.getJcbTipo().getSelectedIndex();
-		if(tipoRecebimento == 0) {
+		Tipo tipo = (Tipo) dialog.getCboxTipo().getSelectedItem();
+		if(tipo == null) {
 			JOptionPane.showMessageDialog(dialog, "Favor escolher o tipo de entrada.");
-			dialog.getJcbTipo().requestFocus();
+			dialog.getCboxTipo().requestFocus();
 			return;
 		}
-		String quantidadeRecebimento = dialog.getTxtQuantidadeReceber().getText();
-		if(quantidadeRecebimento.isEmpty()) {
-			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Quantidade a receber'.");
-			dialog.getTxtQuantidadeReceber().requestFocus();
+		String ValorRecebimento = dialog.getTxtValorReceber().getText();
+		if(ValorRecebimento.isEmpty()) {
+			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Valor à receber'.");
+			dialog.getTxtValorReceber().requestFocus();
 			return;
 		}
-		double valor = dialog.getTxtQuantidadeReceber().doubleValue();
+		double valor = dialog.getTxtValorReceber().doubleValue();
 		int status = 1;
-		if (valor > value) {
-			JOptionPane.showMessageDialog(dialog, "Valor parcial mais valor recebido maior que o total. Favor corrigir.");
-			dialog.getTxtQuantidadeReceber().requestFocus();
+		if (valor > valorPendente) {
+			//TODO: Mostrar troco
+			JOptionPane.showMessageDialog(dialog, "Valor parcial mais valor recebido maior que o pendente.");
+			dialog.getTxtValorReceber().requestFocus();
 			return;
-		}
-		else if (valor == value) {
+		} else if (valor == valorPendente) {
 			status = 0;
 		}
 		// Cadastrar produto
 		ContentValues values = new ContentValues();
 		values.put(Recebimento.ID_ORDEM_SERVICO, recebimento.getIdOrdemServico());
-		values.put(Recebimento.TIPO, tipoRecebimento);
-		values.put(Recebimento.QUANTIDADE_PARCIAL, valor + recebimento.getQuantidadeParcial());
-		values.put(Recebimento.QUANTIDADE_TOTAL, recebimento.getQuantidadeTotal());
+		values.put(Recebimento.TIPO, tipo.getId());
+		values.put(Recebimento.VALOR_PARCIAL, valor + recebimento.getValorParcial());
+		values.put(Recebimento.VALOR_TOTAL, recebimento.getValorTotal());
 		values.put(Recebimento.STATUS, status);
-		values.put(Recebimento.QUANTIDADE_RECEBIMENTO, dialog.getTxtQuantidadeReceber().doubleValue());
+		values.put(Recebimento.VALOR_RECEBIMENTO, dialog.getTxtValorReceber().doubleValue());
 		Date dataAtual = new Date();
 		SimpleDateFormat dia = new SimpleDateFormat("yyyy-MM-dd");  
 		values.put(Recebimento.DATA_RECEBIMENTO, dia.format(dataAtual.getTime()));

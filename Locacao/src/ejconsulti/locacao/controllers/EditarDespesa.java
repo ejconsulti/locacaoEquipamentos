@@ -2,12 +2,15 @@ package ejconsulti.locacao.controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Despesa;
+import ejconsulti.locacao.models.Despesa.Status;
+import ejconsulti.locacao.models.Despesa.Tipo;
 import ejconsulti.locacao.views.DialogDespesa;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -30,16 +33,16 @@ public class EditarDespesa implements ActionListener {
 		dialog.getTxtDescricao().setText(despesa.getDescricao());
 		dialog.getDataPagamento().setDate(despesa.getDataPagamento());
 		dialog.getTxtValor().setValue(despesa.getValor());
-		dialog.getJcbStatus().setSelectedIndex(despesa.getStatus());
-		dialog.getJcbTipo().setSelectedIndex(despesa.getTipo());
+		dialog.getCboxStatus().setSelectedItem(despesa.getStatus());
+		dialog.getCboxTipo().setSelectedItem(despesa.getTipo());
 		
-		if (despesa.getStatus() == 1) {
+		if (despesa.getStatus() == Despesa.Status.Pago) {
 			dialog.getTxtNome().setEnabled(false);
 			dialog.getTxtDescricao().setEnabled(false);
 			dialog.getDataPagamento().setEnabled(false);
 			dialog.getTxtValor().setEnabled(false);
-			dialog.getJcbStatus().setEnabled(false);
-			dialog.getJcbTipo().setEnabled(false);
+			dialog.getCboxStatus().setEnabled(false);
+			dialog.getCboxTipo().setEnabled(false);
 			dialog.getBtnSalvar().setEnabled(false);
 		}
 		
@@ -61,43 +64,39 @@ public class EditarDespesa implements ActionListener {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Nome'.");
 			dialog.getTxtNome().requestFocus();
 			return;
-		}
-				
-		String data = dialog.getDataPagamento().getText().trim();
-		if (data.equals("__/__/____")) {
+		}		
+		Date data = dialog.getDataPagamento().getDate();
+		if (data == null) {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Data Pagamento'.");
 			dialog.getDataPagamento().requestFocus();
 			return;
 		}
-				
 		String valor = dialog.getTxtValor().getText().trim();
 		if (valor.isEmpty()) {
 			JOptionPane.showMessageDialog(dialog, "Favor preencher campo 'Valor'.");
 			dialog.getTxtValor().requestFocus();
 			return;
 		}
-				
-		int status = dialog.getJcbStatus().getSelectedIndex();
-		if (status == 0) {
-			JOptionPane.showMessageDialog(dialog, "Favor escolher uma opção de status.");
-			dialog.getJcbStatus().requestFocus();
+		Status status = (Status) dialog.getCboxStatus().getSelectedItem();
+		if (status == null) {
+			JOptionPane.showMessageDialog(dialog, "Favor escolher um status.");
+			dialog.getCboxStatus().requestFocus();
 			return;
 		}
-				
-		int tipo = dialog.getJcbTipo().getSelectedIndex();
-		if (tipo == 0) {
-			JOptionPane.showMessageDialog(dialog, "Favor escolher uma opção de tipo.");
-			dialog.getJcbTipo().requestFocus();
+		Tipo tipo = (Tipo) dialog.getCboxTipo().getSelectedItem();
+		if (tipo == null) {
+			JOptionPane.showMessageDialog(dialog, "Favor escolher um tipo.");
+			dialog.getCboxTipo().requestFocus();
 			return;
 		}
 				// Cadastrar despesa
 		ContentValues values = new ContentValues();
-		values.put(Despesa.NOME, dialog.getTxtNome().getText().trim());
+		values.put(Despesa.NOME, nome);
 		values.put(Despesa.DESCRICAO, dialog.getTxtDescricao().getText().trim());
-		values.put(Despesa.DATA_PAGAMENTO, dialog.getDataPagamento().getDate());
+		values.put(Despesa.DATA_PAGAMENTO, data);
 		values.put(Despesa.VALOR, dialog.getTxtValor().doubleValue());
-		values.put(Despesa.STATUS, dialog.getJcbStatus().getSelectedIndex());
-		values.put(Despesa.TIPO, dialog.getJcbTipo().getSelectedIndex());
+		values.put(Despesa.STATUS, status.getId());
+		values.put(Despesa.TIPO, tipo.getId());
 		try {
 			DAO.getDatabase().update(Despesa.TABLE, values, Despesa.ID_DESPESA+" = ?", despesa.getId());
 		} catch (SQLException e) {

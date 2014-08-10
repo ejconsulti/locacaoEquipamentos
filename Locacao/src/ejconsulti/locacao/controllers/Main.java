@@ -110,7 +110,7 @@ public class Main implements ActionListener {
 			frame.setPane(consFuncionarios.getContentPanel());
 			break;
 		case "Ordem de Servi\u00e7o":
-			ConsultarOrdemDeServico consOrdemDeServico = new ConsultarOrdemDeServico();
+			ConsultarOrdemServico consOrdemDeServico = new ConsultarOrdemServico();
 			frame.setPane(consOrdemDeServico.getContentPanel());
 			break;
 		case "Despesas":

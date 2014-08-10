@@ -21,7 +21,6 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import ejconsulti.locacao.assets.Config;
 import ejconsulti.locacao.models.Despesa;
-import ejconsulti.locacao.models.StatusDespesa;
 import eso.utils.Log;
 
 public class ImprimirDespesa extends Imprimir {
@@ -93,13 +92,13 @@ public class ImprimirDespesa extends Imprimir {
         tabela_caixa.addCell(header_status);
         tabela_caixa.addCell(header_tipo);
         
-        for (int i = 0; i < lista.size(); i++){
-        	PdfPCell linha_nome = new PdfPCell(new Phrase(lista.get(i).getNome()));
-        	PdfPCell linha_descricao = new PdfPCell(new Phrase(lista.get(i).getDescricao()));
-        	PdfPCell linha_data = new PdfPCell(new Phrase(new SimpleDateFormat("dd/MM/yyyy").format(lista.get(i).getDataPagamento().getTime()).toString()));
-        	PdfPCell linha_valor = new PdfPCell(new Phrase(String.format("%.2f", lista.get(i).getValor())));
-        	PdfPCell linha_status = new PdfPCell(new Phrase(StatusDespesa.valueOf(lista.get(i).getStatus()).toString()));
-        	PdfPCell linha_tipo = new PdfPCell(new Phrase(StatusDespesa.valueOf(lista.get(i).getTipo()).toString()));
+        for (Despesa d : lista){
+        	PdfPCell linha_nome = new PdfPCell(new Phrase(d.getNome()));
+        	PdfPCell linha_descricao = new PdfPCell(new Phrase(d.getDescricao()));
+        	PdfPCell linha_data = new PdfPCell(new Phrase(new SimpleDateFormat("dd/MM/yyyy").format(d.getDataPagamento())));
+        	PdfPCell linha_valor = new PdfPCell(new Phrase(String.format("%.2f", d.getValor())));
+        	PdfPCell linha_status = new PdfPCell(new Phrase(d.getStatus().toString()));
+        	PdfPCell linha_tipo = new PdfPCell(new Phrase(d.getTipo().toString()));
         	
         	linha_nome.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
         	linha_descricao.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
