@@ -6,8 +6,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -21,6 +25,8 @@ import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Endereco;
 import ejconsulti.locacao.models.Funcionario;
 import ejconsulti.locacao.models.FuncionarioTableModel;
+import ejconsulti.locacao.models.Notificacao;
+import ejconsulti.locacao.models.Prioridade;
 import ejconsulti.locacao.models.ValorCellRenderer;
 import ejconsulti.locacao.views.PanelConsultar;
 import eso.database.SQLiteDatabase;
@@ -34,6 +40,86 @@ import eso.utils.Log;
  */
 public class ConsultarFuncionarios implements ActionListener {
 	public static final String TAG = ConsultarFuncionarios.class.getSimpleName();
+	
+	public static final void notificacoes() {
+		List<Notificacao> list = getNotificacoesPagamento();
+		list.addAll(getNotificacoesFerias());
+		
+		Notificacoes.addGrupo("Funcionários", list, new Notificacoes.Action() {
+			@Override
+			public void action(Object objeto) {
+				new EditarFuncionario((Funcionario) objeto);
+			}
+		});
+	}
+	
+	public static final List<Notificacao> getNotificacoesPagamento() {
+		List<Notificacao> list = null;
+		ResultSet rs = null;
+		try {
+			Calendar cal = Calendar.getInstance();
+			int diaAtual = cal.get(Calendar.DAY_OF_MONTH);
+			cal.add(Calendar.DAY_OF_MONTH, 3);
+			int diaFim = cal.get(Calendar.DAY_OF_MONTH);
+			rs = DAO.getDatabase().select(null, Funcionario.TABLE, 
+					Funcionario.DIA_PAGAMENTO+" BETWEEN ? AND ?", new Object[]{diaAtual, diaFim}, null, Funcionario.NOME);
+
+			list = new ArrayList<Notificacao>();
+			while(rs.next()) {
+				Funcionario f = Funcionario.rsToObject(rs);
+				int diferenca = diaAtual - f.getDiaPagamento();
+				
+				Prioridade prioridade = null;
+				if(diferenca <= 0)
+					prioridade = Prioridade.Alta;
+				else if (diferenca == 1)
+					prioridade = Prioridade.Media;
+				else
+					prioridade = Prioridade.Baixa;
+				
+				list.add(new Notificacao(String.format("Pagamento próximo de %s", f.getNome()), f, prioridade));
+			}
+			
+		} catch (SQLException e) {
+			Log.e(TAG, "Erro ao carregar lembrete de pagamento.", e);
+		}
+		return list;
+	}
+	
+	public static final List<Notificacao> getNotificacoesFerias() {
+		List<Notificacao> list = null;
+		ResultSet rs = null;
+		try {
+			Calendar cal = Calendar.getInstance();
+			int diaAtual = cal.get(Calendar.DAY_OF_YEAR);
+			cal.add(Calendar.DAY_OF_YEAR, 30);
+			Date date = new Date(cal.getTimeInMillis());
+			rs = DAO.getDatabase().select(null, Funcionario.TABLE, 
+					Funcionario.PREVISAO_FERIAS+" < ?", new Object[]{date.toString()}, null, Funcionario.NOME);
+
+			list = new ArrayList<Notificacao>();
+			while(rs.next()) {
+				Funcionario f = Funcionario.rsToObject(rs);
+				cal.setTime(f.getPrevisaoFerias());
+				int diaFerias = cal.get(Calendar.DAY_OF_YEAR);
+				int diferenca = diaFerias - diaAtual;
+				
+				Prioridade prioridade = null;
+				if(diferenca <= 0)
+					prioridade = Prioridade.Alta;
+				else if (diferenca <= 15)
+					prioridade = Prioridade.Media;
+				else
+					prioridade = Prioridade.Baixa;
+				
+				list.add(new Notificacao(String.format("Vencimento de férias de %s", f.getNome()), f, prioridade));
+			}
+			
+		} catch (SQLException e) {
+			Log.e(TAG, "Erro ao carregar lembrete de pagamento.", e);
+		}
+		return list;
+	}
 	
 	private PanelConsultar panel;
 	

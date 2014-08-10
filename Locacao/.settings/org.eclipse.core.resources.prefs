@@ -15,6 +15,7 @@ encoding//src/ejconsulti/locacao/controllers/Main.java=UTF-8
 encoding//src/ejconsulti/locacao/models/DespesaTableModel.java=UTF-8
 encoding//src/ejconsulti/locacao/models/OrdemDeServico.java=UTF-8
 encoding//src/ejconsulti/locacao/models/OrdemDeServicoTableModel.java=UTF-8
+encoding//src/ejconsulti/locacao/models/Prioridade.java=UTF-8
 encoding//src/ejconsulti/locacao/models/RecebimentoTableModel.java=UTF-8
 encoding//src/ejconsulti/locacao/models/StatusDespesa.java=UTF-8
 encoding//src/ejconsulti/locacao/models/StatusRecebimento.java=UTF-8

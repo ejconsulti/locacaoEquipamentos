@@ -36,6 +36,7 @@ public class FramePrincipal extends JFrame {
 	private JToggleButton btnCaixa;
 	private JPanel panel;
 	private JLabel label;
+	private JToggleButton btnInicio;
 	
 	public FramePrincipal() {
 		super("Loca\u00e7\u00e3o de Equipamentos");
@@ -62,6 +63,13 @@ public class FramePrincipal extends JFrame {
 		rootPanel.add(headerPanel, BorderLayout.NORTH);
 
 		ButtonGroup btnGroup = new ButtonGroup();
+		
+		btnInicio = new JToggleButton("");
+		btnInicio.setActionCommand("Inicio");
+		btnInicio.setSelected(true);
+		btnGroup.add(btnInicio);
+		btnInicio.setIcon(new ImageIcon(FramePrincipal.class.getResource("/icones/inicio.png")));
+		headerPanel.add(btnInicio);
 		
 		btnClientes = new JToggleButton("Clientes");
 		btnClientes.setIcon(new ImageIcon(getClass().getResource("/icones/clientes.png")));
@@ -127,6 +135,10 @@ public class FramePrincipal extends JFrame {
 			contentPanel.add(container, BorderLayout.CENTER);
 		contentPanel.revalidate();
 		contentPanel.repaint();
+	}
+	
+	public JToggleButton getBtnInicio() {
+		return btnInicio;
 	}
 
 	public JToggleButton getBtnClientes() {
