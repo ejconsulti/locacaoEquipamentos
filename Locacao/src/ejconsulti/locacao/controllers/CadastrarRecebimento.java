@@ -19,6 +19,7 @@ import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.Recebimento.Tipo;
+import ejconsulti.locacao.views.DialogCheque;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -27,6 +28,8 @@ public class CadastrarRecebimento implements ActionListener, FocusListener {
 public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	private DialogRecebimento dialog;
+	
+	private DialogCheque dialogCheque;
 	
 	private HistoricoRecebimentoTableModel model;
 	
@@ -61,6 +64,16 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				if(os != null) {
 					dialog.getTxtValorTotal().setValue(os.getValor());
 					dialog.getTxtValorTotal().setEditable(false);
+				}
+			}
+		});
+		dialog.getCboxTipo().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (dialog.getCboxOrdemServico().getSelectedIndex() == 2) {
+					dialogCheque = new DialogCheque(Main.getFrame(), "Dados do Cheque");
 				}
 			}
 		});
