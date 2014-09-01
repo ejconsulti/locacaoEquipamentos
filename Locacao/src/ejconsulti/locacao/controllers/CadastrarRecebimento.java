@@ -29,7 +29,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	private DialogRecebimento dialog;
 	
-	private DialogCheque dialogCheque;
+	public DialogCheque dialogCheque;
 	
 	private HistoricoRecebimentoTableModel model;
 	
@@ -51,6 +51,10 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
 		else
 			dialog.setVisible(true);
+		
+		dialogCheque = new DialogCheque(Main.getFrame(), "Dados do Cheque");
+		dialogCheque.setVisible(false);
+		
 	}
 	
 	private void addEvents() {
@@ -72,8 +76,9 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if (dialog.getCboxOrdemServico().getSelectedIndex() == 2) {
-					dialogCheque = new DialogCheque(Main.getFrame(), "Dados do Cheque");
+				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
+					
+					dialogCheque.setVisible(true);
 				}
 			}
 		});

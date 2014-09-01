@@ -82,7 +82,7 @@ private static final long serialVersionUID = 1L;
 		
 		
 		JLabel lblDataCheque = new JLabel("Data do Cheque: ");
-		contentPanel.add(lblDataCheque, "cell 20 2");
+		contentPanel.add(lblDataCheque, "cell 0 2");
 		
 		JLabel l3 = new JLabel("*");
 		l3.setForeground(Color.RED);
