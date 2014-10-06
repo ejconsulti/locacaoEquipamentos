@@ -44,15 +44,12 @@ private static final long serialVersionUID = 1L;
 	private PanelEmitente panelEmitente;
 
 	private JComboBox<Emitente> cboxEmitente;
-	private JComboBox<Cartao> cboxCartao;
-	private JComboBox<Cheque> cboxCheque;
+	private JComboBox<?> cboxCartaoCheque;
 	
-	private JButton btnAdicionarCartao;
-	private JButton btnAdicionarCheque;
+	private JButton btnAdicionarCartaoCheque;
 	private JButton btnAdicionarEmitente;
 	
-	private JLabel lblCartao;
-	private JLabel lblCheque;
+	private JLabel lblCartaoCheque;
 	private JLabel lblEmitente;
 	private JLabel l6;
 	private JLabel l7;
@@ -157,69 +154,21 @@ private static final long serialVersionUID = 1L;
 		btnAdicionarEmitente = new JButton("Adicionar Emitente");
 		contentPanel.add(btnAdicionarEmitente, "cell 2 4");
 		
-		lblCartao = new JLabel("Cartão");
-		contentPanel.add(lblCartao, "cell 0 5");
+		lblCartaoCheque = new JLabel();
+		contentPanel.add(lblCartaoCheque, "cell 0 5");
 		
 		l7 = new JLabel("*");
 		l7.setForeground(Color.RED);
 		contentPanel.add(l7, "cell 1 5,alignx trailing");
 		
-		cboxCartao = new JComboBox<Cartao>();
-		contentPanel.add(cboxCartao, "cell 2 5");
+		cboxCartaoCheque = new JComboBox<>();
+		contentPanel.add(cboxCartaoCheque, "cell 2 5");
 		
-		btnAdicionarCartao = new JButton("Adicionar Cartão");
-		contentPanel.add(btnAdicionarCartao, "cell 2 5");
+		btnAdicionarCartaoCheque = new JButton();
+		contentPanel.add(btnAdicionarCartaoCheque, "cell 2 5");
 		
-		lblCheque = new JLabel("Cheque");
-		contentPanel.add(lblCheque, "cell 0 5");
-		
-		cboxCheque = new JComboBox<Cheque>();
-		contentPanel.add(cboxCheque, "cell 2 5");
-		
-		btnAdicionarCheque = new JButton("Adicionar C");
-		contentPanel.add(btnAdicionarCheque, "cell 2 5");
 	}
 	
-	public JLabel getLblCartao() {
-		return lblCartao;
-	}
-
-	public void setLblCartao(JLabel lblCartao) {
-		this.lblCartao = lblCartao;
-	}
-
-	public JLabel getLblCheque() {
-		return lblCheque;
-	}
-
-	public void setLblCheque(JLabel lblCheque) {
-		this.lblCheque = lblCheque;
-	}
-
-	public JLabel getLblEmitente() {
-		return lblEmitente;
-	}
-
-	public void setLblEmitente(JLabel lblEmitente) {
-		this.lblEmitente = lblEmitente;
-	}
-
-	public JLabel getL6() {
-		return l6;
-	}
-
-	public void setL6(JLabel l6) {
-		this.l6 = l6;
-	}
-
-	public JLabel getL7() {
-		return l7;
-	}
-
-	public void setL7(JLabel l7) {
-		this.l7 = l7;
-	}
-
 	public JTable getTable() {
 		return table;
 	}
@@ -309,36 +258,20 @@ private static final long serialVersionUID = 1L;
 		this.cboxEmitente = cboxEmitente;
 	}
 
-	public JComboBox<Cartao> getCboxCartao() {
-		return cboxCartao;
+	public JComboBox<?> getCboxCartaoCheque() {
+		return cboxCartaoCheque;
 	}
 
-	public void setCboxCartao(JComboBox<Cartao> cboxCartao) {
-		this.cboxCartao = cboxCartao;
+	public void setCboxCartaoCheque(JComboBox<?> cboxCartaoCheque) {
+		this.cboxCartaoCheque = cboxCartaoCheque;
+	}
+	
+	public JButton getBtnAdicionarCartaoCheque() {
+		return btnAdicionarCartaoCheque;
 	}
 
-	public JComboBox<Cheque> getCboxCheque() {
-		return cboxCheque;
-	}
-
-	public void setCboxCheque(JComboBox<Cheque> cboxCheque) {
-		this.cboxCheque = cboxCheque;
-	}
-
-	public JButton getBtnAdicionarCartao() {
-		return btnAdicionarCartao;
-	}
-
-	public void setBtnAdicionarCartao(JButton btnAdicionarCartao) {
-		this.btnAdicionarCartao = btnAdicionarCartao;
-	}
-
-	public JButton getBtnAdicionarCheque() {
-		return btnAdicionarCheque;
-	}
-
-	public void setBtnAdicionarCheque(JButton btnAdicionarCheque) {
-		this.btnAdicionarCheque = btnAdicionarCheque;
+	public void setBtnAdicionarCartaoCheque(JButton btnAdicionarCartaoCheque) {
+		this.btnAdicionarCartaoCheque = btnAdicionarCartaoCheque;
 	}
 
 	public JButton getBtnAdicionarEmitente() {
@@ -347,6 +280,38 @@ private static final long serialVersionUID = 1L;
 
 	public void setBtnAdicionarEmitente(JButton btnAdicionarEmitente) {
 		this.btnAdicionarEmitente = btnAdicionarEmitente;
+	}
+
+	public JLabel getLblCartaoCheque() {
+		return lblCartaoCheque;
+	}
+
+	public void setLblCartaoCheque(JLabel lblCartaoCheque) {
+		this.lblCartaoCheque = lblCartaoCheque;
+	}
+
+	public JLabel getLblEmitente() {
+		return lblEmitente;
+	}
+
+	public void setLblEmitente(JLabel lblEmitente) {
+		this.lblEmitente = lblEmitente;
+	}
+
+	public JLabel getL6() {
+		return l6;
+	}
+
+	public void setL6(JLabel l6) {
+		this.l6 = l6;
+	}
+
+	public JLabel getL7() {
+		return l7;
+	}
+
+	public void setL7(JLabel l7) {
+		this.l7 = l7;
 	}
 
 	@Override

@@ -40,20 +40,17 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void initialize() {
 		dialog = new DialogRecebimento(Main.getFrame(), "Cadastrar Recebimento");
 		
-		dialog.getL6().setVisible(false);
-		dialog.getLblEmitente().setVisible(false);
-		dialog.getBtnAdicionarEmitente().setVisible(false);
+		dialog.getL6().setVisible(true);
+		dialog.getLblEmitente().setVisible(true);
+		dialog.getBtnAdicionarEmitente().setVisible(true);
 		
-		dialog.getL7().setVisible(false);
-		dialog.getLblCartao().setVisible(false);
-		dialog.getBtnAdicionarCartao().setVisible(false);
+		dialog.getL7().setVisible(true);
+		dialog.getLblCartaoCheque().setVisible(true);
+		dialog.getLblCartaoCheque().setText("Cartão");
+		dialog.getBtnAdicionarCartaoCheque().setVisible(true);
+		dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
 		
-		dialog.getLblCheque().setVisible(false);
-		dialog.getBtnAdicionarCheque().setVisible(false);
-		
-		dialog.getCboxCartao().setVisible(false);
-		dialog.getCboxCheque().setVisible(false);
-		dialog.getCboxEmitente().setVisible(false);
+		dialog.getCboxEmitente().setVisible(true);
 		
 		model = new HistoricoRecebimentoTableModel();
 		dialog.getTable().setModel(model);
@@ -100,16 +97,14 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 					dialog.getBtnAdicionarEmitente().setVisible(true);
 					
 					dialog.getL7().setVisible(true);
-					dialog.getLblCheque().setVisible(true);
-					dialog.getBtnAdicionarCheque().setVisible(true);
+					dialog.getLblCartaoCheque().setVisible(true);
+					dialog.getLblCartaoCheque().setText("Cheque");
+					dialog.getCboxCartaoCheque().setVisible(true);
+					dialog.getBtnAdicionarCartaoCheque().setVisible(true);
+					dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cheque");
 					
-					dialog.getCboxCheque().setVisible(true);
 					dialog.getCboxEmitente().setVisible(true);
 					
-					dialog.getLblCartao().setVisible(false);
-					dialog.getBtnAdicionarCartao().setVisible(false);
-					
-					dialog.getCboxCartao().setVisible(false);
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
 					dialog.getL6().setVisible(true);
@@ -117,16 +112,13 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 					dialog.getBtnAdicionarEmitente().setVisible(true);
 					
 					dialog.getL7().setVisible(true);
-					dialog.getLblCartao().setVisible(true);
-					dialog.getBtnAdicionarCartao().setVisible(true);
+					dialog.getLblCartaoCheque().setVisible(true);
+					dialog.getLblCartaoCheque().setText("Cartão");
+					dialog.getBtnAdicionarCartaoCheque().setVisible(true);
+					dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
+					dialog.getCboxCartaoCheque().setVisible(true);
 					
 					dialog.getCboxEmitente().setVisible(true);
-					dialog.getCboxCartao().setVisible(true);
-					
-					dialog.getLblCheque().setVisible(false);
-					dialog.getBtnAdicionarCheque().setVisible(false);
-					
-					dialog.getCboxCheque().setVisible(false);
 				}
 				else {
 					dialog.getL6().setVisible(false);
@@ -134,14 +126,12 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 					dialog.getBtnAdicionarEmitente().setVisible(false);
 					
 					dialog.getL7().setVisible(false);
-					dialog.getLblCartao().setVisible(false);
-					dialog.getBtnAdicionarCartao().setVisible(false);
+					dialog.getLblCartaoCheque().setVisible(false);
+					dialog.getLblCartaoCheque().setText("");
+					dialog.getBtnAdicionarCartaoCheque().setVisible(false);
+					dialog.getBtnAdicionarCartaoCheque().setText("");
+					dialog.getCboxCartaoCheque().setVisible(false);
 					
-					dialog.getLblCheque().setVisible(false);
-					dialog.getBtnAdicionarCheque().setVisible(false);
-					
-					dialog.getCboxCartao().setVisible(false);
-					dialog.getCboxCheque().setVisible(false);
 					dialog.getCboxEmitente().setVisible(false);
 				}
 			}
