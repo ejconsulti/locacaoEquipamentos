@@ -13,8 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
+import ejconsulti.locacao.models.Cartao;
+import ejconsulti.locacao.models.Cheque;
+import ejconsulti.locacao.models.Emitente;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.OrdemServico.Status;
@@ -36,7 +40,23 @@ private static final long serialVersionUID = 1L;
 
 	private JButton btnSalvar;
 	private JButton btnCancelar;
+	
+	private PanelEmitente panelEmitente;
 
+	private JComboBox<Emitente> cboxEmitente;
+	private JComboBox<Cartao> cboxCartao;
+	private JComboBox<Cheque> cboxCheque;
+	
+	private JButton btnAdicionarCartao;
+	private JButton btnAdicionarCheque;
+	private JButton btnAdicionarEmitente;
+	
+	private JLabel lblCartao;
+	private JLabel lblCheque;
+	private JLabel lblEmitente;
+	private JLabel l6;
+	private JLabel l7;
+	
 	public DialogRecebimento(Window owner, String title) {
 		super(owner, title);
 		intialize();
@@ -70,42 +90,42 @@ private static final long serialVersionUID = 1L;
 		contentPanel.add(cboxOrdemServico, "cell 2 0");
 		
 		JLabel lblTipoRecebimento = new JLabel("Tipo de Entrada");
-		contentPanel.add(lblTipoRecebimento, "cell 0 1");
+		contentPanel.add(lblTipoRecebimento, "cell 0 3");
 		
 		JLabel l2 = new JLabel("*");
 		l2.setForeground(Color.RED);
-		contentPanel.add(l2, "cell 1 1,alignx trailing");
+		contentPanel.add(l2, "cell 1 3,alignx trailing");
 		
 		cboxTipo = new JComboBox<Recebimento.Tipo>(Recebimento.Tipo.values());
-		contentPanel.add(cboxTipo, "cell 2 1");
+		contentPanel.add(cboxTipo, "cell 2 3");
 		
 		JLabel lblQuantidadeReceber = new JLabel("Valor à receber");
-		contentPanel.add(lblQuantidadeReceber, "cell 0 2");
+		contentPanel.add(lblQuantidadeReceber, "cell 0 1");
 		
 		JLabel l3 = new JLabel("*");
 		l3.setForeground(Color.RED);
-		contentPanel.add(l3, "cell 1 2,alignx trailing");
+		contentPanel.add(l3, "cell 1 1,alignx trailing");
 		
 		txtValorReceber = new DoubleField(0.0);
 		txtValorReceber.setColumns(8);
-		contentPanel.add(txtValorReceber, "cell 2 2");
+		contentPanel.add(txtValorReceber, "cell 2 1");
 		
 		JLabel lblQuantidadeTotal = new JLabel("Valor total");
-		contentPanel.add(lblQuantidadeTotal, "cell 0 3");
+		contentPanel.add(lblQuantidadeTotal, "cell 0 2");
 		
 		JLabel l5 = new JLabel("*");
 		l5.setForeground(Color.RED);
-		contentPanel.add(l5, "cell 1 3,alignx trailing");
+		contentPanel.add(l5, "cell 1 2,alignx trailing");
 		
 		txtValorTotal = new DoubleField(0.0);
 		txtValorTotal.setColumns(8);
-		contentPanel.add(txtValorTotal, "cell 2 3");
+		contentPanel.add(txtValorTotal, "cell 2 2");
 		
 		historicoRecebimentoTableModel = new HistoricoRecebimentoTableModel();
 
 		tabela = new JTable(historicoRecebimentoTableModel);
-		tabela.setPreferredScrollableViewportSize(new Dimension(400, 100));
-		contentPanel.add(new JScrollPane(tabela), "cell 0 4 3");
+		tabela.setPreferredScrollableViewportSize(new Dimension(475, 100));
+		contentPanel.add(new JScrollPane(tabela), "cell 0 7 3");
 		
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
@@ -118,38 +138,215 @@ private static final long serialVersionUID = 1L;
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
 		buttonPanel.add(btnCancelar);
+		
+		panelEmitente = new PanelEmitente();
+		panelEmitente.setBorder(new TitledBorder(null, "Dados do Emitente", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelEmitente.setEditable(false);
+		contentPanel.add(panelEmitente, "cell 0 6 3 1,alignx left");
+		
+		lblEmitente = new JLabel("Nome do Emitente");
+		contentPanel.add(lblEmitente, "cell 0 4,alignx trailing");
+		
+		l6 = new JLabel("*");
+		l6.setForeground(Color.RED);
+		contentPanel.add(l6, "cell 1 4,alignx trailing");
+		
+		cboxEmitente = new JComboBox<Emitente>();
+		contentPanel.add(cboxEmitente, "cell 2 4");
+		
+		btnAdicionarEmitente = new JButton("Adicionar Emitente");
+		contentPanel.add(btnAdicionarEmitente, "cell 2 4");
+		
+		lblCartao = new JLabel("Cartão");
+		contentPanel.add(lblCartao, "cell 0 5");
+		
+		l7 = new JLabel("*");
+		l7.setForeground(Color.RED);
+		contentPanel.add(l7, "cell 1 5,alignx trailing");
+		
+		cboxCartao = new JComboBox<Cartao>();
+		contentPanel.add(cboxCartao, "cell 2 5");
+		
+		btnAdicionarCartao = new JButton("Adicionar Cartão");
+		contentPanel.add(btnAdicionarCartao, "cell 2 5");
+		
+		lblCheque = new JLabel("Cheque");
+		contentPanel.add(lblCheque, "cell 0 5");
+		
+		cboxCheque = new JComboBox<Cheque>();
+		contentPanel.add(cboxCheque, "cell 2 5");
+		
+		btnAdicionarCheque = new JButton("Adicionar C");
+		contentPanel.add(btnAdicionarCheque, "cell 2 5");
 	}
 	
+	public JLabel getLblCartao() {
+		return lblCartao;
+	}
+
+	public void setLblCartao(JLabel lblCartao) {
+		this.lblCartao = lblCartao;
+	}
+
+	public JLabel getLblCheque() {
+		return lblCheque;
+	}
+
+	public void setLblCheque(JLabel lblCheque) {
+		this.lblCheque = lblCheque;
+	}
+
+	public JLabel getLblEmitente() {
+		return lblEmitente;
+	}
+
+	public void setLblEmitente(JLabel lblEmitente) {
+		this.lblEmitente = lblEmitente;
+	}
+
+	public JLabel getL6() {
+		return l6;
+	}
+
+	public void setL6(JLabel l6) {
+		this.l6 = l6;
+	}
+
+	public JLabel getL7() {
+		return l7;
+	}
+
+	public void setL7(JLabel l7) {
+		this.l7 = l7;
+	}
+
 	public JTable getTable() {
 		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
 	}
 
 	public JComboBox<OrdemServico> getCboxOrdemServico() {
 		return cboxOrdemServico;
 	}
 
+	public void setCboxOrdemServico(JComboBox<OrdemServico> cboxOrdemServico) {
+		this.cboxOrdemServico = cboxOrdemServico;
+	}
+
 	public JComboBox<Recebimento.Tipo> getCboxTipo() {
 		return cboxTipo;
 	}
-	
+
+	public void setCboxTipo(JComboBox<Recebimento.Tipo> cboxTipo) {
+		this.cboxTipo = cboxTipo;
+	}
+
 	public DoubleField getTxtValorReceber() {
 		return txtValorReceber;
+	}
+
+	public void setTxtValorReceber(DoubleField txtValorReceber) {
+		this.txtValorReceber = txtValorReceber;
 	}
 
 	public DoubleField getTxtValorTotal() {
 		return txtValorTotal;
 	}
 
+	public void setTxtValorTotal(DoubleField txtValorTotal) {
+		this.txtValorTotal = txtValorTotal;
+	}
+
+	public HistoricoRecebimentoTableModel getHistoricoRecebimentoTableModel() {
+		return historicoRecebimentoTableModel;
+	}
+
+	public void setHistoricoRecebimentoTableModel(
+			HistoricoRecebimentoTableModel historicoRecebimentoTableModel) {
+		this.historicoRecebimentoTableModel = historicoRecebimentoTableModel;
+	}
+
+	public JTable getTabela() {
+		return tabela;
+	}
+
+	public void setTabela(JTable tabela) {
+		this.tabela = tabela;
+	}
+
 	public JButton getBtnSalvar() {
 		return btnSalvar;
+	}
+
+	public void setBtnSalvar(JButton btnSalvar) {
+		this.btnSalvar = btnSalvar;
 	}
 
 	public JButton getBtnCancelar() {
 		return btnCancelar;
 	}
-	
-	public HistoricoRecebimentoTableModel getHistoricoRecebimentoTableModel() {
-		return historicoRecebimentoTableModel;
+
+	public void setBtnCancelar(JButton btnCancelar) {
+		this.btnCancelar = btnCancelar;
+	}
+
+	public PanelEmitente getPanelEmitente() {
+		return panelEmitente;
+	}
+
+	public void setPanelEmitente(PanelEmitente panelEmitente) {
+		this.panelEmitente = panelEmitente;
+	}
+
+	public JComboBox<Emitente> getCboxEmitente() {
+		return cboxEmitente;
+	}
+
+	public void setCboxEmitente(JComboBox<Emitente> cboxEmitente) {
+		this.cboxEmitente = cboxEmitente;
+	}
+
+	public JComboBox<Cartao> getCboxCartao() {
+		return cboxCartao;
+	}
+
+	public void setCboxCartao(JComboBox<Cartao> cboxCartao) {
+		this.cboxCartao = cboxCartao;
+	}
+
+	public JComboBox<Cheque> getCboxCheque() {
+		return cboxCheque;
+	}
+
+	public void setCboxCheque(JComboBox<Cheque> cboxCheque) {
+		this.cboxCheque = cboxCheque;
+	}
+
+	public JButton getBtnAdicionarCartao() {
+		return btnAdicionarCartao;
+	}
+
+	public void setBtnAdicionarCartao(JButton btnAdicionarCartao) {
+		this.btnAdicionarCartao = btnAdicionarCartao;
+	}
+
+	public JButton getBtnAdicionarCheque() {
+		return btnAdicionarCheque;
+	}
+
+	public void setBtnAdicionarCheque(JButton btnAdicionarCheque) {
+		this.btnAdicionarCheque = btnAdicionarCheque;
+	}
+
+	public JButton getBtnAdicionarEmitente() {
+		return btnAdicionarEmitente;
+	}
+
+	public void setBtnAdicionarEmitente(JButton btnAdicionarEmitente) {
+		this.btnAdicionarEmitente = btnAdicionarEmitente;
 	}
 
 	@Override

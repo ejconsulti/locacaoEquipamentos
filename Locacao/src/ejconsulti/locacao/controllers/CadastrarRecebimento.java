@@ -40,6 +40,21 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void initialize() {
 		dialog = new DialogRecebimento(Main.getFrame(), "Cadastrar Recebimento");
 		
+		dialog.getL6().setVisible(false);
+		dialog.getLblEmitente().setVisible(false);
+		dialog.getBtnAdicionarEmitente().setVisible(false);
+		
+		dialog.getL7().setVisible(false);
+		dialog.getLblCartao().setVisible(false);
+		dialog.getBtnAdicionarCartao().setVisible(false);
+		
+		dialog.getLblCheque().setVisible(false);
+		dialog.getBtnAdicionarCheque().setVisible(false);
+		
+		dialog.getCboxCartao().setVisible(false);
+		dialog.getCboxCheque().setVisible(false);
+		dialog.getCboxEmitente().setVisible(false);
+		
 		model = new HistoricoRecebimentoTableModel();
 		dialog.getTable().setModel(model);
 		
@@ -69,6 +84,9 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 					dialog.getTxtValorTotal().setValue(os.getValor());
 					dialog.getTxtValorTotal().setEditable(false);
 				}
+				else {
+					dialog.getTxtValorTotal().setText("");
+				}
 			}
 		});
 		dialog.getCboxTipo().addActionListener(new ActionListener() {
@@ -77,8 +95,54 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
+					dialog.getL6().setVisible(true);
+					dialog.getLblEmitente().setVisible(true);
+					dialog.getBtnAdicionarEmitente().setVisible(true);
 					
-					dialogCheque.setVisible(true);
+					dialog.getL7().setVisible(true);
+					dialog.getLblCheque().setVisible(true);
+					dialog.getBtnAdicionarCheque().setVisible(true);
+					
+					dialog.getCboxCheque().setVisible(true);
+					dialog.getCboxEmitente().setVisible(true);
+					
+					dialog.getLblCartao().setVisible(false);
+					dialog.getBtnAdicionarCartao().setVisible(false);
+					
+					dialog.getCboxCartao().setVisible(false);
+				}
+				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
+					dialog.getL6().setVisible(true);
+					dialog.getLblEmitente().setVisible(true);
+					dialog.getBtnAdicionarEmitente().setVisible(true);
+					
+					dialog.getL7().setVisible(true);
+					dialog.getLblCartao().setVisible(true);
+					dialog.getBtnAdicionarCartao().setVisible(true);
+					
+					dialog.getCboxEmitente().setVisible(true);
+					dialog.getCboxCartao().setVisible(true);
+					
+					dialog.getLblCheque().setVisible(false);
+					dialog.getBtnAdicionarCheque().setVisible(false);
+					
+					dialog.getCboxCheque().setVisible(false);
+				}
+				else {
+					dialog.getL6().setVisible(false);
+					dialog.getLblEmitente().setVisible(false);
+					dialog.getBtnAdicionarEmitente().setVisible(false);
+					
+					dialog.getL7().setVisible(false);
+					dialog.getLblCartao().setVisible(false);
+					dialog.getBtnAdicionarCartao().setVisible(false);
+					
+					dialog.getLblCheque().setVisible(false);
+					dialog.getBtnAdicionarCheque().setVisible(false);
+					
+					dialog.getCboxCartao().setVisible(false);
+					dialog.getCboxCheque().setVisible(false);
+					dialog.getCboxEmitente().setVisible(false);
 				}
 			}
 		});
@@ -90,6 +154,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			rs = DAO.getDatabase().select(null, OrdemServico.TABLE, OrdemServico.STATUS + " IN (1, 2) AND " + OrdemServico.RECEBIMENTO + " = 0", null, null, null);
 		
 			DefaultComboBoxModel<OrdemServico> model = (DefaultComboBoxModel<OrdemServico>) dialog.getCboxOrdemServico().getModel();
+			model.addElement(null);
 			while(rs.next()) {
 				OrdemServico o = OrdemServico.rsToObject(rs);
 				model.addElement(o);
@@ -111,11 +176,6 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void cadastrar() {
 		// Verificar campos obrigat�rios
 		OrdemServico os = (OrdemServico) dialog.getCboxOrdemServico().getSelectedItem();
-		if (os == null) {
-			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
-			dialog.getCboxOrdemServico().requestFocus();
-			return;
-		}
 		Tipo tipo = (Tipo) dialog.getCboxTipo().getSelectedItem();
 		if(tipo == null) {
 			JOptionPane.showMessageDialog(dialog, "Favor escolher o tipo de entrada.");
@@ -150,7 +210,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		values.put(Recebimento.ID_ORDEM_SERVICO, os.getId());
 		values.put(Recebimento.TIPO, tipo.getId());
 		values.put(Recebimento.VALOR_PARCIAL, valorReceber); //TODO: Verificar esta linha (valor parcial é o mesmo do a receber?)
-		values.put(Recebimento.VALOR_TOTAL, valorTotal);
+		values.put(Recebimento.VALOR_TOTAL, valorTotal);     // Sim. Nesse caso o registro está sendo criado, então o valor parcial é o valor recebido quando a compra é parcelada.
 		values.put(Recebimento.STATUS, status);
 		values.put(Recebimento.VALOR_RECEBIMENTO, valorReceber);
 		values.put(Recebimento.DATA_RECEBIMENTO, new Date());
