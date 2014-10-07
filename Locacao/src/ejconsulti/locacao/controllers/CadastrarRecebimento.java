@@ -16,16 +16,13 @@ import javax.swing.JOptionPane;
 import ejconsulti.locacao.assets.DAO;
 import ejconsulti.locacao.models.Cartao;
 import ejconsulti.locacao.models.Cheque;
-import ejconsulti.locacao.models.Cliente;
 import ejconsulti.locacao.models.Emitente;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.Recebimento.Tipo;
-import ejconsulti.locacao.views.DialogCartao;
 import ejconsulti.locacao.views.DialogCheque;
-import ejconsulti.locacao.views.DialogEmitente;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -51,13 +48,13 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		model = new HistoricoRecebimentoTableModel();
 		dialog.getTable().setModel(model);
 		
-		addEvents();
-		
 		addOrdens();
 		
 		addEmitentes();
 
-		if (dialog.getCboxOrdemServico().getModel().getSize() == 0)
+		addEvents();
+		
+		if (dialog.getCboxOrdemServico().getModel().getSize() == 1)
 			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
 		else
 			dialog.setVisible(true);
@@ -88,9 +85,12 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
 					dados(true, "Cheque");
+					addEmitentes();
+					
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
 					dados(true, "Cartão");
+					addEmitentes();
 				}
 				else {
 					dados(false, "Cartão");
@@ -143,18 +143,21 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		}
 	}
 	
-	private void addEmitentes (){
+	private void addEmitentes(){
 		ResultSet rs = null;
+		DefaultComboBoxModel<Emitente> model = null;
+		int condition = dialog.getCboxTipo().getSelectedIndex();
 		try {
-			rs = DAO.getDatabase().select(null, Emitente.TABLE, null, null, null, Emitente.NOME_EMITENTES);
-		
-			
-			DefaultComboBoxModel<Emitente> model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
+			if (condition == 0)
+				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cartao.TABLE+" c ON c." + Cartao.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
+			else if (condition == 2)
+				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cheque.TABLE+" c ON c." + Cheque.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
+			model = new DefaultComboBoxModel<Emitente>();
+			model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
 			while(rs.next()) {
 				Emitente e = Emitente.rsToObject(rs);
 				model.addElement(e);
 			}
-			
 		} catch (SQLException ex) {
 			Log.e(TAG, "Erro ao carregar emitentes", ex);
 		} finally {
