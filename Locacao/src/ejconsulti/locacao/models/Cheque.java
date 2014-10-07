@@ -8,16 +8,15 @@ import eso.database.ContentValues;
 
 public class Cheque {
 	
+	public static final String TABLE = "CHEQUE";
 	public static final String ID = "idCheque";
 	public static final String NOME = "nomeTitularCheque";
 	public static final String DATA = "dataVencimentoCheque";
-	public static final String CPF_CNPJ = "cpf_cnpj";
 	public static final String NUMERO = "numeroCheque";
 	public static final String BANCO = "bancoCheque";
 	public static final String ID_EMITENTE = "idEmitente";
 	
 	private Integer id;
-	private String cpfCnpj;
 	private String nome;
 	private Date dataVencimento;
 	private String numero;
@@ -27,7 +26,6 @@ public class Cheque {
 	public Cheque() {}
 	
 	public Cheque(Integer id,
-			String cpfCnpj,
 			String nome,
 			Date dataVencimento,
 			String numero,
@@ -35,7 +33,6 @@ public class Cheque {
 			Integer idEmitente) {
 		
 		this.id = id;
-		this.cpfCnpj = cpfCnpj;
 		this.nome = nome;
 		this.dataVencimento = dataVencimento;
 		this.numero = numero;
@@ -50,14 +47,6 @@ public class Cheque {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getCpfCnpj() {
-		return cpfCnpj;
-	}
-
-	public void setCpfCnpj(String cpfCnpj) {
-		this.cpfCnpj = cpfCnpj;
 	}
 
 	public String getNome() {
@@ -104,6 +93,11 @@ public class Cheque {
 	public int hashCode() {
 		return id != null ? id : -1;
 	}
+	
+	@Override
+	public String toString() {
+		return banco;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -116,7 +110,6 @@ public class Cheque {
 	
 	public static Cheque rsToObject(ResultSet rs) throws SQLException {
 		return new Cheque(rs.getInt(ID), 
-				               rs.getString(CPF_CNPJ), 
 				               rs.getString(NOME),
 				               ContentValues.getAsDate(rs.getString(DATA)),
 				               rs.getString(NUMERO),

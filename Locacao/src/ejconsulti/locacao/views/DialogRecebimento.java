@@ -74,7 +74,7 @@ private static final long serialVersionUID = 1L;
 		getContentPane().setLayout(new BorderLayout());
 		
 		contentPanel = new JPanel();
-		contentPanel.setLayout(new MigLayout("", "[right]2[][]", "[][][][]"));
+		contentPanel.setLayout(new MigLayout("", "[right]2[][][]", "[][][][]"));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		JLabel lblOrdemServico = new JLabel("Número Ordem de Serviço");
@@ -157,8 +157,9 @@ private static final long serialVersionUID = 1L;
 		cboxEmitente = new JComboBox<Emitente>();
 		contentPanel.add(cboxEmitente, "cell 2 4");
 		
-		//btnAdicionarEmitente = new JButton("Adicionar Emitente");
-		//contentPanel.add(btnAdicionarEmitente, "cell 2 4 3");
+		btnAdicionarEmitente = new JButton();
+		btnAdicionarEmitente.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/adicionar.png")));
+		contentPanel.add(btnAdicionarEmitente, "cell 2 4 3");
 		
 		lblCartaoCheque = new JLabel();
 		contentPanel.add(lblCartaoCheque, "cell 0 5");
@@ -170,8 +171,9 @@ private static final long serialVersionUID = 1L;
 		cboxCartaoCheque = new JComboBox<>();
 		contentPanel.add(cboxCartaoCheque, "cell 2 5");
 		
-		//btnAdicionarCartaoCheque = new JButton();
-		//contentPanel.add(btnAdicionarCartaoCheque, "cell 2 5 3");
+		btnAdicionarCartaoCheque = new JButton();
+		btnAdicionarCartaoCheque.setIcon(new ImageIcon(PanelConsultar.class.getResource("/icones/adicionar.png")));
+		contentPanel.add(btnAdicionarCartaoCheque, "cell 2 5 3");
 		
 	}
 	

@@ -10,7 +10,7 @@ public class Cartao {
 
 	public static final String TABLE = "CARTAO";
 	public static final String ID_CARTAO = "idCartao";
-	public static final String NOME_CARTAO = "nomeCartao";
+	public static final String NOME_CARTAO = "nomeTitularCartao";
 	public static final String NUMERO_CARTAO = "numeroCartao";
 	public static final String BANDEIRA_CARTAO = "bandeiraCartao";
 	public static final String DATA_VENCIMENTO_CARTAO = "dataVencimentoCartao";
@@ -80,6 +80,11 @@ public class Cartao {
 
 	public void setIdEmitente(Integer idEmitente) {
 		this.idEmitente = idEmitente;
+	}
+	
+	@Override
+	public String toString() {
+		return bandeira;
 	}
 
 	@Override

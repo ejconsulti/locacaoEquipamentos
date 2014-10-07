@@ -14,6 +14,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 import ejconsulti.locacao.assets.DAO;
+import ejconsulti.locacao.models.Cartao;
+import ejconsulti.locacao.models.Cheque;
+import ejconsulti.locacao.models.Cliente;
+import ejconsulti.locacao.models.Emitente;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.ProdutoOS;
@@ -42,7 +46,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void initialize() {
 		dialog = new DialogRecebimento(Main.getFrame(), "Cadastrar Recebimento");
 		
-		dados(true, "Cartão", "Adicionar Cartão");
+		dados(true, "Cartão");
 		
 		model = new HistoricoRecebimentoTableModel();
 		dialog.getTable().setModel(model);
@@ -50,6 +54,8 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		addEvents();
 		
 		addOrdens();
+		
+		addEmitentes();
 
 		if (dialog.getCboxOrdemServico().getModel().getSize() == 0)
 			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
@@ -81,17 +87,35 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
-					dados(true, "Cheque", "Adicionar Cheque");
-					new DialogCartao(Main.getFrame(), "Adicionar Cartão").setVisible(true);
+					dados(true, "Cheque");
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
-					dados(true, "Cartão", "Adicionar Cartão");
+					dados(true, "Cartão");
 				}
 				else {
-					dados(false, "Cartão", "Adicionar Cartão");
+					dados(false, "Cartão");
 				}
 			}
 		});
+		dialog.getCboxEmitente().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (dialog.getCboxTipo().getSelectedIndex() == 0) addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
+				else if (dialog.getCboxTipo().getSelectedIndex() == 2) addCheque((Emitente) dialog.getCboxEmitente().getSelectedItem());
+			}
+		});
+		dialog.getCboxCartaoCheque().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		dialog.getBtnAdicionarEmitente().addActionListener(this);
+		dialog.getBtnAdicionarCartaoCheque().addActionListener(this);
 	}
 	
 	private void addOrdens (){
@@ -119,18 +143,90 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		}
 	}
 	
-	public void dados(boolean condition, String tipo, String button) {
+	private void addEmitentes (){
+		ResultSet rs = null;
+		try {
+			rs = DAO.getDatabase().select(null, Emitente.TABLE, null, null, null, Emitente.NOME_EMITENTES);
+		
+			
+			DefaultComboBoxModel<Emitente> model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
+			while(rs.next()) {
+				Emitente e = Emitente.rsToObject(rs);
+				model.addElement(e);
+			}
+			
+		} catch (SQLException ex) {
+			Log.e(TAG, "Erro ao carregar emitentes", ex);
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private void addCartao (Emitente e){
+		ResultSet rs = null;
+		try {
+			rs = DAO.getDatabase().select(null, Cartao.TABLE, Cartao.ID_EMITENTE + " = ?", new Object[]{e.getId()}, null, null);
+		
+			DefaultComboBoxModel<Cartao> model = (DefaultComboBoxModel<Cartao>) dialog.getCboxCartaoCheque().getModel();
+			while(rs.next()) {
+				Cartao c = Cartao.rsToObject(rs);
+				model.addElement(c);
+			}
+			
+		} catch (SQLException ex) {
+			Log.e(TAG, "Erro ao carregar cartões", ex);
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private void addCheque (Emitente e){
+		ResultSet rs = null;
+		try {
+			rs = DAO.getDatabase().select(null, Cheque.TABLE, Cheque.ID_EMITENTE + " = ?", new Object[]{e.getId()}, null, null);
+		
+			DefaultComboBoxModel<Cheque> model = (DefaultComboBoxModel<Cheque>) dialog.getCboxCartaoCheque().getModel();
+			while(rs.next()) {
+				Cheque c = Cheque.rsToObject(rs);
+				model.addElement(c);
+			}
+			
+		} catch (SQLException ex) {
+			Log.e(TAG, "Erro ao carregar cheques", ex);
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void dados(boolean condition, String tipo) {
 		dialog.getLblEmitente().setEnabled(condition);
 		dialog.getL6().setEnabled(condition);
 		dialog.getCboxEmitente().setEnabled(condition);
-		//dialog.getBtnAdicionarEmitente().setEnabled(condition);
+		dialog.getBtnAdicionarEmitente().setEnabled(condition);
 		
 		dialog.getLblCartaoCheque().setEnabled(condition);
 		dialog.getL7().setEnabled(condition);
 		dialog.getCboxCartaoCheque().setEnabled(condition);
 		dialog.getLblCartaoCheque().setText(tipo);
-		//dialog.getBtnAdicionarCartaoCheque().setEnabled(condition);
-		//dialog.getBtnAdicionarCartaoCheque().setText(button);
+		dialog.getBtnAdicionarCartaoCheque().setEnabled(condition);
 		
 		dialog.getPanelEmitente().getLblNome().setEnabled(condition);
 		dialog.getPanelEmitente().getLblTelefone().setEnabled(condition);

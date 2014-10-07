@@ -56,6 +56,11 @@ public class Emitente {
 	public void setCpfCnpj(String cpfCnpj) {
 		this.cpfCnpj = cpfCnpj;
 	}
+	
+	@Override
+	public String toString() {
+		return nome;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
