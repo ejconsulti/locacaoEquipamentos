@@ -10,22 +10,19 @@ public class Emitente {
 	public static final String NOME_EMITENTES = "nomeEmitentes";
 	public static final String TELEFONE_EMITENTES = "telefoneEmitentes";
 	public static final String CPF_CNPJ_EMITENTES = "cpf_cnpj";
-	public static final String ID_RECEBIMENTO = "idRecebimento";
 	
 	private Integer id;
 	private String nome;
 	private String telefone;
 	private String cpfCnpj;
-	private Integer idRecebimento;
 	
 	public Emitente() {}
 	
-	public Emitente(Integer id, String nome, String telefone, String cpfCnpj, Integer idRecebimento) {
+	public Emitente(Integer id, String nome, String telefone, String cpfCnpj) {
 		this.id = id;
 		this.nome = nome;
 		this.telefone = telefone;
 		this.cpfCnpj = cpfCnpj;
-		this.idRecebimento = idRecebimento;
 	}
 
 	public Integer getId() {
@@ -60,14 +57,6 @@ public class Emitente {
 		this.cpfCnpj = cpfCnpj;
 	}
 
-	public Integer getIdRecebimento() {
-		return idRecebimento;
-	}
-
-	public void setIdRecebimento(Integer idRecebimento) {
-		this.idRecebimento = idRecebimento;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null)
@@ -81,8 +70,7 @@ public class Emitente {
 		return new Emitente(rs.getInt(ID_EMITENTES), 
 						 rs.getString(NOME_EMITENTES),
 						 rs.getString(TELEFONE_EMITENTES),
-						 rs.getString(CPF_CNPJ_EMITENTES),
-						 rs.getInt(ID_RECEBIMENTO));
+						 rs.getString(CPF_CNPJ_EMITENTES));
 	}
 	
 }

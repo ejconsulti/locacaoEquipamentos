@@ -16,8 +16,6 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
-import ejconsulti.locacao.models.Cartao;
-import ejconsulti.locacao.models.Cheque;
 import ejconsulti.locacao.models.Emitente;
 import ejconsulti.locacao.models.HistoricoRecebimentoTableModel;
 import ejconsulti.locacao.models.OrdemServico;
@@ -42,10 +40,11 @@ private static final long serialVersionUID = 1L;
 	private JButton btnCancelar;
 	
 	private PanelEmitente panelEmitente;
+	private PanelCartaoCheque panelCartaoCheque;
 
 	private JComboBox<Emitente> cboxEmitente;
 	private JComboBox<?> cboxCartaoCheque;
-	
+
 	private JButton btnAdicionarCartaoCheque;
 	private JButton btnAdicionarEmitente;
 	
@@ -53,6 +52,8 @@ private static final long serialVersionUID = 1L;
 	private JLabel lblEmitente;
 	private JLabel l6;
 	private JLabel l7;
+	
+	private JPanel contentPanel;
 	
 	public DialogRecebimento(Window owner, String title) {
 		super(owner, title);
@@ -72,7 +73,7 @@ private static final long serialVersionUID = 1L;
 		
 		getContentPane().setLayout(new BorderLayout());
 		
-		JPanel contentPanel = new JPanel();
+		contentPanel = new JPanel();
 		contentPanel.setLayout(new MigLayout("", "[right]2[][]", "[][][][]"));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
@@ -122,7 +123,7 @@ private static final long serialVersionUID = 1L;
 
 		tabela = new JTable(historicoRecebimentoTableModel);
 		tabela.setPreferredScrollableViewportSize(new Dimension(475, 100));
-		contentPanel.add(new JScrollPane(tabela), "cell 0 7 3");
+		contentPanel.add(new JScrollPane(tabela), "cell 0 8 3");
 		
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
@@ -141,6 +142,11 @@ private static final long serialVersionUID = 1L;
 		panelEmitente.setEditable(false);
 		contentPanel.add(panelEmitente, "cell 0 6 3 1,alignx left");
 		
+		panelCartaoCheque = new PanelCartaoCheque();
+		panelCartaoCheque.setBorder(new TitledBorder(null, "Dados do Documento", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelCartaoCheque.setEditable(false);
+		contentPanel.add(panelCartaoCheque, "cell 0 7 3 1,alignx left");
+		
 		lblEmitente = new JLabel("Nome do Emitente");
 		contentPanel.add(lblEmitente, "cell 0 4,alignx trailing");
 		
@@ -151,8 +157,8 @@ private static final long serialVersionUID = 1L;
 		cboxEmitente = new JComboBox<Emitente>();
 		contentPanel.add(cboxEmitente, "cell 2 4");
 		
-		btnAdicionarEmitente = new JButton("Adicionar Emitente");
-		contentPanel.add(btnAdicionarEmitente, "cell 2 4");
+		//btnAdicionarEmitente = new JButton("Adicionar Emitente");
+		//contentPanel.add(btnAdicionarEmitente, "cell 2 4 3");
 		
 		lblCartaoCheque = new JLabel();
 		contentPanel.add(lblCartaoCheque, "cell 0 5");
@@ -164,8 +170,8 @@ private static final long serialVersionUID = 1L;
 		cboxCartaoCheque = new JComboBox<>();
 		contentPanel.add(cboxCartaoCheque, "cell 2 5");
 		
-		btnAdicionarCartaoCheque = new JButton();
-		contentPanel.add(btnAdicionarCartaoCheque, "cell 2 5");
+		//btnAdicionarCartaoCheque = new JButton();
+		//contentPanel.add(btnAdicionarCartaoCheque, "cell 2 5 3");
 		
 	}
 	
@@ -205,6 +211,14 @@ private static final long serialVersionUID = 1L;
 		return txtValorTotal;
 	}
 
+	public JPanel getContentPanel() {
+		return contentPanel;
+	}
+
+	public void setContentPanel(JPanel contentPanel) {
+		this.contentPanel = contentPanel;
+	}
+
 	public void setTxtValorTotal(DoubleField txtValorTotal) {
 		this.txtValorTotal = txtValorTotal;
 	}
@@ -240,6 +254,14 @@ private static final long serialVersionUID = 1L;
 
 	public void setBtnCancelar(JButton btnCancelar) {
 		this.btnCancelar = btnCancelar;
+	}
+
+	public PanelCartaoCheque getPanelCartaoCheque() {
+		return panelCartaoCheque;
+	}
+
+	public void setPanelCartaoCheque(PanelCartaoCheque panelCartaoCheque) {
+		this.panelCartaoCheque = panelCartaoCheque;
 	}
 
 	public PanelEmitente getPanelEmitente() {

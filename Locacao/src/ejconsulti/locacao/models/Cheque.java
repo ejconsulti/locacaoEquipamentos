@@ -14,7 +14,7 @@ public class Cheque {
 	public static final String CPF_CNPJ = "cpf_cnpj";
 	public static final String NUMERO = "numeroCheque";
 	public static final String BANCO = "bancoCheque";
-	public static final String ID_RECEBIMENTO = "idRecebimento";
+	public static final String ID_EMITENTE = "idEmitente";
 	
 	private Integer id;
 	private String cpfCnpj;
@@ -22,7 +22,7 @@ public class Cheque {
 	private Date dataVencimento;
 	private String numero;
 	private String banco;
-	private Integer idRecebimento;
+	private Integer idEmitente;
 	
 	public Cheque() {}
 	
@@ -32,7 +32,7 @@ public class Cheque {
 			Date dataVencimento,
 			String numero,
 			String banco,
-			Integer idRecebimento) {
+			Integer idEmitente) {
 		
 		this.id = id;
 		this.cpfCnpj = cpfCnpj;
@@ -40,7 +40,7 @@ public class Cheque {
 		this.dataVencimento = dataVencimento;
 		this.numero = numero;
 		this.banco = banco;
-		this.idRecebimento = idRecebimento;
+		this.idEmitente = idEmitente;
 		
 	}
 
@@ -92,12 +92,12 @@ public class Cheque {
 		this.banco = banco;
 	}
 
-	public Integer getIdRecebimento() {
-		return idRecebimento;
+	public Integer getIdEmitente() {
+		return idEmitente;
 	}
 
-	public void setIdRecebimento(Integer idRecebimento) {
-		this.idRecebimento = idRecebimento;
+	public void setIdEmitente(Integer idEmitente) {
+		this.idEmitente = idEmitente;
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class Cheque {
 				               ContentValues.getAsDate(rs.getString(DATA)),
 				               rs.getString(NUMERO),
 				               rs.getString(BANCO),
-				               rs.getInt(ID_RECEBIMENTO));
+				               rs.getInt(ID_EMITENTE));
 	}
 
 }

@@ -40,17 +40,9 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void initialize() {
 		dialog = new DialogRecebimento(Main.getFrame(), "Cadastrar Recebimento");
 		
-		dialog.getL6().setVisible(true);
-		dialog.getLblEmitente().setVisible(true);
-		dialog.getBtnAdicionarEmitente().setVisible(true);
-		
-		dialog.getL7().setVisible(true);
-		dialog.getLblCartaoCheque().setVisible(true);
 		dialog.getLblCartaoCheque().setText("Cartão");
-		dialog.getBtnAdicionarCartaoCheque().setVisible(true);
-		dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
-		
-		dialog.getCboxEmitente().setVisible(true);
+		//dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
+		dados(true);
 		
 		model = new HistoricoRecebimentoTableModel();
 		dialog.getTable().setModel(model);
@@ -92,47 +84,17 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
-					dialog.getL6().setVisible(true);
-					dialog.getLblEmitente().setVisible(true);
-					dialog.getBtnAdicionarEmitente().setVisible(true);
-					
-					dialog.getL7().setVisible(true);
-					dialog.getLblCartaoCheque().setVisible(true);
 					dialog.getLblCartaoCheque().setText("Cheque");
-					dialog.getCboxCartaoCheque().setVisible(true);
-					dialog.getBtnAdicionarCartaoCheque().setVisible(true);
-					dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cheque");
-					
-					dialog.getCboxEmitente().setVisible(true);
-					
+					//dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cheque");
+					dados(true);
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
-					dialog.getL6().setVisible(true);
-					dialog.getLblEmitente().setVisible(true);
-					dialog.getBtnAdicionarEmitente().setVisible(true);
-					
-					dialog.getL7().setVisible(true);
-					dialog.getLblCartaoCheque().setVisible(true);
 					dialog.getLblCartaoCheque().setText("Cartão");
-					dialog.getBtnAdicionarCartaoCheque().setVisible(true);
-					dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
-					dialog.getCboxCartaoCheque().setVisible(true);
-					
-					dialog.getCboxEmitente().setVisible(true);
+					//dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
+					dados(true);
 				}
 				else {
-					dialog.getL6().setVisible(false);
-					dialog.getLblEmitente().setVisible(false);
-					dialog.getBtnAdicionarEmitente().setVisible(false);
-					
-					dialog.getL7().setVisible(false);
-					dialog.getLblCartaoCheque().setVisible(false);
-					dialog.getLblCartaoCheque().setText("");
-					dialog.getBtnAdicionarCartaoCheque().setVisible(false);
-					dialog.getBtnAdicionarCartaoCheque().setText("");
-					dialog.getCboxCartaoCheque().setVisible(false);
-					
-					dialog.getCboxEmitente().setVisible(false);
+					dados(false);
 				}
 			}
 		});
@@ -161,6 +123,34 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				}
 			}
 		}
+	}
+	
+	public void dados(boolean condition) {
+		dialog.getLblEmitente().setEnabled(condition);
+		dialog.getL6().setEnabled(condition);
+		dialog.getCboxEmitente().setEnabled(condition);
+		//dialog.getBtnAdicionarEmitente().setEnabled(condition);
+		
+		dialog.getLblCartaoCheque().setEnabled(condition);
+		dialog.getL7().setEnabled(condition);
+		dialog.getCboxCartaoCheque().setEnabled(condition);
+		//dialog.getBtnAdicionarCartaoCheque().setEnabled(condition);
+		
+		dialog.getPanelEmitente().getLblNome().setEnabled(condition);
+		dialog.getPanelEmitente().getLblTelefone().setEnabled(condition);
+		dialog.getPanelEmitente().getLblCpfCnpj().setEnabled(condition);
+		dialog.getPanelEmitente().getTxtNomeTitular().setEnabled(condition);
+		dialog.getPanelEmitente().getTxtTelefoneTitular().setEnabled(condition);
+		dialog.getPanelEmitente().getTxtCpfCnpj().setEnabled(condition);
+		
+		dialog.getPanelCartaoCheque().getLblNome().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getLblNumero().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getLblBandeiraBanco().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getLblData().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtNomeTitular().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtNumeroCartaoCheque().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtBandeiraBanco().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtDataVencimento().setEnabled(condition);
 	}
 	
 	private void cadastrar() {

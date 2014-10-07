@@ -18,6 +18,7 @@ public class Recebimento {
 	public static final String VALOR_TOTAL = "quantidadeTotalRecebimento";
 	public static final String STATUS = "statusRecebimento";
 	public static final String DATA_RECEBIMENTO = "dataRecebimento";
+	public static final String ID_EMITENTE = "idEmitente";
 	
 	private Integer id;
 	private Integer idOrdemServico;
@@ -27,6 +28,7 @@ public class Recebimento {
 	private Double valorTotal;
 	private Status status;
 	private Date dataRecebimento;
+	private Integer idEmitente;
 	
 	public Recebimento() {}
 	
@@ -37,7 +39,8 @@ public class Recebimento {
 			           Double valorParcial,
 			           Double valorTotal,
 			           Status status,
-			           Date dataRecebimento) {
+			           Date dataRecebimento,
+			           Integer idEmitente) {
 		
 		this.id = id;
 		this.idOrdemServico = idOrdemServico;
@@ -47,6 +50,7 @@ public class Recebimento {
 		this.valorTotal = valorTotal;
 		this.status = status;
 		this.dataRecebimento = dataRecebimento;
+		this.idEmitente = idEmitente;
 	}
 
 	public Integer getId() {
@@ -119,6 +123,22 @@ public class Recebimento {
 		return id != null ? id : -1;
 	}
 
+	public Integer getIdEmitente() {
+		return idEmitente;
+	}
+
+	public void setIdEmitente(Integer idEmitente) {
+		this.idEmitente = idEmitente;
+	}
+
+	public Double getValorRecebimento() {
+		return valorRecebimento;
+	}
+
+	public void setValorTotal(Double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null)
@@ -136,7 +156,8 @@ public class Recebimento {
 				               rs.getDouble(VALOR_PARCIAL), 
 				               rs.getDouble(VALOR_TOTAL),
 				               Status.valueOf(rs.getInt(STATUS)),
-				               ContentValues.getAsDate(rs.getString(DATA_RECEBIMENTO)));
+				               ContentValues.getAsDate(rs.getString(DATA_RECEBIMENTO)),
+				               rs.getInt(ID_EMITENTE));
 	}
 	
 	public enum Status implements StatusColor {
