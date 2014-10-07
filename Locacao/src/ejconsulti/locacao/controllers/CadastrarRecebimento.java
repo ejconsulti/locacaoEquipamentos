@@ -19,7 +19,9 @@ import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.Recebimento.Tipo;
+import ejconsulti.locacao.views.DialogCartao;
 import ejconsulti.locacao.views.DialogCheque;
+import ejconsulti.locacao.views.DialogEmitente;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -40,9 +42,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	private void initialize() {
 		dialog = new DialogRecebimento(Main.getFrame(), "Cadastrar Recebimento");
 		
-		dialog.getLblCartaoCheque().setText("Cartão");
-		//dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
-		dados(true);
+		dados(true, "Cartão", "Adicionar Cartão");
 		
 		model = new HistoricoRecebimentoTableModel();
 		dialog.getTable().setModel(model);
@@ -55,9 +55,6 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
 		else
 			dialog.setVisible(true);
-		
-		dialogCheque = new DialogCheque(Main.getFrame(), "Dados do Cheque");
-		dialogCheque.setVisible(false);
 		
 	}
 	
@@ -84,17 +81,14 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
-					dialog.getLblCartaoCheque().setText("Cheque");
-					//dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cheque");
-					dados(true);
+					dados(true, "Cheque", "Adicionar Cheque");
+					new DialogCartao(Main.getFrame(), "Adicionar Cartão").setVisible(true);
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
-					dialog.getLblCartaoCheque().setText("Cartão");
-					//dialog.getBtnAdicionarCartaoCheque().setText("Adicionar Cartão");
-					dados(true);
+					dados(true, "Cartão", "Adicionar Cartão");
 				}
 				else {
-					dados(false);
+					dados(false, "Cartão", "Adicionar Cartão");
 				}
 			}
 		});
@@ -125,7 +119,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		}
 	}
 	
-	public void dados(boolean condition) {
+	public void dados(boolean condition, String tipo, String button) {
 		dialog.getLblEmitente().setEnabled(condition);
 		dialog.getL6().setEnabled(condition);
 		dialog.getCboxEmitente().setEnabled(condition);
@@ -134,7 +128,9 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		dialog.getLblCartaoCheque().setEnabled(condition);
 		dialog.getL7().setEnabled(condition);
 		dialog.getCboxCartaoCheque().setEnabled(condition);
+		dialog.getLblCartaoCheque().setText(tipo);
 		//dialog.getBtnAdicionarCartaoCheque().setEnabled(condition);
+		//dialog.getBtnAdicionarCartaoCheque().setText(button);
 		
 		dialog.getPanelEmitente().getLblNome().setEnabled(condition);
 		dialog.getPanelEmitente().getLblTelefone().setEnabled(condition);

@@ -18,19 +18,19 @@ import net.miginfocom.swing.MigLayout;
 import eso.components.DateField;
 import eso.utils.Text;
 
-public class DialogCheque extends JDialog {
+public class DialogCartao extends JDialog {
 private static final long serialVersionUID = 1L;
 
 	private JTextField jtfNomeTitular;
-	private DateField dfDataCheque;
-	private JFormattedTextField jtfNumeroCheque;
+	private DateField dfDataCartao;
+	private JFormattedTextField jtfNumeroCartao;
 
-	private JComboBox<String> cboxBanco;
+	private JComboBox<String> cboxBandeira;
 	
 	private JButton btnSalvar;
 	private JButton btnCancelar;
 
-	public DialogCheque(Window owner, String title) {
+	public DialogCartao(Window owner, String title) {
 		super(owner, title);
 		intialize();
 	}
@@ -63,16 +63,16 @@ private static final long serialVersionUID = 1L;
 		
 		// Numero
 		
-		JLabel lblNumeroCheque = new JLabel("Numero do Cheque: ");
+		JLabel lblNumeroCheque = new JLabel("Numero do Cartão: ");
 		contentPanel.add(lblNumeroCheque, "cell 0 1");
 		
 		JLabel l4 = new JLabel("*");
 		l4.setForeground(Color.RED);
 		contentPanel.add(l4, "cell 1 1,alignx trailing");
 		
-		jtfNumeroCheque = new JFormattedTextField(Text.buildMask("##############################"));
-		jtfNumeroCheque.setColumns(20);
-		contentPanel.add(jtfNumeroCheque, "cell 2 1");
+		jtfNumeroCartao = new JFormattedTextField(Text.buildMask("################"));
+		jtfNumeroCartao.setColumns(20);
+		contentPanel.add(jtfNumeroCartao, "cell 2 1");
 		
 		// Banco
 		
@@ -83,9 +83,9 @@ private static final long serialVersionUID = 1L;
 		l1.setForeground(Color.RED);
 		contentPanel.add(l1, "cell 1 2,alignx trailing");
 		
-		String banco[] = {"Itaú", "Bradesco", "Banco do Brasil", "Caixa Econômica", "Banco do Nordeste", "Santander", "HSBC"};
-		cboxBanco = new JComboBox<String>(banco);
-		contentPanel.add(cboxBanco, "cell 2 2");
+		String bandeira[] = {"MasterCard", "Visa", "HiperCard", "Elo", "American Express"};
+		cboxBandeira = new JComboBox<String>(bandeira);
+		contentPanel.add(cboxBandeira, "cell 2 2");
 		
 		// Data vencimento
 		
@@ -96,9 +96,9 @@ private static final long serialVersionUID = 1L;
 		l3.setForeground(Color.RED);
 		contentPanel.add(l3, "cell 1 3,alignx trailing");
 		
-		dfDataCheque = new DateField();
-		dfDataCheque.setColumns(10);
-		contentPanel.add(dfDataCheque, "cell 2 3");
+		dfDataCartao = new DateField();
+		dfDataCartao.setColumns(10);
+		contentPanel.add(dfDataCartao, "cell 2 3");
 		
 				
 		JPanel buttonPanel = new JPanel();
@@ -131,20 +131,28 @@ private static final long serialVersionUID = 1L;
 		this.jtfNomeTitular = jtfNomeTitular;
 	}
 
-	public DateField getDfDataCheque() {
-		return dfDataCheque;
+	public DateField getDfDataCartao() {
+		return dfDataCartao;
 	}
 
-	public void setDfDataCheque(DateField dfDataCheque) {
-		this.dfDataCheque = dfDataCheque;
+	public void setDfDataCartao(DateField dfDataCartao) {
+		this.dfDataCartao = dfDataCartao;
 	}
 
-	public JFormattedTextField getJtfNumeroCheque() {
-		return jtfNumeroCheque;
+	public JFormattedTextField getJtfNumeroCartao() {
+		return jtfNumeroCartao;
 	}
 
-	public void setJtfNumeroCheque(JFormattedTextField jtfNumeroCheque) {
-		this.jtfNumeroCheque = jtfNumeroCheque;
+	public void setJtfNumeroCartao(JFormattedTextField jtfNumeroCartao) {
+		this.jtfNumeroCartao = jtfNumeroCartao;
+	}
+
+	public JComboBox<String> getCboxBandeira() {
+		return cboxBandeira;
+	}
+
+	public void setCboxBandeira(JComboBox<String> cboxBandeira) {
+		this.cboxBandeira = cboxBandeira;
 	}
 
 	@Override
