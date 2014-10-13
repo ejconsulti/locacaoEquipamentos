@@ -44,6 +44,7 @@ private static final long serialVersionUID = 1L;
 
 	private JComboBox<Emitente> cboxEmitente;
 	private JComboBox<?> cboxCartaoCheque;
+	private JComboBox<String> cboxParcelas;
 
 	private JButton btnAdicionarCartaoCheque;
 	private JButton btnAdicionarEmitente;
@@ -96,6 +97,10 @@ private static final long serialVersionUID = 1L;
 		
 		cboxTipo = new JComboBox<Recebimento.Tipo>(Recebimento.Tipo.values());
 		contentPanel.add(cboxTipo, "cell 2 3");
+		
+		String parcelas[] = {"Parcelas", "1 x", "2 x", "3 x", "4 x", "5 x", "6 x", "7 x", "8 x", "9 x", "10 x"};
+		cboxParcelas = new JComboBox<String>(parcelas);
+		contentPanel.add(cboxParcelas, "cell 2 3 3");
 		
 		JLabel lblQuantidadeReceber = new JLabel("Valor à receber");
 		contentPanel.add(lblQuantidadeReceber, "cell 0 1");
@@ -179,6 +184,14 @@ private static final long serialVersionUID = 1L;
 		
 	}
 	
+	public JComboBox<String> getCboxParcelas() {
+		return cboxParcelas;
+	}
+
+	public void setCboxParcelas(JComboBox<String> cboxParcelas) {
+		this.cboxParcelas = cboxParcelas;
+	}
+
 	public JTable getTable() {
 		return table;
 	}

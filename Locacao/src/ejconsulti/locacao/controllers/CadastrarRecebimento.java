@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,10 +63,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 
 		addEvents();
 		
-		if (dialog.getCboxOrdemServico().getModel().getSize() == 1)
-			JOptionPane.showMessageDialog(dialog, "Sem ordem de serviço a pagar.");
-		else
-			dialog.setVisible(true);
+		dialog.setVisible(true);
 		
 	}
 	
@@ -92,16 +90,19 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
+					dialog.getCboxParcelas().setVisible(true);
 					dados(true, "Cheque");
 					addEmitentes();
 					addCheque((Emitente) dialog.getCboxEmitente().getSelectedItem());
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
+					dialog.getCboxParcelas().setVisible(true);
 					dados(true, "Cartão");
 					addEmitentes();
 					addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
 				}
 				else {
+					dialog.getCboxParcelas().setVisible(false);
 					dados(false, "Cartão");
 				}
 			}
@@ -170,17 +171,17 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	private void addEmitentes(){
 		ResultSet rs = null;
-		int condition = dialog.getCboxTipo().getSelectedIndex();
 		try {
-			if (condition == 0)
+			if (dialog.getCboxTipo().getSelectedIndex() == 0)
 				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cartao.TABLE+" c ON c." + Cartao.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
-			else if (condition == 2)
+			else if (dialog.getCboxTipo().getSelectedIndex() == 2)
 				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cheque.TABLE+" c ON c." + Cheque.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
-			DefaultComboBoxModel<Emitente> model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
+			DefaultComboBoxModel<Emitente> model = new DefaultComboBoxModel<Emitente>();
 			while(rs.next()) {
 				Emitente e = Emitente.rsToObject(rs);
 				model.addElement(e);
 			}
+			dialog.getCboxEmitente().setModel(model);
 		} catch (SQLException ex) {
 			Log.e(TAG, "Erro ao carregar emitentes", ex);
 		} finally {
@@ -199,12 +200,12 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		try {
 			rs = DAO.getDatabase().select(null, Cartao.TABLE, Cartao.ID_EMITENTE + " = ?", new Object[]{e.getId()}, null, null);
 		
-			DefaultComboBoxModel<Cartao> model = (DefaultComboBoxModel<Cartao>) dialog.getCboxCartaoCheque().getModel();
+			DefaultComboBoxModel model = new DefaultComboBoxModel();
 			while(rs.next()) {
 				Cartao c = Cartao.rsToObject(rs);
 				model.addElement(c);
 			}
-			
+			dialog.getCboxCartaoCheque().setModel(model);
 		} catch (SQLException ex) {
 			Log.e(TAG, "Erro ao carregar cartões", ex);
 		} finally {
@@ -223,12 +224,12 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		try {
 			rs = DAO.getDatabase().select(null, Cheque.TABLE, Cheque.ID_EMITENTE + " = ?", new Object[]{e.getId()}, null, null);
 		
-			DefaultComboBoxModel<Cheque> model = (DefaultComboBoxModel<Cheque>) dialog.getCboxCartaoCheque().getModel();
+			DefaultComboBoxModel model = new DefaultComboBoxModel();
 			while(rs.next()) {
 				Cheque c = Cheque.rsToObject(rs);
 				model.addElement(c);
 			}
-			
+			dialog.getCboxCartaoCheque().setModel(model);
 		} catch (SQLException ex) {
 			Log.e(TAG, "Erro ao carregar cheques", ex);
 		} finally {
@@ -260,17 +261,24 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		dialog.getPanelEmitente().getLblTelefone().setEnabled(condition);
 		dialog.getPanelEmitente().getLblCpfCnpj().setEnabled(condition);
 		dialog.getPanelEmitente().getTxtNomeTitular().setEnabled(condition);
+		dialog.getPanelEmitente().getTxtNomeTitular().setText("");
 		dialog.getPanelEmitente().getTxtTelefoneTitular().setEnabled(condition);
+		dialog.getPanelEmitente().getTxtTelefoneTitular().setText("");
 		dialog.getPanelEmitente().getTxtCpfCnpj().setEnabled(condition);
+		dialog.getPanelEmitente().getTxtCpfCnpj().setText("");
 		
 		dialog.getPanelCartaoCheque().getLblNome().setEnabled(condition);
 		dialog.getPanelCartaoCheque().getLblNumero().setEnabled(condition);
 		dialog.getPanelCartaoCheque().getLblBandeiraBanco().setEnabled(condition);
 		dialog.getPanelCartaoCheque().getLblData().setEnabled(condition);
 		dialog.getPanelCartaoCheque().getTxtNomeTitular().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtNomeTitular().setText("");
 		dialog.getPanelCartaoCheque().getTxtNumeroCartaoCheque().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtNumeroCartaoCheque().setText("");
 		dialog.getPanelCartaoCheque().getTxtBandeiraBanco().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtBandeiraBanco().setText("");
 		dialog.getPanelCartaoCheque().getTxtDataVencimento().setEnabled(condition);
+		dialog.getPanelCartaoCheque().getTxtDataVencimento().setText("");
 	}
 	
 	private void cadastrar() {
@@ -307,13 +315,20 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		
 		// Cadastrar recebimento
 		ContentValues values = new ContentValues();
-		values.put(Recebimento.ID_ORDEM_SERVICO, os.getId());
+		if (os != null)
+			values.put(Recebimento.ID_ORDEM_SERVICO, os.getId());
 		values.put(Recebimento.TIPO, tipo.getId());
 		values.put(Recebimento.VALOR_PARCIAL, valorReceber); //TODO: Verificar esta linha (valor parcial é o mesmo do a receber?)
 		values.put(Recebimento.VALOR_TOTAL, valorTotal);     // Sim. Nesse caso o registro está sendo criado, então o valor parcial é o valor recebido quando a compra é parcelada.
 		values.put(Recebimento.STATUS, status);
 		values.put(Recebimento.VALOR_RECEBIMENTO, valorReceber);
-		values.put(Recebimento.DATA_RECEBIMENTO, new Date());
+		Date dataAtual = new Date();
+		SimpleDateFormat dia = new SimpleDateFormat("yyyy-MM-dd");
+		values.put(Recebimento.DATA_RECEBIMENTO, dia.format(dataAtual.getTime()));
+		if (dialog.getCboxTipo().getSelectedIndex() == 0 || dialog.getCboxTipo().getSelectedIndex() == 2) {
+			Emitente emitente = (Emitente) dialog.getCboxEmitente().getSelectedItem();
+			values.put(Recebimento.ID_EMITENTE, emitente.getId());
+		}
 		
 		int id = -1;
 		try {
@@ -325,26 +340,28 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		if(id < 1)
 			return;
 		
-		ResultSet rs = null;
-		List<ProdutoOS> list = null;
-		OrdemServico ordem = null;
-		try {
-			rs = DAO.getDatabase().select(null, ProdutoOS.TABLE, ProdutoOS.ID_ORDEMSERVICO + " = ?", new Object[]{os.getId()}, null, null);
-			list = new ArrayList<ProdutoOS>();
-			while (rs.next()) {
-				ProdutoOS produto = ProdutoOS.rsToObject(rs);
-				list.add(produto);
-			}
-			
-			new GerarRecibo(ordem, list);
-		} catch (SQLException b) {
-			Log.e(TAG, "Erro ao buscar produtos da OS.");
-		}  finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException ex) {
-					ex.printStackTrace();
+		if (os != null) {
+			ResultSet rs = null;
+			List<ProdutoOS> list = null;
+			OrdemServico ordem = null;
+			try {
+				rs = DAO.getDatabase().select(null, ProdutoOS.TABLE, ProdutoOS.ID_ORDEMSERVICO + " = ?", new Object[]{os.getId()}, null, null);
+				list = new ArrayList<ProdutoOS>();
+				while (rs.next()) {
+					ProdutoOS produto = ProdutoOS.rsToObject(rs);
+					list.add(produto);
+				}
+				
+				new GerarRecibo(ordem, list);
+			} catch (SQLException b) {
+				Log.e(TAG, "Erro ao buscar produtos da OS.");
+			}  finally {
+				if(rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		}
@@ -380,6 +397,27 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				dialogCheque.getBtnSalvarCheque().addActionListener(this);
 			}
 		}
+		else if (e.getSource() == dialogCartao.getBtnSalvarCartao()) {
+			ContentValues values = new ContentValues();
+			values.put(Cartao.NOME_CARTAO, dialogCartao.getJtfNomeTitular().getText());
+			values.put(Cartao.NUMERO_CARTAO, dialogCartao.getJtfNumeroCartao().getText());
+			values.put(Cartao.DATA_VENCIMENTO_CARTAO, dialogCartao.getDfDataCartao().getDate());
+			values.put(Cartao.BANDEIRA_CARTAO, dialogCartao.getCboxBandeira().getSelectedItem());
+			Emitente emitente = (Emitente) dialog.getCboxEmitente().getSelectedItem();
+			values.put(Cartao.ID_EMITENTE, emitente.getId());
+			
+			int id = -1;
+			try {
+				id = DAO.getDatabase().insert(Cartao.TABLE, values);
+			} catch (SQLException sqlException) {
+				Log.e(TAG, "Erro ao adicionar cartão.");
+			}
+			
+			if(id < 1)
+				return;
+			dialogCartao.dispose();
+			addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
+		}
 		else if (e.getSource() == dialogCheque.getBtnSalvarCheque()) {
 			JOptionPane.showMessageDialog(dialogCheque, e.getSource());
 			ContentValues values = new ContentValues();
@@ -401,27 +439,6 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				return;
 			dialogCheque.dispose();
 			addCheque((Emitente) dialog.getCboxEmitente().getSelectedItem());
-		}
-		else if (e.getSource() == dialogCartao.getBtnSalvarCartao()) {
-			ContentValues values = new ContentValues();
-			values.put(Cartao.NOME_CARTAO, dialogCartao.getJtfNomeTitular().getText());
-			values.put(Cartao.NUMERO_CARTAO, dialogCartao.getJtfNumeroCartao().getText());
-			values.put(Cartao.DATA_VENCIMENTO_CARTAO, dialogCartao.getDfDataCartao().getDate());
-			values.put(Cartao.BANDEIRA_CARTAO, dialogCartao.getCboxBandeira().getSelectedItem());
-			Emitente emitente = (Emitente) dialog.getCboxEmitente().getSelectedItem();
-			values.put(Cartao.ID_EMITENTE, emitente.getId());
-			
-			int id = -1;
-			try {
-				id = DAO.getDatabase().insert(Cartao.TABLE, values);
-			} catch (SQLException sqlException) {
-				Log.e(TAG, "Erro ao adicionar cartão.");
-			}
-			
-			if(id < 1)
-				return;
-			dialogCartao.dispose();
-			addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
 		}
 		else if (e.getSource() == dialogEmitente.getBtnSalvarEmitente()) {
 			ContentValues values = new ContentValues();
