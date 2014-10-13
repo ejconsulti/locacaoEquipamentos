@@ -27,8 +27,8 @@ private static final long serialVersionUID = 1L;
 
 	private JComboBox<String> cboxBanco;
 	
-	private JButton btnSalvar;
-	private JButton btnCancelar;
+	private JButton btnSalvarCheque;
+	private JButton btnCancelarCheque;
 
 	public DialogCheque(Window owner, String title) {
 		super(owner, title);
@@ -104,23 +104,23 @@ private static final long serialVersionUID = 1L;
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
-		btnSalvar = new JButton("Salvar");
-		btnSalvar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
-		buttonPanel.add(btnSalvar);
-		getRootPane().setDefaultButton(btnSalvar);
+		btnSalvarCheque = new JButton("Salvar Cheque");
+		btnSalvarCheque.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
+		buttonPanel.add(btnSalvarCheque);
+		getRootPane().setDefaultButton(btnSalvarCheque);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
-		buttonPanel.add(btnCancelar);
+		btnCancelarCheque = new JButton("Cancelar Cheque");
+		btnCancelarCheque.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
+		buttonPanel.add(btnCancelarCheque);
 		
 	}
 	
-	public JButton getBtnSalvar() {
-		return btnSalvar;
+	public JButton getBtnSalvarCheque() {
+		return btnSalvarCheque;
 	}
 
 	public JButton getBtnCancelar() {
-		return btnCancelar;
+		return btnCancelarCheque;
 	}
 
 	public JTextField getJtfNomeTitular() {
@@ -133,6 +133,14 @@ private static final long serialVersionUID = 1L;
 
 	public DateField getDfDataCheque() {
 		return dfDataCheque;
+	}
+
+	public JComboBox<String> getCboxBanco() {
+		return cboxBanco;
+	}
+
+	public void setCboxBanco(JComboBox<String> cboxBanco) {
+		this.cboxBanco = cboxBanco;
 	}
 
 	public void setDfDataCheque(DateField dfDataCheque) {

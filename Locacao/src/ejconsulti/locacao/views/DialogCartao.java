@@ -27,8 +27,8 @@ private static final long serialVersionUID = 1L;
 
 	private JComboBox<String> cboxBandeira;
 	
-	private JButton btnSalvar;
-	private JButton btnCancelar;
+	private JButton btnSalvarCartao;
+	private JButton btnCancelarCartao;
 
 	public DialogCartao(Window owner, String title) {
 		super(owner, title);
@@ -104,23 +104,23 @@ private static final long serialVersionUID = 1L;
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
-		btnSalvar = new JButton("Salvar");
-		btnSalvar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
-		buttonPanel.add(btnSalvar);
-		getRootPane().setDefaultButton(btnSalvar);
+		btnSalvarCartao = new JButton("Salvar Cartão");
+		btnSalvarCartao.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
+		buttonPanel.add(btnSalvarCartao);
+		getRootPane().setDefaultButton(btnSalvarCartao);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
-		buttonPanel.add(btnCancelar);
+		btnCancelarCartao = new JButton("Cancelar Cartão");
+		btnCancelarCartao.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
+		buttonPanel.add(btnCancelarCartao);
 		
 	}
 	
-	public JButton getBtnSalvar() {
-		return btnSalvar;
+	public JButton getBtnSalvarCartao() {
+		return btnSalvarCartao;
 	}
 
 	public JButton getBtnCancelar() {
-		return btnCancelar;
+		return btnCancelarCartao;
 	}
 
 	public JTextField getJtfNomeTitular() {

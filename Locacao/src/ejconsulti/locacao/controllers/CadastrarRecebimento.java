@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import ejconsulti.locacao.assets.DAO;
@@ -22,7 +23,9 @@ import ejconsulti.locacao.models.OrdemServico;
 import ejconsulti.locacao.models.ProdutoOS;
 import ejconsulti.locacao.models.Recebimento;
 import ejconsulti.locacao.models.Recebimento.Tipo;
+import ejconsulti.locacao.views.DialogCartao;
 import ejconsulti.locacao.views.DialogCheque;
+import ejconsulti.locacao.views.DialogEmitente;
 import ejconsulti.locacao.views.DialogRecebimento;
 import eso.database.ContentValues;
 import eso.utils.Log;
@@ -32,9 +35,13 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	private DialogRecebimento dialog;
 	
-	public DialogCheque dialogCheque;
-	
 	private HistoricoRecebimentoTableModel model;
+	
+	private DialogEmitente dialogEmitente;
+	
+	private DialogCartao dialogCartao;
+	
+	private DialogCheque dialogCheque;
 	
 	public CadastrarRecebimento() {
 		initialize();
@@ -51,6 +58,7 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		addOrdens();
 		
 		addEmitentes();
+		addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
 
 		addEvents();
 		
@@ -86,11 +94,12 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				if (dialog.getCboxTipo().getSelectedIndex() == 2) {
 					dados(true, "Cheque");
 					addEmitentes();
-					
+					addCheque((Emitente) dialog.getCboxEmitente().getSelectedItem());
 				}
 				else if (dialog.getCboxTipo().getSelectedIndex() == 0) {
 					dados(true, "Cartão");
 					addEmitentes();
+					addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
 				}
 				else {
 					dados(false, "Cartão");
@@ -104,14 +113,30 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 				// TODO Auto-generated method stub
 				if (dialog.getCboxTipo().getSelectedIndex() == 0) addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
 				else if (dialog.getCboxTipo().getSelectedIndex() == 2) addCheque((Emitente) dialog.getCboxEmitente().getSelectedItem());
+				Emitente emitente = (Emitente) dialog.getCboxEmitente().getSelectedItem();
+				dialog.getPanelEmitente().getTxtNomeTitular().setText(emitente.getNome());
+				dialog.getPanelEmitente().getTxtCpfCnpj().setText(emitente.getCpfCnpj());
+				dialog.getPanelEmitente().getTxtTelefoneTitular().setText(emitente.getTelefone());
 			}
 		});
 		dialog.getCboxCartaoCheque().addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+				if (dialog.getCboxTipo().getSelectedIndex() == 0) {
+					Cartao cartao = (Cartao) dialog.getCboxCartaoCheque().getSelectedItem();
+					dialog.getPanelCartaoCheque().getTxtNomeTitular().setText(cartao.getNome());
+					dialog.getPanelCartaoCheque().getTxtNumeroCartaoCheque().setText(cartao.getNumero());
+					dialog.getPanelCartaoCheque().getTxtDataVencimento().setText(cartao.getDataVencimento().toString());
+					dialog.getPanelCartaoCheque().getTxtBandeiraBanco().setText(cartao.getBandeira());
+				}
+				else if (dialog.getCboxTipo().getSelectedIndex() == 2) {
+					Cheque cheque = (Cheque) dialog.getCboxCartaoCheque().getSelectedItem();
+					dialog.getPanelCartaoCheque().getTxtNomeTitular().setText(cheque.getNome());
+					dialog.getPanelCartaoCheque().getTxtNumeroCartaoCheque().setText(cheque.getNumero());
+					dialog.getPanelCartaoCheque().getTxtDataVencimento().setText(cheque.getDataVencimento().toString());
+					dialog.getPanelCartaoCheque().getTxtBandeiraBanco().setText(cheque.getBanco());
+				}
 			}
 		});
 		dialog.getBtnAdicionarEmitente().addActionListener(this);
@@ -145,15 +170,13 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	private void addEmitentes(){
 		ResultSet rs = null;
-		DefaultComboBoxModel<Emitente> model = null;
 		int condition = dialog.getCboxTipo().getSelectedIndex();
 		try {
 			if (condition == 0)
 				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cartao.TABLE+" c ON c." + Cartao.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
 			else if (condition == 2)
 				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cheque.TABLE+" c ON c." + Cheque.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
-			model = new DefaultComboBoxModel<Emitente>();
-			model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
+			DefaultComboBoxModel<Emitente> model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
 			while(rs.next()) {
 				Emitente e = Emitente.rsToObject(rs);
 				model.addElement(e);
@@ -224,12 +247,14 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		dialog.getL6().setEnabled(condition);
 		dialog.getCboxEmitente().setEnabled(condition);
 		dialog.getBtnAdicionarEmitente().setEnabled(condition);
+		dialog.getBtnAdicionarEmitente().setText("Emitente");
 		
 		dialog.getLblCartaoCheque().setEnabled(condition);
 		dialog.getL7().setEnabled(condition);
 		dialog.getCboxCartaoCheque().setEnabled(condition);
 		dialog.getLblCartaoCheque().setText(tipo);
 		dialog.getBtnAdicionarCartaoCheque().setEnabled(condition);
+		dialog.getBtnAdicionarCartaoCheque().setText(tipo);
 		
 		dialog.getPanelEmitente().getLblNome().setEnabled(condition);
 		dialog.getPanelEmitente().getLblTelefone().setEnabled(condition);
@@ -332,13 +357,92 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		switch(e.getActionCommand()) {
-		case "Salvar":
+		if (e.getSource() == dialog.getBtnSalvar()) {
 			cadastrar();
-			break;
-		case "Cancelar":
+		}
+		else if (e.getSource() == dialog.getBtnCancelar()) {
 			dialog.dispose();
-			break;
+		}
+		else if (e.getSource() == dialog.getBtnAdicionarEmitente()) {
+			dialogEmitente = new DialogEmitente(dialog, "Adicionar Emitente");
+			dialogEmitente.setVisible(true);
+			dialogEmitente.getBtnSalvarEmitente().addActionListener(this);
+		}
+		else if (e.getSource() == dialog.getBtnAdicionarCartaoCheque()) {
+			if (dialog.getCboxTipo().getSelectedIndex() == 0) {
+				dialogCartao = new DialogCartao(dialog, "Adicionar Cartão de Crédito");
+				dialogCartao.setVisible(true);
+				dialogCartao.getBtnSalvarCartao().addActionListener(this);
+			}
+			else if (dialog.getCboxTipo().getSelectedIndex() == 2) {
+				dialogCheque = new DialogCheque(dialog, "Adicionar Cheque");
+				dialogCheque.setVisible(true);
+				dialogCheque.getBtnSalvarCheque().addActionListener(this);
+			}
+		}
+		else if (e.getSource() == dialogCheque.getBtnSalvarCheque()) {
+			JOptionPane.showMessageDialog(dialogCheque, e.getSource());
+			ContentValues values = new ContentValues();
+			values.put(Cheque.NOME, dialogCheque.getJtfNomeTitular().getText());
+			values.put(Cheque.NUMERO, dialogCheque.getJtfNumeroCheque().getText());
+			values.put(Cheque.DATA, dialogCheque.getDfDataCheque().getDate());
+			values.put(Cheque.BANCO, dialogCheque.getCboxBanco().getSelectedItem());
+			Emitente emitente = (Emitente) dialog.getCboxEmitente().getSelectedItem();
+			values.put(Cheque.ID_EMITENTE, emitente.getId());
+			
+			int id = -1;
+			try {
+				id = DAO.getDatabase().insert(Cheque.TABLE, values);
+			} catch (SQLException sqlException) {
+				Log.e(TAG, "Erro ao adicionar cheque.");
+			}
+			
+			if(id < 1)
+				return;
+			dialogCheque.dispose();
+			addCheque((Emitente) dialog.getCboxEmitente().getSelectedItem());
+		}
+		else if (e.getSource() == dialogCartao.getBtnSalvarCartao()) {
+			ContentValues values = new ContentValues();
+			values.put(Cartao.NOME_CARTAO, dialogCartao.getJtfNomeTitular().getText());
+			values.put(Cartao.NUMERO_CARTAO, dialogCartao.getJtfNumeroCartao().getText());
+			values.put(Cartao.DATA_VENCIMENTO_CARTAO, dialogCartao.getDfDataCartao().getDate());
+			values.put(Cartao.BANDEIRA_CARTAO, dialogCartao.getCboxBandeira().getSelectedItem());
+			Emitente emitente = (Emitente) dialog.getCboxEmitente().getSelectedItem();
+			values.put(Cartao.ID_EMITENTE, emitente.getId());
+			
+			int id = -1;
+			try {
+				id = DAO.getDatabase().insert(Cartao.TABLE, values);
+			} catch (SQLException sqlException) {
+				Log.e(TAG, "Erro ao adicionar cartão.");
+			}
+			
+			if(id < 1)
+				return;
+			dialogCartao.dispose();
+			addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
+		}
+		else if (e.getSource() == dialogEmitente.getBtnSalvarEmitente()) {
+			ContentValues values = new ContentValues();
+			values.put(Emitente.NOME_EMITENTES, dialogEmitente.getJtfNomeTitular().getText());
+			if (dialogEmitente.getCpf().isSelected())
+				values.put(Emitente.CPF_CNPJ_EMITENTES, dialogEmitente.getJtfCpfTitular().getText());
+			else if (dialogEmitente.getCnpj().isSelected())
+				values.put(Emitente.CPF_CNPJ_EMITENTES, dialogEmitente.getJtfCnpjTitular().getText());
+			values.put(Emitente.TELEFONE_EMITENTES, dialogEmitente.getJtfTelefoneTitular().getText());
+			
+			int id = -1;
+			try {
+				id = DAO.getDatabase().insert(Emitente.TABLE, values);
+			} catch (SQLException sqlException) {
+				Log.e(TAG, "Erro ao adicionar emitente.");
+			}
+			
+			if(id < 1)
+				return;
+			dialogEmitente.dispose();
+			addEmitentes();
 		}
 	}
 

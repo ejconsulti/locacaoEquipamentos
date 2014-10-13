@@ -122,7 +122,7 @@ private static final long serialVersionUID = 1L;
 		historicoRecebimentoTableModel = new HistoricoRecebimentoTableModel();
 
 		tabela = new JTable(historicoRecebimentoTableModel);
-		tabela.setPreferredScrollableViewportSize(new Dimension(475, 100));
+		tabela.setPreferredScrollableViewportSize(new Dimension(540, 100));
 		contentPanel.add(new JScrollPane(tabela), "cell 0 8 3");
 		
 		JPanel buttonPanel = new JPanel();
@@ -139,11 +139,13 @@ private static final long serialVersionUID = 1L;
 		
 		panelEmitente = new PanelEmitente();
 		panelEmitente.setBorder(new TitledBorder(null, "Dados do Emitente", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelEmitente.setPreferredSize(new Dimension(550, 100));
 		panelEmitente.setEditable(false);
 		contentPanel.add(panelEmitente, "cell 0 6 3 1,alignx left");
 		
 		panelCartaoCheque = new PanelCartaoCheque();
 		panelCartaoCheque.setBorder(new TitledBorder(null, "Dados do Documento", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelCartaoCheque.setPreferredSize(new Dimension(550, 100));
 		panelCartaoCheque.setEditable(false);
 		contentPanel.add(panelCartaoCheque, "cell 0 7 3 1,alignx left");
 		
