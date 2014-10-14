@@ -173,9 +173,9 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		ResultSet rs = null;
 		try {
 			if (dialog.getCboxTipo().getSelectedIndex() == 0)
-				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cartao.TABLE+" c ON c." + Cartao.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
+				rs = DAO.getDatabase().executeQuery("SELECT DISTINCT * FROM " + Emitente.TABLE + " o INNER JOIN " + Cartao.TABLE + " c ON c." + Cartao.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES + " GROUP BY " + Emitente.NOME_EMITENTES, null);
 			else if (dialog.getCboxTipo().getSelectedIndex() == 2)
-				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cheque.TABLE+" c ON c." + Cheque.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
+				rs = DAO.getDatabase().executeQuery("SELECT DISTINCT * FROM " + Emitente.TABLE + " o INNER JOIN " + Cheque.TABLE + " c ON c." + Cheque.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES + " GROUP BY " + Emitente.NOME_EMITENTES, null);
 			DefaultComboBoxModel<Emitente> model = new DefaultComboBoxModel<Emitente>();
 			while(rs.next()) {
 				Emitente e = Emitente.rsToObject(rs);
