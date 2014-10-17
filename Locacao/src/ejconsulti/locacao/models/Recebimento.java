@@ -198,6 +198,7 @@ public class Recebimento {
 	
 	public enum Tipo {
 
+		Nenhum(0, " "),
 		Credito(1, "Cartão de Crédito"),
 		Debito(2, "Cartão de Débito"),
 		Cheque(3, "Cheque"),

@@ -52,6 +52,8 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 		
 		addEmitentes();
 
+		addCartao((Emitente) dialog.getCboxEmitente().getSelectedItem());
+		
 		addEvents();
 		
 		if (dialog.getCboxOrdemServico().getModel().getSize() == 1)
@@ -145,15 +147,13 @@ public static final String TAG = CadastrarRecebimento.class.getSimpleName();
 	
 	private void addEmitentes(){
 		ResultSet rs = null;
-		DefaultComboBoxModel<Emitente> model = null;
 		int condition = dialog.getCboxTipo().getSelectedIndex();
 		try {
 			if (condition == 0)
 				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cartao.TABLE+" c ON c." + Cartao.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
 			else if (condition == 2)
 				rs = DAO.getDatabase().select(null, Emitente.TABLE + " o INNER JOIN " + Cheque.TABLE+" c ON c." + Cheque.ID_EMITENTE + " = o." + Emitente.ID_EMITENTES, null, null, null, Emitente.NOME_EMITENTES);
-			model = new DefaultComboBoxModel<Emitente>();
-			model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
+			DefaultComboBoxModel<Emitente> model = (DefaultComboBoxModel<Emitente>) dialog.getCboxEmitente().getModel();
 			while(rs.next()) {
 				Emitente e = Emitente.rsToObject(rs);
 				model.addElement(e);
