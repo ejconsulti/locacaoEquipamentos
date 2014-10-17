@@ -26,8 +26,8 @@ private static final long serialVersionUID = 1L;
 	private JFormattedTextField jtfTelefoneTitular;
 	private JTextField jtfNomeTitular;
 
-	private JButton btnSalvar;
-	private JButton btnCancelar;
+	private JButton btnSalvarEmitente;
+	private JButton btnCancelarEmitente;
 	
 	private ButtonGroup grupoCheckBox;
 	private JRadioButton cpf;
@@ -113,23 +113,23 @@ private static final long serialVersionUID = 1L;
 		JPanel buttonPanel = new JPanel();
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		
-		btnSalvar = new JButton("Salvar");
-		btnSalvar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
-		buttonPanel.add(btnSalvar);
-		getRootPane().setDefaultButton(btnSalvar);
+		btnSalvarEmitente = new JButton("Salvar Emitente");
+		btnSalvarEmitente.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/confirmar.png")));
+		buttonPanel.add(btnSalvarEmitente);
+		getRootPane().setDefaultButton(btnSalvarEmitente);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
-		buttonPanel.add(btnCancelar);
+		btnCancelarEmitente = new JButton("Cancelar Emitente");
+		btnCancelarEmitente.setIcon(new ImageIcon(DialogRecebimento.class.getResource("/icones/cancelar.png")));
+		buttonPanel.add(btnCancelarEmitente);
 		
 	}
 	
-	public JButton getBtnSalvar() {
-		return btnSalvar;
+	public JButton getBtnSalvarEmitente() {
+		return btnSalvarEmitente;
 	}
 
 	public JButton getBtnCancelar() {
-		return btnCancelar;
+		return btnCancelarEmitente;
 	}
 
 	public ButtonGroup getGrupoCheckBox() {

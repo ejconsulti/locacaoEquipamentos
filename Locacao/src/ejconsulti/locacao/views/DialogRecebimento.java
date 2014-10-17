@@ -44,6 +44,7 @@ private static final long serialVersionUID = 1L;
 
 	private JComboBox<Emitente> cboxEmitente;
 	private JComboBox<?> cboxCartaoCheque;
+	private JComboBox<String> cboxParcelas;
 
 	private JButton btnAdicionarCartaoCheque;
 	private JButton btnAdicionarEmitente;
@@ -97,6 +98,10 @@ private static final long serialVersionUID = 1L;
 		cboxTipo = new JComboBox<Recebimento.Tipo>(Recebimento.Tipo.values());
 		contentPanel.add(cboxTipo, "cell 2 3");
 		
+		String parcelas[] = {"Parcelas", "1 x", "2 x", "3 x", "4 x", "5 x", "6 x", "7 x", "8 x", "9 x", "10 x"};
+		cboxParcelas = new JComboBox<String>(parcelas);
+		contentPanel.add(cboxParcelas, "cell 2 3 3");
+		
 		JLabel lblQuantidadeReceber = new JLabel("Valor à receber");
 		contentPanel.add(lblQuantidadeReceber, "cell 0 1");
 		
@@ -122,7 +127,7 @@ private static final long serialVersionUID = 1L;
 		historicoRecebimentoTableModel = new HistoricoRecebimentoTableModel();
 
 		tabela = new JTable(historicoRecebimentoTableModel);
-		tabela.setPreferredScrollableViewportSize(new Dimension(475, 100));
+		tabela.setPreferredScrollableViewportSize(new Dimension(540, 100));
 		contentPanel.add(new JScrollPane(tabela), "cell 0 8 3");
 		
 		JPanel buttonPanel = new JPanel();
@@ -139,11 +144,13 @@ private static final long serialVersionUID = 1L;
 		
 		panelEmitente = new PanelEmitente();
 		panelEmitente.setBorder(new TitledBorder(null, "Dados do Emitente", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelEmitente.setPreferredSize(new Dimension(550, 100));
 		panelEmitente.setEditable(false);
 		contentPanel.add(panelEmitente, "cell 0 6 3 1,alignx left");
 		
 		panelCartaoCheque = new PanelCartaoCheque();
 		panelCartaoCheque.setBorder(new TitledBorder(null, "Dados do Documento", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelCartaoCheque.setPreferredSize(new Dimension(550, 100));
 		panelCartaoCheque.setEditable(false);
 		contentPanel.add(panelCartaoCheque, "cell 0 7 3 1,alignx left");
 		
@@ -177,6 +184,14 @@ private static final long serialVersionUID = 1L;
 		
 	}
 	
+	public JComboBox<String> getCboxParcelas() {
+		return cboxParcelas;
+	}
+
+	public void setCboxParcelas(JComboBox<String> cboxParcelas) {
+		this.cboxParcelas = cboxParcelas;
+	}
+
 	public JTable getTable() {
 		return table;
 	}
